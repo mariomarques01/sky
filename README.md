@@ -27,3 +27,16 @@ A cena abre com a geometria do cenário já posicionada e editável. O GLB do pe
 - [Configuração mobile](docs/MOBILE_OPTIMIZATION.md)
 - [Testes e reprodução](docs/TEST_REPORT.md)
 - [Pendências de produção](docs/PENDING_TASKS.md)
+
+## Jogar no navegador
+
+Abra [Skybound no GitHub Pages](https://mariomarques01.github.io/sky/) em um navegador com WebGL 2. No celular, vire a tela para a horizontal. O primeiro acesso baixa o jogo.
+
+O workflow de Pages exporta a cena principal com o Godot 4.7.2 a cada push para main. Para reproduzir a publicação localmente, instale os templates dessa versão e execute os comandos abaixo. Acesse http://localhost:8000.
+
+```sh
+godot --headless --editor --import
+mkdir -p build/web
+godot --headless --export-release Web build/web/index.html
+python3 -m http.server 8000 --directory build/web
+```
