@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://core/components/health.gd" id="5"]
 [ext_resource type="Script" path="res://player/abilities/dash.gd" id="6"]
 [sub_resource type="CapsuleShape3D" id="body"]
+resource_local_to_scene = true
 radius = 0.27
 height = 1.55
 [node name="Player" type="CharacterBody3D" groups=["player"]]

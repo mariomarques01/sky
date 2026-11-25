@@ -11,6 +11,7 @@ Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do a
 | Mover e acelerar | A/D ou ←/→ | Analógico esquerdo ou direcional | Setas da esquerda |
 | Saltar | Espaço ou W | Botão inferior | ↑ |
 | Salto duplo | Solte e pressione salto no ar | Segundo toque no botão inferior | Segundo toque em ↑ |
+| Agachar ou deslizar durante a corrida | S ou ↓ | Direcional para baixo | ↓ |
 | Dash | X ou Shift | Botão esquerdo | ϟ |
 | Pausa | Esc | Start | Ⅱ |
 | Exibir ou ocultar controles virtuais no computador | T | | |

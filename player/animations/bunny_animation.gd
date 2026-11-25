@@ -23,8 +23,10 @@ func _ready() -> void:
 	tree.advance(0.01)
 func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float) -> void:
 	rotation.y = lerp_angle(rotation.y,facing*PI/2,1-exp(-18*dt))
-	playback.travel("Running" if next in [&"Run",&"Dash"] else "Walking")
+	playback.travel("Running" if next in [&"Run",&"Dash",&"Slide"] else "Walking")
 	tree.active = true
-	tree.advance(dt * (clampf(speed/3.5,.6,1.5) if next in [&"Walk",&"Run"] else 0.0))
-	rotation.z = lerp_angle(rotation.z,(-.14*facing if next == &"Dash" else 0.0),1-exp(-18*dt))
+	tree.advance(dt * (clampf(speed/3.5,.6,1.5) if next in [&"Walk",&"Run",&"Crouch"] else 0.0))
+	var low_pose := next in [&"Crouch", &"Slide"]
+	$Explorer.scale.y = lerpf($Explorer.scale.y, .63 if low_pose else 1.0, 1-exp(-18*dt))
+	rotation.z = lerp_angle(rotation.z,(-.14*facing if next in [&"Dash", &"Slide"] else 0.0),1-exp(-18*dt))
 	visible = shield <= 0 or fmod(shield,.14)<.1
