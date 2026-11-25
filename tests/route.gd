@@ -6,8 +6,8 @@ func _ready() -> void:
 	var last_jump := -40
 	for frame in 530:
 		await get_tree().physics_frame
-		if Game.complete:
-			print("PASS percurso contínuo do início até o cristal azul; vida ",Game.health," coletas ",Game.counts)
+		if Game.counts[2] == 1 and not Game.complete:
+			print("PASS percurso contínuo do início até o arco sem encerrar a fase; vida ",Game.health," coletas ",Game.counts)
 			Input.action_release("right")
 			get_tree().paused = false
 			Audio.voice.stop()

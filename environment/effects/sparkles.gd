@@ -1,5 +1,6 @@
 extends CPUParticles3D
 @export var tint := Color("#fff1a3")
+@export var burst_amount := 9
 @export var continuous := false
 func _ready() -> void:
 	var shape := SphereMesh.new()
@@ -12,7 +13,7 @@ func _ready() -> void:
 	glow.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	shape.material = glow
 	mesh = shape
-	amount = 9 if not continuous else 15
+	amount = burst_amount if not continuous else 15
 	lifetime = .43 if not continuous else .85
 	one_shot = not continuous
 	explosiveness = 0 if continuous else .96

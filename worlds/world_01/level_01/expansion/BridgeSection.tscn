@@ -1,0 +1,151 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Checkpoint.tscn" id="Checkpoint"]
+[ext_resource type="PackedScene" path="res://environment/Bridge.glb" id="Bridge"]
+[ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="Sunstone"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Waterfall.tscn" id="Waterfall"]
+
+[sub_resource type="BoxShape3D" id="Span0Shape"]
+size = Vector3(0.52668, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span1Shape"]
+size = Vector3(0.52517, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span2Shape"]
+size = Vector3(0.52279, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span3Shape"]
+size = Vector3(0.52067, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span4Shape"]
+size = Vector3(0.52005, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span5Shape"]
+size = Vector3(0.52195, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span6Shape"]
+size = Vector3(0.52676, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span7Shape"]
+size = Vector3(0.53408, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span8Shape"]
+size = Vector3(0.54278, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span9Shape"]
+size = Vector3(0.55131, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span10Shape"]
+size = Vector3(0.55808, 0.14, 1.58)
+
+[sub_resource type="BoxShape3D" id="Span11Shape"]
+size = Vector3(0.56182, 0.14, 1.58)
+
+[node name="BridgeSection" type="Node3D"]
+
+[node name="BridgeCheckpoint" parent="." instance=ExtResource("Checkpoint")]
+position = Vector3(47, 2.05, 0)
+
+[node name="SuspendedDeck" parent="." instance=ExtResource("Bridge")]
+position = Vector3(48, 1.54, 0)
+scale = Vector3(1, 1.17, 1.16)
+
+[node name="Span0" type="StaticBody3D" parent="."]
+position = Vector3(48.23867, 1.42993, 0)
+rotation = Vector3(0, 0, -0.16251)
+
+[node name="Collision" type="CollisionShape3D" parent="Span0"]
+shape = SubResource("Span0Shape")
+
+[node name="Span1" type="StaticBody3D" parent="."]
+position = Vector3(48.74001, 1.3527, 0)
+rotation = Vector3(0, 0, -0.14316)
+
+[node name="Collision" type="CollisionShape3D" parent="Span1"]
+shape = SubResource("Span1Shape")
+
+[node name="Span2" type="StaticBody3D" parent="."]
+position = Vector3(49.24263, 1.28987, 0)
+rotation = Vector3(0, 0, -0.10548)
+
+[node name="Collision" type="CollisionShape3D" parent="Span2"]
+shape = SubResource("Span2Shape")
+
+[node name="Span3" type="StaticBody3D" parent="."]
+position = Vector3(49.74638, 1.25017, 0)
+rotation = Vector3(0, 0, -0.0517)
+
+[node name="Collision" type="CollisionShape3D" parent="Span3"]
+shape = SubResource("Span3Shape")
+
+[node name="Span4" type="StaticBody3D" parent="."]
+position = Vector3(50.25102, 1.24078, 0)
+rotation = Vector3(0, 0, 0.01454)
+
+[node name="Collision" type="CollisionShape3D" parent="Span4"]
+shape = SubResource("Span4Shape")
+
+[node name="Span5" type="StaticBody3D" parent="."]
+position = Vector3(50.75617, 1.2668, 0)
+rotation = Vector3(0, 0, 0.08825)
+
+[node name="Collision" type="CollisionShape3D" parent="Span5"]
+shape = SubResource("Span5Shape")
+
+[node name="Span6" type="StaticBody3D" parent="."]
+position = Vector3(51.2614, 1.33084, 0)
+rotation = Vector3(0, 0, 0.16355)
+
+[node name="Collision" type="CollisionShape3D" parent="Span6"]
+shape = SubResource("Span6Shape")
+
+[node name="Span7" type="StaticBody3D" parent="."]
+position = Vector3(51.76627, 1.43282, 0)
+rotation = Vector3(0, 0, 0.23456)
+
+[node name="Collision" type="CollisionShape3D" parent="Span7"]
+shape = SubResource("Span7Shape")
+
+[node name="Span8" type="StaticBody3D" parent="."]
+position = Vector3(52.27044, 1.57, 0)
+rotation = Vector3(0, 0, 0.29626)
+
+[node name="Collision" type="CollisionShape3D" parent="Span8"]
+shape = SubResource("Span8Shape")
+
+[node name="Span9" type="StaticBody3D" parent="."]
+position = Vector3(52.77367, 1.73723, 0)
+rotation = Vector3(0, 0, 0.345)
+
+[node name="Collision" type="CollisionShape3D" parent="Span9"]
+shape = SubResource("Span9Shape")
+
+[node name="Span10" type="StaticBody3D" parent="."]
+position = Vector3(53.27587, 1.92732, 0)
+rotation = Vector3(0, 0, 0.37847)
+
+[node name="Collision" type="CollisionShape3D" parent="Span10"]
+shape = SubResource("Span10Shape")
+
+[node name="Span11" type="StaticBody3D" parent="."]
+position = Vector3(53.77697, 2.13154, 0)
+rotation = Vector3(0, 0, 0.39546)
+
+[node name="Collision" type="CollisionShape3D" parent="Span11"]
+shape = SubResource("Span11Shape")
+
+[node name="BridgeGold0" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(48.85, 2.15596, 0)
+
+[node name="BridgeGold1" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(50.25, 2.05634, 0)
+
+[node name="BridgeGold2" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(51.65, 2.22325, 0)
+
+[node name="BridgeGold3" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(53.15, 2.70099, 0)
+
+[node name="WaterfallBridgeLanding" parent="." instance=ExtResource("Waterfall")]
+position = Vector3(54.38, -0.16, 1.07)
+scale = Vector3(0.63, 4.9, 1)

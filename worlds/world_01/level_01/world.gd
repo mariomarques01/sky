@@ -18,10 +18,13 @@ func set_quality(value: int) -> void:
 	$DirectionalLight3D.shadow_enabled = quality>0
 	$DirectionalLight3D.directional_shadow_max_distance = 18 if quality==1 else 35
 	$Background/FarClouds.visible = quality>0
+	$Expansion/Scenery/FarClouds.visible = quality>0
 	$Environment/Motes.emitting = quality>0
 	$Environment/Mist.emitting = quality>0
 	var water := $Environment/Waterfalls/Falls0.material_override as ShaderMaterial
 	water.set_shader_parameter("simple",quality==0)
+	for waterfall: MeshInstance3D in $Expansion.find_children("Waterfall*", "MeshInstance3D", true, false):
+		waterfall.material_override = water
 func _process(dt: float) -> void:
 	clock += dt
 	$Gameplay/WoodenBridge/Planks.position.y = sin(clock*1.8)*.019
@@ -54,9 +57,14 @@ func decorate() -> void:
 	amber.shader = preload("res://shaders/crystal.gdshader")
 	var azure := amber.duplicate() as ShaderMaterial
 	azure.set_shader_parameter("hue",Color("#29bafa"))
-	for item: Area3D in $Gameplay/Collectibles.get_children():
+	var pickups := $Gameplay/Collectibles.get_children()
+	for item in $Expansion.find_children("*", "Area3D", true, true):
+		if item.get_script() == preload("res://collectibles/pickup.gd"):
+			pickups.append(item)
+	for item: Area3D in pickups:
 		for part: MeshInstance3D in item.find_children("*","MeshInstance3D",true,false):
-			part.material_override = azure if item.get("kind")==2 else amber
+			if not item.get("reward"):
+				part.material_override = azure if item.get("kind")==2 else amber
 	var mist := preload("res://environment/effects/sparkles.gd").new()
 	mist.name = "Mist"
 	mist.continuous = true

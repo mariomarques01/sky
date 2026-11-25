@@ -11,11 +11,15 @@ func begin() -> void:
 	complete = false
 	checkpoint = Vector3(-3,0.12,0)
 	changed.emit()
-func collect(kind: int) -> void:
+func collect(kind: int, completes_level := true) -> void:
 	counts[kind] += 1
 	Audio.cue(690.0+kind*170)
 	changed.emit()
-	if kind == 2 and not complete:
+	if kind == 2 and completes_level:
+		finish_level()
+
+func finish_level() -> void:
+	if not complete:
 		complete = true
 		Save.write("Jardins","concluido",true)
 		Save.write("Jardins","recorde",maxi(counts[0],int(Save.data.get_value("Jardins","recorde",0))))

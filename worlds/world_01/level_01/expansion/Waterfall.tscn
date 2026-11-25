@@ -1,0 +1,16 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://shaders/water.gdshader" id="WaterShader"]
+
+[sub_resource type="ShaderMaterial" id="Water"]
+shader = ExtResource("WaterShader")
+
+[sub_resource type="QuadMesh" id="WaterPlane"]
+size = Vector2(1, 1)
+
+[node name="Waterfall" type="MeshInstance3D"]
+mesh = SubResource("WaterPlane")
+material_override = SubResource("Water")
+cast_shadow = 0
+visibility_range_end = 30.0
+visibility_range_end_margin = 4.0

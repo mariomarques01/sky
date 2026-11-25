@@ -1,0 +1,22 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/IslandCrossing.tscn" id="IslandCrossing"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/TreasureRoute.tscn" id="TreasureRoute"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RuinsSection.tscn" id="RuinsSection"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/BridgeSection.tscn" id="BridgeSection"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/TempleSection.tscn" id="TempleSection"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Scenery.tscn" id="Scenery"]
+
+[node name="Expansion" type="Node3D"]
+
+[node name="IslandCrossing" parent="." instance=ExtResource("IslandCrossing")]
+
+[node name="TreasureRoute" parent="." instance=ExtResource("TreasureRoute")]
+
+[node name="RuinsSection" parent="." instance=ExtResource("RuinsSection")]
+
+[node name="BridgeSection" parent="." instance=ExtResource("BridgeSection")]
+
+[node name="TempleSection" parent="." instance=ExtResource("TempleSection")]
+
+[node name="Scenery" parent="." instance=ExtResource("Scenery")]

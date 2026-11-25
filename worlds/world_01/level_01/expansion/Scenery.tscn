@@ -1,0 +1,136 @@
+[gd_scene format=3]
+
+[ext_resource type="Shader" path="res://shaders/cloud.gdshader" id="cloud"]
+[ext_resource type="PackedScene" path="res://environment/Horizon.glb" id="Horizon"]
+[ext_resource type="PackedScene" path="res://environment/Arch.glb" id="Arch"]
+
+[sub_resource type="QuadMesh" id="CloudPlane"]
+size = Vector2(1, 1)
+
+[sub_resource type="ShaderMaterial" id="Cloud"]
+shader = ExtResource("cloud")
+
+[node name="Scenery" type="Node3D"]
+
+[node name="FarClouds" type="Node3D" parent="."]
+
+[node name="Cloud0" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(28, -3, -9)
+scale = Vector3(12, 3, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud1" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(38, 5, -20)
+scale = Vector3(13, 3.2, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud2" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(43, -5, -10)
+scale = Vector3(15, 4, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud3" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(55, 4, -15)
+scale = Vector3(12, 3, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud4" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(62, -5, -10)
+scale = Vector3(13, 3, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud5" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(73, 3, -20)
+scale = Vector3(15, 4, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud6" type="MeshInstance3D" parent="FarClouds"]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(49, 10, -35)
+scale = Vector3(16, 4.9, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud7" type="MeshInstance3D" parent="FarClouds"]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(72, 12, -38)
+scale = Vector3(22, 6, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Cloud8" type="MeshInstance3D" parent="FarClouds"]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("Cloud")
+position = Vector3(35, 12, -33)
+scale = Vector3(18, 5, 1)
+cast_shadow = 0
+visibility_range_end = 66.0
+visibility_range_end_margin = 6.0
+
+[node name="Horizon0" parent="." instance=ExtResource("Horizon")]
+position = Vector3(32, -2, -12)
+scale = Vector3(0.86, 0.86, 0.86)
+
+[node name="DistantArch0" parent="." instance=ExtResource("Arch")]
+position = Vector3(32, -2, -12)
+scale = Vector3(0.4558, 0.4558, 0.4558)
+
+[node name="Horizon1" parent="." instance=ExtResource("Horizon")]
+position = Vector3(44, 4.2, -23)
+scale = Vector3(1.24, 1.24, 1.24)
+
+[node name="DistantArch1" parent="." instance=ExtResource("Arch")]
+position = Vector3(44, 4.2, -23)
+scale = Vector3(0.6572, 0.6572, 0.6572)
+
+[node name="Horizon2" parent="." instance=ExtResource("Horizon")]
+position = Vector3(52, -2.1, -13)
+scale = Vector3(0.74, 0.74, 0.74)
+
+[node name="DistantArch2" parent="." instance=ExtResource("Arch")]
+position = Vector3(52, -2.1, -13)
+scale = Vector3(0.3922, 0.3922, 0.3922)
+
+[node name="Horizon3" parent="." instance=ExtResource("Horizon")]
+position = Vector3(65, 4.5, -22)
+scale = Vector3(1, 1, 1)
+
+[node name="DistantArch3" parent="." instance=ExtResource("Arch")]
+position = Vector3(65, 4.5, -22)
+scale = Vector3(0.53, 0.53, 0.53)
+
+[node name="Horizon4" parent="." instance=ExtResource("Horizon")]
+position = Vector3(74, -0.8, -15)
+scale = Vector3(0.93, 0.93, 0.93)
+
+[node name="DistantArch4" parent="." instance=ExtResource("Arch")]
+position = Vector3(74, -0.8, -15)
+scale = Vector3(0.4929, 0.4929, 0.4929)
