@@ -1,0 +1,28 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://worlds/world_01/level_01/expansion/checkpoint.gd" id="checkpoint"]
+[ext_resource type="PackedScene" path="res://environment/Pillar.glb" id="Pillar"]
+[ext_resource type="PackedScene" path="res://environment/Aether.glb" id="Aether"]
+[ext_resource type="PackedScene" path="res://environment/Pennant.glb" id="Pennant"]
+
+[sub_resource type="SphereShape3D" id="CollisionShape"]
+radius = 0.67
+
+[node name="Checkpoint" type="Area3D"]
+script = ExtResource("checkpoint")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("CollisionShape")
+position = Vector3(0, 0, 0)
+
+[node name="Marker" parent="." instance=ExtResource("Pillar")]
+position = Vector3(0, -0.55, -0.84)
+scale = Vector3(0.75, 0.32, 0.75)
+
+[node name="Flame" parent="." instance=ExtResource("Aether")]
+position = Vector3(0, 0.55, -0.83)
+scale = Vector3(0.83, 0.83, 0.83)
+
+[node name="Flag" parent="." instance=ExtResource("Pennant")]
+position = Vector3(0, 0.24, -0.88)
+scale = Vector3(0.68, 0.68, 0.68)

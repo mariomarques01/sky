@@ -1,5 +1,19 @@
 # Relatório de validação
 
+## Expansão dos Jardins Celestiais
+
+Validada no Godot 4.7.2 com as cenas `tests/route.tscn`, `tests/playthrough.tscn` e `tests/expansion.tscn` a 60 Hz. Cada cena usa uma pasta de dados temporária no workflow do GitHub Pages.
+
+- O percurso original chega ao arco com a coleta azul e continua na mesma cena. Os testes de regressão cobrem movimentação, salto duplo, Dash, dano, pausa, ponte original e multitouch.
+- O teste da expansão usa as ações do jogador entre os pontos de partida das duas rotas. Na travessia principal, o maior vão entre bordas é de 2,41 unidades incluindo os extremos da plataforma móvel. O salto simples a 6,6 unidades/s cobre cerca de 4,3 unidades com elevação de 0,62. Os saltos também foram percorridos com a aceleração real, partindo das áreas de pouso.
+- A rota opcional inclui sete pousos, uso do Dash no vão após a plataforma móvel, recuperação de um ponto de vida, abertura do baú e retorno à ponte. Foram validados a passagem nas ruínas, o alcance vertical da câmera, a conclusão no templo e a recuperação após quedas.
+- O teste recarrega a gravação do disco e reinstancia a fase para confirmar que o cristal raro, o cristal épico e o baú não reaparecem. A conclusão continua disponível em uma nova partida.
+- O preset Web produziu HTML, WASM e PCK e abriu no Chromium com WebGL 2 em modo Compatibility. Foram inspecionados os setores em viewport horizontal e verificado o toque simultâneo de movimento e salto no Chromium emulado. O desempenho e a latência do toque em aparelhos físicos não foram medidos.
+
+## Validação do mapa original
+
+Os resultados abaixo registram a versão anterior à expansão.
+
 Ambiente Linux x86_64, Godot 4.7.2.stable. A cena principal foi executada em modo headless e renderizada no backend Forward Mobile com Vulkan 1.4.305 e Mesa llvmpipe. As imagens em inicio.png, ponte.png e arco.png são capturas do viewport. A janela de captura mede 960 × 540, com área lógica base de 1920 × 1080.
 
 ## Reprodução

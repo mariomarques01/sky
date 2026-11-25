@@ -1,0 +1,63 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FloatingPlatform.tscn" id="FloatingPlatform"]
+[ext_resource type="PackedScene" path="res://environment/Blossoms.glb" id="Blossoms"]
+[ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="Sunstone"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/MovingPlatform.tscn" id="MovingPlatform"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Waterfall.tscn" id="Waterfall"]
+
+[node name="IslandCrossing" type="Node3D"]
+
+[node name="FirstIsland" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(24, 1.08, 0)
+dimensions = Vector3(2.1, 2.9, 2.450)
+
+[node name="Flowers" parent="FirstIsland" instance=ExtResource("Blossoms")]
+position = Vector3(0, 0, 0.52)
+scale = Vector3(0.6, 0.65, 0.6)
+
+[node name="FirstIslandGold" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(24, 1.84, 0)
+
+[node name="LowIsland" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(28, 0.65, 0)
+dimensions = Vector3(2.65, 3.4, 2.700)
+
+[node name="Flowers" parent="LowIsland" instance=ExtResource("Blossoms")]
+position = Vector3(0, 0, 0.52)
+scale = Vector3(0.6, 0.65, 0.6)
+
+[node name="LowIslandGold" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(28, 1.41, 0)
+
+[node name="Ferry" parent="." instance=ExtResource("MovingPlatform")]
+position = Vector3(32, 1.1, 0)
+travel = Vector3(0.68, 0.18, 0)
+period = 4.0
+dimensions = Vector3(2, 2.05, 2.350)
+
+[node name="Flowers" parent="Ferry" instance=ExtResource("Blossoms")]
+position = Vector3(0, 0, 0.52)
+scale = Vector3(0.6, 0.65, 0.6)
+
+[node name="Crystal" parent="Ferry" instance=ExtResource("Sunstone")]
+position = Vector3(0, 0.77, 0)
+
+[node name="HighIsland" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(36, 1.54, 0)
+dimensions = Vector3(2.55, 3.2, 2.650)
+
+[node name="Flowers" parent="HighIsland" instance=ExtResource("Blossoms")]
+position = Vector3(0, 0, 0.52)
+scale = Vector3(0.6, 0.65, 0.6)
+
+[node name="HighIslandGold" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(36, 2.3, 0)
+
+[node name="WaterfallLowIsland" parent="." instance=ExtResource("Waterfall")]
+position = Vector3(28.5, -1.57, 1.04)
+scale = Vector3(0.48, 4.4, 1)
+
+[node name="WaterfallHighIsland" parent="." instance=ExtResource("Waterfall")]
+position = Vector3(36.4, -0.305, 1.05)
+scale = Vector3(0.52, 3.65, 1)

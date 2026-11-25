@@ -129,6 +129,18 @@ for i in range(13):
     pts=[(r*cos(t),1.68+r*sin(t)) for r,t in [(1.17,a),(1.73,a),(1.73,b),(1.17,b)]]
     tube([[(x,y,z) for x,y in pts] for z in [.38,-.38]],tint(stone,rng.uniform(.78,1.12)))
 bake('Arch')
+# Keep the existing scenery deterministic while reusing the arch's masonry.
+arch_rng_state = rng.getstate()
+for side, courses in [(-1, 4), (1, 2)]:
+    for j in range(courses):
+        block(side*1.45,.21+j*.42,0,.58,.41,.77,stone)
+for i in range(9,13):
+    a=pi*i/13+.014;b=pi*(i+1)/13-.014
+    pts=[(r*cos(t),1.68+r*sin(t)) for r,t in [(1.17,a),(1.73,a),(1.73,b),(1.17,b)]]
+    tube([[(x,y,z) for x,y in pts] for z in [.38,-.38]],tint(stone,rng.uniform(.78,1.12)))
+block(.62,.17,.26,.47,.34,.55,tint(stone,.83))
+bake('BrokenArch')
+rng.setstate(arch_rng_state)
 def deck(x):return .65*x/6-.48*sin(pi*x/6)
 for i in range(21):
     x=(i+.5)*6/21;block(x,deck(x)-.09,0,.276,.18,rng.uniform(1.28,1.42),tint(wood,rng.uniform(.8,1.35)))

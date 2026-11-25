@@ -1,0 +1,101 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FloatingPlatform.tscn" id="FloatingPlatform"]
+[ext_resource type="PackedScene" path="res://environment/Rosette.glb" id="Rosette"]
+[ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="Sunstone"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/MovingPlatform.tscn" id="MovingPlatform"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RareCollectible.tscn" id="RareCollectible"]
+[ext_resource type="Resource" path="res://collectibles/rarities/rare.tres" id="rare"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RecoveryHeart.tscn" id="RecoveryHeart"]
+[ext_resource type="Resource" path="res://collectibles/rarities/heart.tres" id="heart"]
+[ext_resource type="Resource" path="res://collectibles/rarities/epic.tres" id="epic"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/TreasureChest.tscn" id="TreasureChest"]
+[ext_resource type="Resource" path="res://collectibles/rarities/legendary.tres" id="legendary"]
+
+[node name="TreasureRoute" type="Node3D"]
+
+[node name="TreasureIsland1" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(22.6, 3.78, 0)
+dimensions = Vector3(1.7, 1.35, 2.050)
+
+[node name="Plant" parent="TreasureIsland1" instance=ExtResource("Rosette")]
+position = Vector3(0.12, 0, -0.56)
+scale = Vector3(0.58, 0.7, 0.58)
+
+[node name="GuideCrystal" parent="TreasureIsland1" instance=ExtResource("Sunstone")]
+position = Vector3(0, 0.72, 0)
+
+[node name="TreasureIsland2" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(26.1, 4.45, 0)
+dimensions = Vector3(2.05, 1.55, 2.200)
+
+[node name="Plant" parent="TreasureIsland2" instance=ExtResource("Rosette")]
+position = Vector3(0.12, 0, -0.56)
+scale = Vector3(0.58, 0.7, 0.58)
+
+[node name="TreasureIsland3" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(29.9, 5.28, 0)
+dimensions = Vector3(1.55, 1.45, 2.050)
+
+[node name="Plant" parent="TreasureIsland3" instance=ExtResource("Rosette")]
+position = Vector3(0.12, 0, -0.56)
+scale = Vector3(0.58, 0.7, 0.58)
+
+[node name="TreasureIsland4" parent="." instance=ExtResource("MovingPlatform")]
+position = Vector3(34.6, 6.1, 0)
+travel = Vector3(0.8, 0.25, 0)
+period = 5.0
+dimensions = Vector3(1.65, 1.6, 2.100)
+
+[node name="Plant" parent="TreasureIsland4" instance=ExtResource("Rosette")]
+position = Vector3(0.12, 0, -0.56)
+scale = Vector3(0.58, 0.7, 0.58)
+
+[node name="GuideCrystal" parent="TreasureIsland4" instance=ExtResource("Sunstone")]
+position = Vector3(0, 0.72, 0)
+
+[node name="TreasureIsland5" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(39.9, 6.55, 0)
+dimensions = Vector3(1.45, 1.6, 1.980)
+
+[node name="Plant" parent="TreasureIsland5" instance=ExtResource("Rosette")]
+position = Vector3(0.12, 0, -0.56)
+scale = Vector3(0.58, 0.7, 0.58)
+
+[node name="TreasureIsland6" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(44.1, 7.25, 0)
+dimensions = Vector3(1.85, 1.85, 2.250)
+
+[node name="Plant" parent="TreasureIsland6" instance=ExtResource("Rosette")]
+position = Vector3(0.12, 0, -0.56)
+scale = Vector3(0.58, 0.7, 0.58)
+
+[node name="TreasureIsland7" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(47.2, 5.5, 0)
+dimensions = Vector3(1.64, 1.5, 2.060)
+
+[node name="Plant" parent="TreasureIsland7" instance=ExtResource("Rosette")]
+position = Vector3(0.12, 0, -0.56)
+scale = Vector3(0.58, 0.7, 0.58)
+
+[node name="GuideCrystal" parent="TreasureIsland7" instance=ExtResource("Sunstone")]
+position = Vector3(0, 0.72, 0)
+
+[node name="Sapphire" parent="." instance=ExtResource("RareCollectible")]
+position = Vector3(26.1, 5.24, 0)
+reward = ExtResource("rare")
+persistent_id = "sapphire_route"
+
+[node name="Heart" parent="." instance=ExtResource("RecoveryHeart")]
+position = Vector3(29.9, 6.05, 0)
+reward = ExtResource("heart")
+
+[node name="Amethyst" parent="." instance=ExtResource("RareCollectible")]
+position = Vector3(39.9, 7.4, 0)
+reward = ExtResource("epic")
+persistent_id = "amethyst_route"
+
+[node name="GoldenChest" parent="." instance=ExtResource("TreasureChest")]
+position = Vector3(44.1, 7.25, 0)
+reward = ExtResource("legendary")
+persistent_id = "golden_chest"

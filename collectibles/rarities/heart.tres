@@ -1,0 +1,12 @@
+[gd_resource type="Resource" format=3]
+
+[ext_resource type="Script" path="res://collectibles/reward_profile.gd" id="Profile"]
+
+[resource]
+script = ExtResource("Profile")
+tint = Color(1, 0.18, 0.32, 1)
+hover = 0.1
+spin = 1.35
+particles = 9
+emission = 0.8
+healing = true

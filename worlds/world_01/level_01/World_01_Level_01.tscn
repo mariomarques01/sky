@@ -23,6 +23,8 @@
 [ext_resource type="Script" path="res://ui/hud.gd" id="e21"]
 [ext_resource type="PackedScene" path="res://environment/Pennant.glb" id="banner"]
 [ext_resource type="PackedScene" path="res://environment/Rosette.glb" id="fern"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Expansion.tscn" id="expansion"]
+[ext_resource type="Resource" path="res://collectibles/rarities/rare.tres" id="rare_reward"]
 [sub_resource type="ShaderMaterial" id="water"]
 shader = ExtResource("e0")
 [sub_resource type="ShaderMaterial" id="cloud"]
@@ -1195,6 +1197,9 @@ position = Vector3(17.6,2.3,0)
 position = Vector3(18.55,2.6,0)
 [node name="Aether0"  parent="Gameplay/Collectibles" instance=ExtResource("e16")]
 position = Vector3(20.1,3.23,0)
+completes_level = false
+persistent_id = "original_arch"
+reward = ExtResource("rare_reward")
 [node name="Sporeling"  parent="Gameplay/Enemies" instance=ExtResource("e17")]
 position = Vector3(14,0.65,0)
 [node name="Beacon" type="Area3D" parent="Gameplay/Checkpoints"]
@@ -1206,10 +1211,13 @@ shape = SubResource("shape44")
 position = Vector3(0,0.8,-0.67)
 scale = Vector3(0.48,0.65,0.48)
 rotation = Vector3(0,0,0)
+[node name="Expansion" parent="." instance=ExtResource("expansion")]
+
 [node name="Player"  parent="." instance=ExtResource("e19")]
 position = Vector3(-3,0.12,0)
 [node name="CameraRig" type="Camera3D" parent="."]
 script = ExtResource("e20")
+bounds = Vector2(-2, 68.5)
 fov = 39
 current = true
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

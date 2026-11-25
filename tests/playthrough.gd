@@ -87,7 +87,7 @@ func _ready() -> void:
 		get_viewport().get_texture().get_image().save_png("/tmp/sky-gate.png")
 	player.position=Vector3(20.1,3.05,0)
 	await frames(5)
-	check(Game.complete and Game.counts[2]==1 and get_tree().paused,"cristal azul e conclusão")
+	check(not Game.complete and Game.counts[2]==1 and not get_tree().paused,"cristal azul sem concluir a fase")
 	get_tree().paused = false
 	Audio.voice.stop()
 	await get_tree().create_timer(.3,true,false,true).timeout
