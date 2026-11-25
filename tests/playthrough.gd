@@ -7,11 +7,61 @@ func check(condition: bool, label: String) -> void:
 	if not condition: failed += 1
 func frames(count: int) -> void:
 	for i in count: await get_tree().physics_frame
+func check_stance() -> void:
+	var collision := player.get_node("Collision") as CollisionShape3D
+	var capsule := collision.shape as CapsuleShape3D
+	var standing_height := capsule.height
+	Input.action_press("crouch")
+	await frames(3)
+	check(capsule.height < standing_height and is_equal_approx(collision.position.y, capsule.height * .5), "agachamento mantém os pés no chão")
+
+	var roof := StaticBody3D.new()
+	var roof_collision := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(1.5, .2, 1.5)
+	roof_collision.shape = box
+	roof.add_child(roof_collision)
+	add_child(roof)
+	roof.global_position = player.global_position + Vector3.UP * 1.23
+	await frames(3)
+	Input.action_release("crouch")
+	await frames(3)
+	check(capsule.height < standing_height, "teto bloqueia retorno à postura em pé")
+	roof.queue_free()
+	await frames(4)
+	check(is_equal_approx(capsule.height, standing_height), "retorno à postura em pé após liberar espaço")
+
+func check_slide() -> void:
+	player.global_position = Vector3(1.0, .12, 0)
+	player.velocity = Vector3.ZERO
+	await frames(15)
+	Input.action_press("right")
+	await frames(24)
+	Input.action_press("crouch")
+	await frames(2)
+	Input.action_release("crouch")
+	Input.action_release("right")
+	check(player.get("sliding") and player.velocity.x > 6.6, "deslizada conserva impulso após soltar")
+	var wall := StaticBody3D.new()
+	var wall_collision := CollisionShape3D.new()
+	var box := BoxShape3D.new()
+	box.size = Vector3(.15, 2, 1.5)
+	wall_collision.shape = box
+	wall.add_child(wall_collision)
+	add_child(wall)
+	wall.global_position = player.global_position + Vector3(.65, .6, 0)
+	var impacts: Array[bool] = []
+	player.connect("impact", func() -> void: impacts.append(true), CONNECT_ONE_SHOT)
+	await frames(8)
+	check(not player.get("sliding") and impacts.size() == 1, "parede encerra deslizada e registra impacto")
+	wall.queue_free()
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	world.process_mode = Node.PROCESS_MODE_PAUSABLE
 	await frames(20)
 	check(player.is_on_floor(),"spawn e chão")
+	await check_stance()
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png("/tmp/sky-start.png")
@@ -89,6 +139,7 @@ func _ready() -> void:
 	await frames(5)
 	check(not Game.complete and Game.counts[2]==1 and not get_tree().paused,"cristal azul sem concluir a fase")
 	get_tree().paused = false
+	await check_slide()
 	Audio.voice.stop()
 	await get_tree().create_timer(.3,true,false,true).timeout
 	get_tree().quit(failed)

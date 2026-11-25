@@ -1,16 +1,17 @@
 extends Control
-var actions := ["left","right","dash","jump"]
+var actions := ["left","right","dash","jump","crouch"]
 const ICONS := [
 	[Vector2(-24,0),Vector2(17,-24),Vector2(17,24)],
 	[Vector2(24,0),Vector2(-17,24),Vector2(-17,-24)],
 	[Vector2(10,-32),Vector2(-21,5),Vector2(-4,5),Vector2(-11,33),Vector2(24,-9),Vector2(6,-9)],
-	[Vector2(0,-30),Vector2(25,-4),Vector2(9,-4),Vector2(9,29),Vector2(-9,29),Vector2(-9,-4),Vector2(-25,-4)]
+	[Vector2(0,-30),Vector2(25,-4),Vector2(9,-4),Vector2(9,29),Vector2(-9,29),Vector2(-9,-4),Vector2(-25,-4)],
+	[Vector2(0,29),Vector2(-25,3),Vector2(-9,3),Vector2(-9,-29),Vector2(9,-29),Vector2(9,3),Vector2(25,3)]
 ]
 var centers: Array[Vector2] = []
 var fingers: Dictionary = {}
 var radius := 68.0
 func layout() -> void:
-	centers = [Vector2(96,size.y-94),Vector2(255,size.y-94),Vector2(size.x-255,size.y-94),Vector2(size.x-96,size.y-94)]
+	centers = [Vector2(96,size.y-94),Vector2(255,size.y-94),Vector2(size.x-255,size.y-94),Vector2(size.x-96,size.y-94),Vector2(size.x-96,size.y-252)]
 	queue_redraw()
 func _draw() -> void:
 	for i in centers.size():
