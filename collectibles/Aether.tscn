@@ -1,0 +1,11 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://collectibles/pickup.gd" id="1"]
+[ext_resource type="PackedScene" path="res://environment/Aether.glb" id="2"]
+[sub_resource type="SphereShape3D" id="sphere"]
+radius = 0.44
+[node name="Aether" type="Area3D"]
+script = ExtResource("1")
+kind = 2
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("sphere")
+[node name="Visual" parent="." instance=ExtResource("2")]

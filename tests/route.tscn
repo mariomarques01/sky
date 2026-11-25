@@ -1,0 +1,6 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://tests/route.gd" id="1"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/World_01_Level_01.tscn" id="2"]
+[node name="Test" type="Node"]
+script=ExtResource("1")
+[node name="World" parent="." instance=ExtResource("2")]

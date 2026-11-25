@@ -1,0 +1,1424 @@
+[gd_scene format=3]
+[ext_resource type="Shader" path="res://shaders/water.gdshader" id="e0"]
+[ext_resource type="Shader" path="res://shaders/cloud.gdshader" id="e1"]
+[ext_resource type="Shader" path="res://shaders/vegetation.gdshader" id="e2"]
+[ext_resource type="Shader" path="res://shaders/crystal.gdshader" id="e3"]
+[ext_resource type="Script" path="res://worlds/world_01/level_01/world.gd" id="e4"]
+[ext_resource type="PackedScene" path="res://environment/Horizon.glb" id="e5"]
+[ext_resource type="PackedScene" path="res://environment/Arch.glb" id="e6"]
+[ext_resource type="PackedScene" path="res://environment/Meadow.glb" id="e7"]
+[ext_resource type="PackedScene" path="res://environment/Bridge.glb" id="e8"]
+[ext_resource type="PackedScene" path="res://environment/Pillar.glb" id="e9"]
+[ext_resource type="PackedScene" path="res://environment/Maple.glb" id="e10"]
+[ext_resource type="PackedScene" path="res://environment/Crate.glb" id="e11"]
+[ext_resource type="PackedScene" path="res://environment/Barrel.glb" id="e12"]
+[ext_resource type="PackedScene" path="res://environment/Sign.glb" id="e13"]
+[ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="e14"]
+[ext_resource type="PackedScene" path="res://collectibles/Coin.tscn" id="e15"]
+[ext_resource type="PackedScene" path="res://collectibles/Aether.tscn" id="e16"]
+[ext_resource type="PackedScene" path="res://enemies/mushroom/Mushroom.tscn" id="e17"]
+[ext_resource type="PackedScene" path="res://environment/Aether.glb" id="e18"]
+[ext_resource type="PackedScene" path="res://player/player.tscn" id="e19"]
+[ext_resource type="Script" path="res://camera/rig.gd" id="e20"]
+[ext_resource type="Script" path="res://ui/hud.gd" id="e21"]
+[ext_resource type="PackedScene" path="res://environment/Pennant.glb" id="banner"]
+[ext_resource type="PackedScene" path="res://environment/Rosette.glb" id="fern"]
+[sub_resource type="ShaderMaterial" id="water"]
+shader = ExtResource("e0")
+[sub_resource type="ShaderMaterial" id="cloud"]
+shader = ExtResource("e1")
+[sub_resource type="ShaderMaterial" id="wind"]
+shader = ExtResource("e2")
+[sub_resource type="ShaderMaterial" id="gold"]
+shader = ExtResource("e3")
+[sub_resource type="ShaderMaterial" id="blue"]
+shader = ExtResource("e3")
+shader_parameter/hue = Color(0.02,0.74,1,1)
+[sub_resource type="ProceduralSkyMaterial" id="skyMat"]
+sky_top_color = Color(0.13,0.48,0.92,1)
+sky_horizon_color = Color(0.42,0.70,0.95,1)
+sky_curve = 0.21
+ground_horizon_color = Color(0.42,0.70,0.95,1)
+ground_bottom_color = Color(0.43,0.62,0.90,1)
+[sub_resource type="Sky" id="sky"]
+sky_material = SubResource("skyMat")
+[sub_resource type="Environment" id="env"]
+background_mode = 2
+sky = SubResource("sky")
+ambient_light_source = 2
+ambient_light_color = Color(0.81,0.90,1,1)
+ambient_light_energy = 0.48
+tonemap_mode = 2
+fog_enabled = true
+fog_mode = 1
+fog_depth_begin = 15.0
+fog_depth_end = 67.0
+fog_density = 0.44
+fog_light_color = Color(0.69,0.83,0.99,1)
+[sub_resource type="QuadMesh" id="plane"]
+size = Vector2(1,1)
+[sub_resource type="BoxShape3D" id="shape9"]
+size = Vector3(11.5,0.44,2.8)
+[sub_resource type="BoxShape3D" id="shape10"]
+size = Vector3(11.5,0.44,2.8)
+[sub_resource type="BoxShape3D" id="shape11"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape12"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape13"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape14"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape15"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape16"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape17"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape18"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape19"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape20"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape21"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape22"]
+size = Vector3(0.52,0.14,1.4)
+[sub_resource type="BoxShape3D" id="shape23"]
+size = Vector3(3.5,0.44,1.6)
+[sub_resource type="BoxShape3D" id="shape24"]
+size = Vector3(3.5,0.44,1.6)
+[sub_resource type="BoxShape3D" id="shape25"]
+size = Vector3(3.5,0.44,1.6)
+[sub_resource type="BoxShape3D" id="shape26"]
+size = Vector3(3.5,0.44,1.6)
+[sub_resource type="MultiMesh" id="flowers0"]
+transform_format = 1
+instance_count = 18
+buffer = PackedFloat32Array(0.8545954344427376,0,0,-3.5341304806587757,0,0.8545954344427376,0,0,0,0,0.8545954344427376,-1.2605318482705412,0.6641102288807634,0,0,-0.5154180601187548,0,0.6641102288807634,0,0,0,0,0.6641102288807634,-1.3530360844470193,0.99279467098805,0,0,0.9866505621027395,0,0.99279467098805,0,0,0,0,0.99279467098805,-1.1481410503161826,0.6420746803563047,0,0,-1.2754539648331011,0,0.6420746803563047,0,0,0,0,0.6420746803563047,-1.1409900385198617,0.6855186498910266,0,0,-5.349453459562848,0,0.6855186498910266,0,0,0,0,0.6855186498910266,-1.1842348947630006,0.6804152086924702,0,0,-4.2471332848142325,0,0.6804152086924702,0,0,0,0,0.6804152086924702,-1.3790122591521634,0.6950668560420745,0,0,-0.2413920396457554,0,0.6950668560420745,0,0,0,0,0.6950668560420745,-1.213312463889692,0.8900689066598488,0,0,-5.40848874057337,0,0.8900689066598488,0,0,0,0,0.8900689066598488,-1.0905132192735887,1.0749047918066168,0,0,-1.2011389400467296,0,1.0749047918066168,0,0,0,0,1.0749047918066168,-1.4946379441240847,0.7870554373885041,0,0,-3.7513707631788265,0,0.7870554373885041,0,0,0,0,0.7870554373885041,-1.091164422464648,0.7314446594250825,0,0,2.2265949808154284,0,0.7314446594250825,0,0,0,0,0.7314446594250825,-1.093222604304655,1.0837751664777928,0,0,-4.8102629394675605,0,1.0837751664777928,0,0,0,0,1.0837751664777928,-1.4255838954305515,1.1321406686123106,0,0,3.418741369179785,0,1.1321406686123106,0,0,0,0,1.1321406686123106,-1.5941676783470236,0.9796250596542463,0,0,-3.8289956356492167,0,0.9796250596542463,0,0,0,0,0.9796250596542463,-1.2024454123886266,0.8018376048693334,0,0,-5.289084581430902,0,0.8018376048693334,0,0,0,0,0.8018376048693334,-1.5956414649419943,0.983722368387475,0,0,-1.4423605876699792,0,0.983722368387475,0,0,0,0,0.983722368387475,-1.2912359826811952,0.6718815121997486,0,0,-3.286955732495101,0,0.6718815121997486,0,0,0,0,0.6718815121997486,-1.3068894184471345,0.6443694974151016,0,0,-0.2363534044790736,0,0.6443694974151016,0,0,0,0,0.6443694974151016,-1.5447643607807513)
+[sub_resource type="MultiMesh" id="flowers1"]
+transform_format = 1
+instance_count = 18
+buffer = PackedFloat32Array(0.9974952845362914,0,0,-2.412731420761074,0,0.9974952845362914,0,0,0,0,0.9974952845362914,1.0703575481090164,0.8478214246659446,0,0,-0.8946073723683483,0,0.8478214246659446,0,0,0,0,0.8478214246659446,1.5107159023273813,0.8467796978979617,0,0,-4.583820398245715,0,0.8467796978979617,0,0,0,0,0.8467796978979617,1.376695017191268,0.9266352514198375,0,0,1.0676084769234562,0,0.9266352514198375,0,0,0,0,0.9266352514198375,1.1725351090607323,0.9583853504208495,0,0,-2.3231688955680996,0,0.9583853504208495,0,0,0,0,0.9583853504208495,1.41194169990641,0.9841266673087001,0,0,-2.897702082054755,0,0.9841266673087001,0,0,0,0,0.9841266673087001,1.1311605612564126,1.101827176531836,0,0,2.2367123298356617,0,1.101827176531836,0,0,0,0,1.101827176531836,1.230873499331862,0.6158112536834689,0,0,0.7042971397267275,0,0.6158112536834689,0,0,0,0,0.6158112536834689,1.1961561153042481,0.9359992753558877,0,0,-2.6303117951962562,0,0.9359992753558877,0,0,0,0,0.9359992753558877,1.5618534297184898,0.630386994972708,0,0,-3.4475153295857908,0,0.630386994972708,0,0,0,0,0.630386994972708,1.1342371122249004,0.7491933914767921,0,0,1.5028775466608426,0,0.7491933914767921,0,0,0,0,0.7491933914767921,1.2894894943988597,0.7006538788184411,0,0,2.4089421980931514,0,0.7006538788184411,0,0,0,0,0.7006538788184411,1.6307629796780945,0.93631094753584,0,0,-3.2326314033562347,0,0.93631094753584,0,0,0,0,0.93631094753584,1.0840792207435401,1.003964010922442,0,0,-5.586266485117975,0,1.003964010922442,0,0,0,0,1.003964010922442,1.5583521354890375,1.0386296602353218,0,0,-1.7123718941498303,0,1.0386296602353218,0,0,0,0,1.0386296602353218,1.2434481829832538,0.7982850432074087,0,0,-3.9980179127580664,0,0.7982850432074087,0,0,0,0,0.7982850432074087,1.3131136055778045,0.7515698300376132,0,0,1.4593896315584258,0,0.7515698300376132,0,0,0,0,0.7515698300376132,1.2369878192496784,0.7540856708888615,0,0,-0.12699891016895393,0,0.7540856708888615,0,0,0,0,0.7540856708888615,1.5179783666862352)
+[sub_resource type="MultiMesh" id="flowers2"]
+transform_format = 1
+instance_count = 18
+buffer = PackedFloat32Array(0.6884373097209461,0,0,13.674564671562559,0,0.6884373097209461,0,0.65,0,0,0.6884373097209461,-1.6232299851166525,0.9899590849957935,0,0,20.396451585474754,0,0.9899590849957935,0,0.65,0,0,0.9899590849957935,-1.0991374489920933,0.7279412340468234,0,0,14.14053510469288,0,0.7279412340468234,0,0.65,0,0,0.7279412340468234,-1.2972958423389302,0.6513948253555616,0,0,15.633980674708335,0,0.6513948253555616,0,0.65,0,0,0.6513948253555616,-1.3044903646836117,0.933838919360284,0,0,14.2743456624824,0,0.933838919360284,0,0.65,0,0,0.933838919360284,-1.1820145228677856,0.705218773893815,0,0,14.885834568407223,0,0.705218773893815,0,0.65,0,0,0.705218773893815,-1.4188503885939956,0.9178215313266724,0,0,11.819052374938614,0,0.9178215313266724,0,0.65,0,0,0.9178215313266724,-1.222484165959474,0.7374326511591465,0,0,19.738009018772004,0,0.7374326511591465,0,0.65,0,0,0.7374326511591465,-1.359519813022953,1.0183252565566963,0,0,18.863025770582095,0,1.0183252565566963,0,0.65,0,0,1.0183252565566963,-1.5909342690396344,0.9693781275253093,0,0,19.7298406877629,0,0.9693781275253093,0,0.65,0,0,0.9693781275253093,-1.4089931489296743,1.107166682644349,0,0,14.541418503751153,0,1.107166682644349,0,0.65,0,0,1.107166682644349,-1.0936693709426453,0.6574862319279241,0,0,16.03160175800661,0,0.6574862319279241,0,0.65,0,0,0.6574862319279241,-1.432295572473368,0.7486552209101461,0,0,20.615484511783436,0,0.7486552209101461,0,0.65,0,0,0.7486552209101461,-1.3579406940329162,1.1088911202200205,0,0,19.896370741157924,0,1.1088911202200205,0,0.65,0,0,1.1088911202200205,-1.1222993582131269,0.9325974866875308,0,0,18.810229252029945,0,0.9325974866875308,0,0.65,0,0,0.9325974866875308,-1.4039150438372294,0.5854523784718084,0,0,17.09687222376639,0,0.5854523784718084,0,0.65,0,0,0.5854523784718084,-1.1991253108315654,0.9351248123403247,0,0,12.696173663565238,0,0.9351248123403247,0,0.65,0,0,0.9351248123403247,-1.5566269956302268,0.7800255059101668,0,0,17.72582915306701,0,0.7800255059101668,0,0.65,0,0,0.7800255059101668,-1.2924012865264038)
+[sub_resource type="MultiMesh" id="flowers3"]
+transform_format = 1
+instance_count = 18
+buffer = PackedFloat32Array(1.0078398223398994,0,0,13.14126381317842,0,1.0078398223398994,0,0.65,0,0,1.0078398223398994,1.3654339035856224,0.9881073722931373,0,0,15.205250612653076,0,0.9881073722931373,0,0.65,0,0,0.9881073722931373,1.1028221183126246,1.1381218132319797,0,0,16.549347220329455,0,1.1381218132319797,0,0.65,0,0,1.1381218132319797,1.62150478049533,0.7281488125317167,0,0,20.678411833968685,0,0.7281488125317167,0,0.65,0,0,0.7281488125317167,1.3131056388690423,0.7994302495414238,0,0,15.667938707527508,0,0.7994302495414238,0,0.65,0,0,0.7994302495414238,1.63969615615162,0.8706676673761681,0,0,14.093046067971228,0,0.8706676673761681,0,0.65,0,0,0.8706676673761681,1.6398078528598854,1.0367270281056016,0,0,11.725455495793938,0,1.0367270281056016,0,0.65,0,0,1.0367270281056016,1.29612964500951,0.6222361531889278,0,0,11.535292739388355,0,0.6222361531889278,0,0.65,0,0,0.6222361531889278,1.210550305423653,0.9602643570307337,0,0,17.12131154398611,0,0.9602643570307337,0,0.65,0,0,0.9602643570307337,1.6383493847133976,0.6961427677530793,0,0,15.035402230876668,0,0.6961427677530793,0,0.65,0,0,0.6961427677530793,1.385698636885062,0.87359231958486,0,0,11.944347632610587,0,0.87359231958486,0,0.65,0,0,0.87359231958486,1.3115267072368983,0.5840431055413576,0,0,14.356615909118934,0,0.5840431055413576,0,0.65,0,0,0.5840431055413576,1.1265232582178022,0.8371927732882036,0,0,14.114896277529972,0,0.8371927732882036,0,0.65,0,0,0.8371927732882036,1.081190939625837,0.5810353737546928,0,0,17.099524643862203,0,0.5810353737546928,0,0.65,0,0,0.5810353737546928,1.2264939933012502,0.8148999638901164,0,0,20.47597735064663,0,0.8148999638901164,0,0.65,0,0,0.8148999638901164,1.6418005520133874,0.6697886615742208,0,0,14.242183176153883,0,0.6697886615742208,0,0.65,0,0,0.6697886615742208,1.128479379855258,1.0109581646873478,0,0,20.12014542605996,0,1.0109581646873478,0,0.65,0,0,1.0109581646873478,1.5999125000251246,0.8644997828704708,0,0,18.750970042437775,0,0.8644997828704708,0,0.65,0,0,0.8644997828704708,1.3554297871547087)
+[sub_resource type="SphereMesh" id="wing01a"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing01b"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing11a"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing11b"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing21a"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing21b"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing31a"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing31b"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing41a"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing41b"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing51a"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="wing51b"]
+radius = 0.08
+height = 0.19
+radial_segments = 6
+rings = 3
+[sub_resource type="SphereMesh" id="mote"]
+radius = 0.018
+height = 0.036
+radial_segments = 5
+rings = 2
+[sub_resource type="BoxShape3D" id="shape44"]
+size = Vector3(1,1.8,1.5)
+[node name="World_01_Level_01" type="Node3D"]
+script = ExtResource("e4")
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("env")
+[node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
+rotation = Vector3(-0.9,-0.55,0)
+light_color = Color(1,0.92,0.77,1)
+light_energy = 0.82
+shadow_enabled = true
+[node name="Background" type="Node3D" parent="."]
+
+[node name="Clouds" type="Node3D" parent="Background"]
+
+[node name="FarClouds" type="Node3D" parent="Background"]
+
+[node name="DistantIslands" type="Node3D" parent="Background"]
+
+[node name="DistantRuins" type="Node3D" parent="Background"]
+
+[node name="Environment" type="Node3D" parent="."]
+
+[node name="Trees" type="Node3D" parent="Environment"]
+
+[node name="Vegetation" type="Node3D" parent="Environment"]
+
+[node name="Waterfalls" type="Node3D" parent="Environment"]
+
+[node name="DecorativeProps" type="Node3D" parent="Environment"]
+
+[node name="Butterflies" type="Node3D" parent="Environment"]
+
+[node name="Gameplay" type="Node3D" parent="."]
+
+[node name="StartIsland" type="Node3D" parent="Gameplay"]
+
+[node name="WoodenBridge" type="Node3D" parent="Gameplay"]
+
+[node name="SecondIsland" type="Node3D" parent="Gameplay"]
+
+[node name="AncientRuins" type="Node3D" parent="Gameplay"]
+
+[node name="Collectibles" type="Node3D" parent="Gameplay"]
+
+[node name="Enemies" type="Node3D" parent="Gameplay"]
+
+[node name="Checkpoints" type="Node3D" parent="Gameplay"]
+
+[node name="DeathZones" type="Node3D" parent="Gameplay"]
+
+[node name="Cloud0" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(10.51985,8.66656,-45.51132)
+scale = Vector3(13.80005,3.1385,1)
+cast_shadow = 0
+[node name="Cloud1" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-39.61631,-7.54512,-20.32146)
+scale = Vector3(13.29519,4.60897,1)
+cast_shadow = 0
+[node name="Cloud2" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(39.95976,-3.65507,-26.46814)
+scale = Vector3(6.55173,4.57803,1)
+cast_shadow = 0
+[node name="Cloud3" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(18.29102,-4.39198,-44.65225)
+scale = Vector3(12.02194,3.34508,1)
+cast_shadow = 0
+[node name="Cloud4" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(40.38569,9.43601,-23.99271)
+scale = Vector3(14.87112,4.11597,1)
+cast_shadow = 0
+[node name="Cloud5" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(12.00218,-3.80773,-20.91102)
+scale = Vector3(12.27928,2.47334,1)
+cast_shadow = 0
+[node name="Cloud6" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(27.73753,-4.58536,-32.81377)
+scale = Vector3(12.98157,2.64453,1)
+cast_shadow = 0
+[node name="Cloud7" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(34.47937,-7.99222,-24.92971)
+scale = Vector3(10.36996,4.47106,1)
+cast_shadow = 0
+[node name="Cloud8" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(29.60125,6.30935,-16.74056)
+scale = Vector3(11.73305,2.46513,1)
+cast_shadow = 0
+[node name="Cloud9" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-4.83474,-3.62168,-39.24457)
+scale = Vector3(9.40313,3.66733,1)
+cast_shadow = 0
+[node name="Cloud10" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-31.53738,-7.42834,-12.657)
+scale = Vector3(9.07518,4.76883,1)
+cast_shadow = 0
+[node name="Cloud11" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(16.35099,-7.87043,-18.22871)
+scale = Vector3(12.61939,3.39898,1)
+cast_shadow = 0
+[node name="Cloud12" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(36.87636,11.17748,-44.41015)
+scale = Vector3(6.73191,3.3341,1)
+cast_shadow = 0
+[node name="Cloud13" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(23.31531,-6.90171,-16.01419)
+scale = Vector3(11.93589,3.68855,1)
+cast_shadow = 0
+[node name="Cloud14" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-13.43923,-7.2057,-19.82651)
+scale = Vector3(14.25255,3.31555,1)
+cast_shadow = 0
+[node name="Cloud15" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(15.54094,-3.93273,-43.43904)
+scale = Vector3(9.71248,4.51327,1)
+cast_shadow = 0
+[node name="Cloud16" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(45.26233,9.14352,-17.85396)
+scale = Vector3(11.83121,4.60306,1)
+cast_shadow = 0
+[node name="Cloud17" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-11.79587,-7.11744,-17.70654)
+scale = Vector3(14.66121,2.87935,1)
+cast_shadow = 0
+[node name="Cloud18" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-9.14288,-4.29709,-35.56364)
+scale = Vector3(8.78521,4.87203,1)
+cast_shadow = 0
+[node name="Cloud19" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(52.05088,-3.97801,-13.64899)
+scale = Vector3(10.33234,4.56693,1)
+cast_shadow = 0
+[node name="Cloud20" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(6.33454,4.02855,-13.07948)
+scale = Vector3(14.95938,4.21816,1)
+cast_shadow = 0
+[node name="Cloud21" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(25.72762,-6.48147,-36.32101)
+scale = Vector3(7.44288,3.49662,1)
+cast_shadow = 0
+[node name="Cloud22" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(41.13213,-7.71648,-25.64084)
+scale = Vector3(6.12032,4.64988,1)
+cast_shadow = 0
+[node name="Cloud23" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-16.08808,-3.45482,-13.75969)
+scale = Vector3(11.17894,2.81743,1)
+cast_shadow = 0
+[node name="Cloud24" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(4.03393,8.81792,-34.81901)
+scale = Vector3(7.08283,3.18553,1)
+cast_shadow = 0
+[node name="Cloud25" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(55.6437,-6.1124,-12.23678)
+scale = Vector3(11.66825,4.80764,1)
+cast_shadow = 0
+[node name="Cloud26" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(28.53812,-5.71782,-20.95769)
+scale = Vector3(6.39557,4.30185,1)
+cast_shadow = 0
+[node name="Cloud27" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(10.69428,-5.47489,-42.92257)
+scale = Vector3(8.47506,2.93127,1)
+cast_shadow = 0
+[node name="Cloud28" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(50.70542,11.91593,-15.6627)
+scale = Vector3(6.47947,4.12819,1)
+cast_shadow = 0
+[node name="Cloud29" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-7.03982,-6.47416,-20.42678)
+scale = Vector3(7.17891,4.6415,1)
+cast_shadow = 0
+[node name="Cloud30" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(42.18125,-6.20756,-41.43997)
+scale = Vector3(12.99582,2.57625,1)
+cast_shadow = 0
+[node name="Cloud31" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-18.16931,-7.25891,-21.99917)
+scale = Vector3(13.2777,3.97403,1)
+cast_shadow = 0
+[node name="Cloud32" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(36.60494,4.60815,-13.92609)
+scale = Vector3(12.06507,2.84135,1)
+cast_shadow = 0
+[node name="Cloud33" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(17.09256,-5.21669,-38.07566)
+scale = Vector3(11.26692,3.99463,1)
+cast_shadow = 0
+[node name="Cloud34" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(53.3586,-4.55776,-19.86018)
+scale = Vector3(8.6173,3.21849,1)
+cast_shadow = 0
+[node name="Cloud35" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(21.59422,-3.30043,-16.90764)
+scale = Vector3(13.15895,3.63337,1)
+cast_shadow = 0
+[node name="Cloud36" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(18.23514,10.36764,-38.56653)
+scale = Vector3(6.31105,2.65366,1)
+cast_shadow = 0
+[node name="Cloud37" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-15.71936,-4.40233,-15.74536)
+scale = Vector3(12.87101,3.24705,1)
+cast_shadow = 0
+[node name="Cloud38" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-8.81322,-4.95762,-22.07037)
+scale = Vector3(13.14984,4.64387,1)
+cast_shadow = 0
+[node name="Cloud39" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-14.26083,-7.14902,-32.58369)
+scale = Vector3(12.88636,4.12692,1)
+cast_shadow = 0
+[node name="Cloud40" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(42.63439,7.64527,-19.69123)
+scale = Vector3(7.7644,3.59687,1)
+cast_shadow = 0
+[node name="Cloud41" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(7.38564,-7.11216,-17.18685)
+scale = Vector3(6.64128,3.74448,1)
+cast_shadow = 0
+[node name="Cloud42" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(14.97154,-7.22512,-46.25103)
+scale = Vector3(9.94571,2.54532,1)
+cast_shadow = 0
+[node name="Cloud43" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(59.48716,-4.97998,-21.56687)
+scale = Vector3(6.09916,2.62283,1)
+cast_shadow = 0
+[node name="Cloud44" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(55.03923,8.40569,-19.58753)
+scale = Vector3(9.30876,4.15913,1)
+cast_shadow = 0
+[node name="Cloud45" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(7.97602,-4.05741,-37.80488)
+scale = Vector3(8.17624,3.97922,1)
+cast_shadow = 0
+[node name="Cloud46" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(57.44462,-3.76139,-25.16336)
+scale = Vector3(7.85308,3.86944,1)
+cast_shadow = 0
+[node name="Cloud47" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-13.19984,-4.90825,-12.24372)
+scale = Vector3(7.62387,3.57633,1)
+cast_shadow = 0
+[node name="Cloud48" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(12.15006,8.0028,-45.00077)
+scale = Vector3(9.03249,4.05914,1)
+cast_shadow = 0
+[node name="Cloud49" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(41.86243,-3.38441,-20.10884)
+scale = Vector3(9.21343,2.60599,1)
+cast_shadow = 0
+[node name="Cloud50" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(57.48033,-6.96559,-21.0813)
+scale = Vector3(7.85978,3.04223,1)
+cast_shadow = 0
+[node name="Cloud51" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(58.03524,-6.94349,-35.04446)
+scale = Vector3(8.44195,4.13774,1)
+cast_shadow = 0
+[node name="Cloud52" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-31.23469,6.84233,-11.38409)
+scale = Vector3(10.08048,3.83678,1)
+cast_shadow = 0
+[node name="Cloud53" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(29.86262,-4.54912,-23.31314)
+scale = Vector3(13.89359,4.31205,1)
+cast_shadow = 0
+[node name="Cloud54" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(8.95983,-6.32713,-37.79709)
+scale = Vector3(13.30259,4.66742,1)
+cast_shadow = 0
+[node name="Cloud55" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-21.62832,-7.30547,-16.1674)
+scale = Vector3(11.61167,4.0552,1)
+cast_shadow = 0
+[node name="Cloud56" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(37.32096,11.80375,-20.85373)
+scale = Vector3(7.77137,3.75857,1)
+cast_shadow = 0
+[node name="Cloud57" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-5.34721,-5.81495,-46.51651)
+scale = Vector3(12.28063,3.40819,1)
+cast_shadow = 0
+[node name="Cloud58" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(24.48113,-3.17324,-12.77388)
+scale = Vector3(10.62129,4.71305,1)
+cast_shadow = 0
+[node name="Cloud59" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(50.75371,-4.3378,-25.26972)
+scale = Vector3(14.34003,3.00446,1)
+cast_shadow = 0
+[node name="Cloud60" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(35.32008,10.83756,-40.65489)
+scale = Vector3(12.2418,2.85259,1)
+cast_shadow = 0
+[node name="Cloud61" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-32.18733,-3.96457,-23.99209)
+scale = Vector3(10.45158,2.40238,1)
+cast_shadow = 0
+[node name="Cloud62" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(43.21859,-3.12976,-12.55349)
+scale = Vector3(11.17034,4.23457,1)
+cast_shadow = 0
+[node name="Cloud63" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-19.95679,-4.43783,-33.88116)
+scale = Vector3(6.69458,2.8266,1)
+cast_shadow = 0
+[node name="Cloud64" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-19.81672,7.61587,-24.89366)
+scale = Vector3(14.40413,4.14304,1)
+cast_shadow = 0
+[node name="Cloud65" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-32.87992,-6.07805,-12.56117)
+scale = Vector3(10.75334,4.43685,1)
+cast_shadow = 0
+[node name="Cloud66" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(23.35161,-4.74017,-35.45732)
+scale = Vector3(14.09145,2.8493,1)
+cast_shadow = 0
+[node name="Cloud67" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(16.07476,-3.96368,-17.25953)
+scale = Vector3(7.45326,4.57854,1)
+cast_shadow = 0
+[node name="Cloud68" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(11.45143,11.26586,-12.89187)
+scale = Vector3(8.51494,2.51443,1)
+cast_shadow = 0
+[node name="Cloud69" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(19.5242,-6.56444,-35.79693)
+scale = Vector3(10.48449,3.43977,1)
+cast_shadow = 0
+[node name="Cloud70" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(47.59282,-4.38722,-23.35151)
+scale = Vector3(6.33299,2.79587,1)
+cast_shadow = 0
+[node name="Cloud71" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(51.28462,-7.831,-25.60829)
+scale = Vector3(11.78516,4.35859,1)
+cast_shadow = 0
+[node name="Cloud72" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-28.35478,4.44746,-46.83419)
+scale = Vector3(11.69879,4.05918,1)
+cast_shadow = 0
+[node name="Cloud73" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(7.31801,-5.5899,-17.309)
+scale = Vector3(11.16691,4.75618,1)
+cast_shadow = 0
+[node name="Cloud74" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-40.20197,-3.34298,-25.20421)
+scale = Vector3(7.51016,3.02152,1)
+cast_shadow = 0
+[node name="Cloud75" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-13.12124,-6.21401,-35.52745)
+scale = Vector3(14.16992,2.72986,1)
+cast_shadow = 0
+[node name="Cloud76" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(37.60175,4.53443,-23.71168)
+scale = Vector3(13.46625,3.78302,1)
+cast_shadow = 0
+[node name="Cloud77" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-2.40214,-4.66855,-23.63196)
+scale = Vector3(9.91938,2.74696,1)
+cast_shadow = 0
+[node name="Cloud78" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-7.18707,-5.92057,-45.22206)
+scale = Vector3(6.55472,4.28519,1)
+cast_shadow = 0
+[node name="Cloud79" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(49.42921,-3.86612,-25.97702)
+scale = Vector3(14.50066,4.36008,1)
+cast_shadow = 0
+[node name="Cloud80" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(20.73583,7.03184,-20.37969)
+scale = Vector3(14.48747,4.09698,1)
+cast_shadow = 0
+[node name="Cloud81" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(14.15713,-3.94888,-42.4465)
+scale = Vector3(13.89967,4.17561,1)
+cast_shadow = 0
+[node name="Cloud82" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-30.31376,-7.07573,-20.25864)
+scale = Vector3(6.06299,3.2461,1)
+cast_shadow = 0
+[node name="Cloud83" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(7.48033,-3.32053,-13.94732)
+scale = Vector3(9.64133,2.63658,1)
+cast_shadow = 0
+[node name="Cloud84" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-2.51986,8.61391,-40.62384)
+scale = Vector3(9.8717,4.03615,1)
+cast_shadow = 0
+[node name="Cloud85" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(61.66399,-6.4187,-11.78123)
+scale = Vector3(9.91474,4.27345,1)
+cast_shadow = 0
+[node name="Cloud86" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(48.77584,-6.27602,-18.0001)
+scale = Vector3(9.86084,4.85751,1)
+cast_shadow = 0
+[node name="Cloud87" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(21.8273,-3.12245,-32.8561)
+scale = Vector3(14.63708,4.74097,1)
+cast_shadow = 0
+[node name="Cloud88" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(25.70209,7.86986,-13.02362)
+scale = Vector3(8.6426,2.74089,1)
+cast_shadow = 0
+[node name="Cloud89" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-36.05763,-7.80846,-13.95477)
+scale = Vector3(6.67982,2.4071,1)
+cast_shadow = 0
+[node name="Cloud90" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(18.69246,-5.79342,-37.7092)
+scale = Vector3(11.92532,2.45036,1)
+cast_shadow = 0
+[node name="Cloud91" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-8.06534,-7.24445,-23.22884)
+scale = Vector3(10.15374,4.64954,1)
+cast_shadow = 0
+[node name="Cloud92" type="MeshInstance3D" parent="Background/Clouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-36.68895,6.01135,-13.23965)
+scale = Vector3(13.91532,3.75852,1)
+cast_shadow = 0
+[node name="Cloud93" type="MeshInstance3D" parent="Background/FarClouds"]
+mesh = SubResource("plane")
+material_override = SubResource("cloud")
+position = Vector3(-8.11813,-7.2066,-39.52789)
+scale = Vector3(13.4048,2.48835,1)
+cast_shadow = 0
+[node name="Island0"  parent="Background/DistantIslands" instance=ExtResource("e5")]
+position = Vector3(-12,4,-24)
+scale = Vector3(0.85742,0.85742,0.85742)
+rotation = Vector3(0,0,0)
+[node name="Temple0"  parent="Background/DistantRuins" instance=ExtResource("e6")]
+position = Vector3(-11.6,4,-24)
+scale = Vector3(0.61734,0.61734,0.61734)
+rotation = Vector3(0,0,0)
+[node name="Fall0" type="MeshInstance3D" parent="Background/DistantIslands"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(-12.7,1.35,-22.49952)
+scale = Vector3(0.69,5.4,1)
+cast_shadow = 0
+[node name="Island1"  parent="Background/DistantIslands" instance=ExtResource("e5")]
+position = Vector3(0,2.7,-16)
+scale = Vector3(1.14601,1.14601,1.14601)
+rotation = Vector3(0,0,0)
+[node name="Temple1"  parent="Background/DistantRuins" instance=ExtResource("e6")]
+position = Vector3(0.4,2.7,-16)
+scale = Vector3(0.82513,0.82513,0.82513)
+rotation = Vector3(0,0,0)
+[node name="Fall1" type="MeshInstance3D" parent="Background/DistantIslands"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(-0.7,0.05,-13.99448)
+scale = Vector3(0.69,5.4,1)
+cast_shadow = 0
+[node name="Island2"  parent="Background/DistantIslands" instance=ExtResource("e5")]
+position = Vector3(9,6,-28)
+scale = Vector3(0.97981,0.97981,0.97981)
+rotation = Vector3(0,0,0)
+[node name="Temple2"  parent="Background/DistantRuins" instance=ExtResource("e6")]
+position = Vector3(9.4,6,-28)
+scale = Vector3(0.70546,0.70546,0.70546)
+rotation = Vector3(0,0,0)
+[node name="Fall2" type="MeshInstance3D" parent="Background/DistantIslands"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(8.3,3.35,-26.28534)
+scale = Vector3(0.69,5.4,1)
+cast_shadow = 0
+[node name="Island3"  parent="Background/DistantIslands" instance=ExtResource("e5")]
+position = Vector3(22,4,-17)
+scale = Vector3(0.92061,0.92061,0.92061)
+rotation = Vector3(0,0,0)
+[node name="Temple3"  parent="Background/DistantRuins" instance=ExtResource("e6")]
+position = Vector3(22.4,4,-17)
+scale = Vector3(0.66284,0.66284,0.66284)
+rotation = Vector3(0,0,0)
+[node name="Fall3" type="MeshInstance3D" parent="Background/DistantIslands"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(21.3,1.35,-15.38894)
+scale = Vector3(0.69,5.4,1)
+cast_shadow = 0
+[node name="Island4"  parent="Background/DistantIslands" instance=ExtResource("e5")]
+position = Vector3(32,7,-26)
+scale = Vector3(1.00858,1.00858,1.00858)
+rotation = Vector3(0,0,0)
+[node name="Temple4"  parent="Background/DistantRuins" instance=ExtResource("e6")]
+position = Vector3(32.4,7,-26)
+scale = Vector3(0.72617,0.72617,0.72617)
+rotation = Vector3(0,0,0)
+[node name="Fall4" type="MeshInstance3D" parent="Background/DistantIslands"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(31.3,4.35,-24.23499)
+scale = Vector3(0.69,5.4,1)
+cast_shadow = 0
+[node name="Island5"  parent="Background/DistantIslands" instance=ExtResource("e5")]
+position = Vector3(4,-3,-9)
+scale = Vector3(0.76911,0.76911,0.76911)
+rotation = Vector3(0,0,0)
+[node name="Temple5"  parent="Background/DistantRuins" instance=ExtResource("e6")]
+position = Vector3(4.4,-3,-9)
+scale = Vector3(0.55376,0.55376,0.55376)
+rotation = Vector3(0,0,0)
+[node name="Fall5" type="MeshInstance3D" parent="Background/DistantIslands"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(3.3,-5.65,-7.65406)
+scale = Vector3(0.69,5.4,1)
+cast_shadow = 0
+[node name="Island6"  parent="Background/DistantIslands" instance=ExtResource("e5")]
+position = Vector3(35,-2,-13)
+scale = Vector3(0.884,0.884,0.884)
+rotation = Vector3(0,0,0)
+[node name="Temple6"  parent="Background/DistantRuins" instance=ExtResource("e6")]
+position = Vector3(35.4,-2,-13)
+scale = Vector3(0.63648,0.63648,0.63648)
+rotation = Vector3(0,0,0)
+[node name="Fall6" type="MeshInstance3D" parent="Background/DistantIslands"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(34.3,-4.65,-11.45299)
+scale = Vector3(0.69,5.4,1)
+cast_shadow = 0
+[node name="Cliffs"  parent="Gameplay/StartIsland" instance=ExtResource("e7")]
+position = Vector3(-1,0,0)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Ground" type="StaticBody3D" parent="Gameplay/StartIsland"]
+position = Vector3(-1,-0.22,0)
+rotation = Vector3(0,0,0)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/StartIsland/Ground"]
+shape = SubResource("shape9")
+[node name="Cliffs"  parent="Gameplay/SecondIsland" instance=ExtResource("e7")]
+position = Vector3(16,0.65,0)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Ground" type="StaticBody3D" parent="Gameplay/SecondIsland"]
+position = Vector3(16.4,0.43,0)
+rotation = Vector3(0,0,0)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/SecondIsland/Ground"]
+shape = SubResource("shape10")
+[node name="Planks"  parent="Gameplay/WoodenBridge" instance=ExtResource("e8")]
+position = Vector3(4.65,0,0)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Span0" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(4.9,-0.10503,0)
+rotation = Vector3(0,0,-0.13923)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span0"]
+shape = SubResource("shape11")
+[node name="Span1" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(5.4,-0.17087,0)
+rotation = Vector3(0,0,-0.12258)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span1"]
+shape = SubResource("shape12")
+[node name="Span2" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(5.9,-0.22429,0)
+rotation = Vector3(0,0,-0.09024)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span2"]
+shape = SubResource("shape13")
+[node name="Span3" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(6.4,-0.25797,0)
+rotation = Vector3(0,0,-0.0442)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span3"]
+shape = SubResource("shape14")
+[node name="Span4" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(6.9,-0.26592,0)
+rotation = Vector3(0,0,0.01243)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span4"]
+shape = SubResource("shape15")
+[node name="Span5" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(7.4,-0.24391,0)
+rotation = Vector3(0,0,0.07548)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span5"]
+shape = SubResource("shape16")
+[node name="Span6" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(7.9,-0.18974,0)
+rotation = Vector3(0,0,0.14012)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span6"]
+shape = SubResource("shape17")
+[node name="Span7" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(8.4,-0.10342,0)
+rotation = Vector3(0,0,0.20147)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span7"]
+shape = SubResource("shape18")
+[node name="Span8" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(8.9,0.01286,0)
+rotation = Vector3(0,0,0.25521)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span8"]
+shape = SubResource("shape19")
+[node name="Span9" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(9.4,0.15488,0)
+rotation = Vector3(0,0,0.29801)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span9"]
+shape = SubResource("shape20")
+[node name="Span10" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(9.9,0.31663,0)
+rotation = Vector3(0,0,0.32762)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span10"]
+shape = SubResource("shape21")
+[node name="Span11" type="StaticBody3D" parent="Gameplay/WoodenBridge"]
+position = Vector3(10.4,0.4908,0)
+rotation = Vector3(0,0,0.34272)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/WoodenBridge/Span11"]
+shape = SubResource("shape22")
+[node name="Terrace0"  parent="Gameplay/SecondIsland" instance=ExtResource("e5")]
+position = Vector3(17.85,0.91,-0.15)
+scale = Vector3(0.55,0.34,0.9)
+rotation = Vector3(0,0,0)
+[node name="Step0" type="StaticBody3D" parent="Gameplay/SecondIsland"]
+position = Vector3(17.95,0.69,0)
+rotation = Vector3(0,0,0)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/SecondIsland/Step0"]
+shape = SubResource("shape23")
+[node name="Terrace1"  parent="Gameplay/SecondIsland" instance=ExtResource("e5")]
+position = Vector3(18.65,1.17,-0.15)
+scale = Vector3(0.55,0.34,0.9)
+rotation = Vector3(0,0,0)
+[node name="Step1" type="StaticBody3D" parent="Gameplay/SecondIsland"]
+position = Vector3(18.75,0.95,0)
+rotation = Vector3(0,0,0)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/SecondIsland/Step1"]
+shape = SubResource("shape24")
+[node name="Terrace2"  parent="Gameplay/SecondIsland" instance=ExtResource("e5")]
+position = Vector3(19.45,1.43,-0.15)
+scale = Vector3(0.55,0.34,0.9)
+rotation = Vector3(0,0,0)
+[node name="Step2" type="StaticBody3D" parent="Gameplay/SecondIsland"]
+position = Vector3(19.55,1.21,0)
+rotation = Vector3(0,0,0)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/SecondIsland/Step2"]
+shape = SubResource("shape25")
+[node name="Terrace3"  parent="Gameplay/SecondIsland" instance=ExtResource("e5")]
+position = Vector3(20.25,1.69,-0.15)
+scale = Vector3(0.55,0.34,0.9)
+rotation = Vector3(0,0,0)
+[node name="Step3" type="StaticBody3D" parent="Gameplay/SecondIsland"]
+position = Vector3(20.35,1.47,0)
+rotation = Vector3(0,0,0)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/SecondIsland/Step3"]
+shape = SubResource("shape26")
+[node name="Gate"  parent="Gameplay/AncientRuins" instance=ExtResource("e6")]
+position = Vector3(20.1,1.69,-0.5)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Column0"  parent="Gameplay/AncientRuins" instance=ExtResource("e9")]
+position = Vector3(10.8,0.65,-1.4)
+scale = Vector3(1,0.75,1)
+rotation = Vector3(0,0,0)
+[node name="Column1"  parent="Gameplay/AncientRuins" instance=ExtResource("e9")]
+position = Vector3(12.2,0.65,-1.4)
+scale = Vector3(1,0.85,1)
+rotation = Vector3(0,0,0)
+[node name="Column2"  parent="Gameplay/AncientRuins" instance=ExtResource("e9")]
+position = Vector3(15.4,0.65,-1.4)
+scale = Vector3(1,0.95,1)
+rotation = Vector3(0,0,0)
+[node name="Column3"  parent="Gameplay/AncientRuins" instance=ExtResource("e9")]
+position = Vector3(18.4,0.65,-1.4)
+scale = Vector3(1,1.05,1)
+rotation = Vector3(0,0,0)
+[node name="OldMaple"  parent="Environment/Trees" instance=ExtResource("e10")]
+position = Vector3(-5.2,0,-0.85)
+scale = Vector3(1.25,1.25,1.25)
+rotation = Vector3(0,0,0)
+[node name="Crate0"  parent="Environment/DecorativeProps" instance=ExtResource("e11")]
+position = Vector3(-4.4,0,1)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Crate1"  parent="Environment/DecorativeProps" instance=ExtResource("e11")]
+position = Vector3(-5.35,0,0.8)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Barrel2"  parent="Environment/DecorativeProps" instance=ExtResource("e12")]
+position = Vector3(-3.65,0,1)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Sign3"  parent="Environment/DecorativeProps" instance=ExtResource("e13")]
+position = Vector3(-1.45,0,-0.6)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Barrel4"  parent="Environment/DecorativeProps" instance=ExtResource("e12")]
+position = Vector3(14,0.65,-1.1)
+scale = Vector3(1,1,1)
+rotation = Vector3(0,0,0)
+[node name="Falls0" type="MeshInstance3D" parent="Environment/Waterfalls"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(10.9,-2.03,1.44)
+scale = Vector3(0.42,5.35,1)
+cast_shadow = 0
+[node name="Falls1" type="MeshInstance3D" parent="Environment/Waterfalls"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(11.26,-2.03,1.46)
+scale = Vector3(0.42,5.35,1)
+cast_shadow = 0
+[node name="Falls2" type="MeshInstance3D" parent="Environment/Waterfalls"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(11.62,-2.03,1.48)
+scale = Vector3(0.42,5.35,1)
+cast_shadow = 0
+[node name="Falls3" type="MeshInstance3D" parent="Environment/Waterfalls"]
+mesh = SubResource("plane")
+material_override = SubResource("water")
+position = Vector3(11.98,-2.03,1.5)
+scale = Vector3(0.42,5.35,1)
+cast_shadow = 0
+[node name="Border0" type="MultiMeshInstance3D" parent="Environment/Vegetation"]
+multimesh = SubResource("flowers0")
+visibility_range_end = 33
+[node name="Border1" type="MultiMeshInstance3D" parent="Environment/Vegetation"]
+multimesh = SubResource("flowers1")
+visibility_range_end = 33
+[node name="Border2" type="MultiMeshInstance3D" parent="Environment/Vegetation"]
+multimesh = SubResource("flowers2")
+visibility_range_end = 33
+[node name="Border3" type="MultiMeshInstance3D" parent="Environment/Vegetation"]
+multimesh = SubResource("flowers3")
+visibility_range_end = 33
+[node name="Butterfly0" type="Node3D" parent="Environment/Butterflies"]
+position = Vector3(-4,2,-0.8)
+[node name="Wing0" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly0"]
+mesh = SubResource("wing01a")
+position = Vector3(-0.059,0,0)
+rotation = Vector3(0,0,0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Wing2" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly0"]
+mesh = SubResource("wing01b")
+position = Vector3(0.059,0,0)
+rotation = Vector3(0,0,-0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Butterfly1" type="Node3D" parent="Environment/Butterflies"]
+position = Vector3(0,2,-0.8)
+[node name="Wing0" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly1"]
+mesh = SubResource("wing11a")
+position = Vector3(-0.059,0,0)
+rotation = Vector3(0,0,0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Wing2" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly1"]
+mesh = SubResource("wing11b")
+position = Vector3(0.059,0,0)
+rotation = Vector3(0,0,-0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Butterfly2" type="Node3D" parent="Environment/Butterflies"]
+position = Vector3(4,2,-0.8)
+[node name="Wing0" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly2"]
+mesh = SubResource("wing21a")
+position = Vector3(-0.059,0,0)
+rotation = Vector3(0,0,0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Wing2" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly2"]
+mesh = SubResource("wing21b")
+position = Vector3(0.059,0,0)
+rotation = Vector3(0,0,-0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Butterfly3" type="Node3D" parent="Environment/Butterflies"]
+position = Vector3(8,2,-0.8)
+[node name="Wing0" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly3"]
+mesh = SubResource("wing31a")
+position = Vector3(-0.059,0,0)
+rotation = Vector3(0,0,0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Wing2" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly3"]
+mesh = SubResource("wing31b")
+position = Vector3(0.059,0,0)
+rotation = Vector3(0,0,-0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Butterfly4" type="Node3D" parent="Environment/Butterflies"]
+position = Vector3(12,2,-0.8)
+[node name="Wing0" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly4"]
+mesh = SubResource("wing41a")
+position = Vector3(-0.059,0,0)
+rotation = Vector3(0,0,0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Wing2" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly4"]
+mesh = SubResource("wing41b")
+position = Vector3(0.059,0,0)
+rotation = Vector3(0,0,-0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Butterfly5" type="Node3D" parent="Environment/Butterflies"]
+position = Vector3(16,2,-0.8)
+[node name="Wing0" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly5"]
+mesh = SubResource("wing51a")
+position = Vector3(-0.059,0,0)
+rotation = Vector3(0,0,0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Wing2" type="MeshInstance3D" parent="Environment/Butterflies/Butterfly5"]
+mesh = SubResource("wing51b")
+position = Vector3(0.059,0,0)
+rotation = Vector3(0,0,-0.6)
+scale = Vector3(1,1,0.2)
+material_override = SubResource("gold")
+[node name="Motes" type="CPUParticles3D" parent="Environment"]
+position = Vector3(7,2,0)
+amount = 26
+lifetime = 4
+emission_shape = 3
+emission_box_extents = Vector3(12,2,1.5)
+gravity = Vector3(0.09,0.05,0)
+mesh = SubResource("mote")
+[node name="Sunstone0"  parent="Gameplay/Collectibles" instance=ExtResource("e14")]
+position = Vector3(5.4,1,0)
+[node name="Sunstone1"  parent="Gameplay/Collectibles" instance=ExtResource("e14")]
+position = Vector3(6.7,1.38,0)
+[node name="Sunstone2"  parent="Gameplay/Collectibles" instance=ExtResource("e14")]
+position = Vector3(8,1.6,0)
+[node name="Sunstone3"  parent="Gameplay/Collectibles" instance=ExtResource("e14")]
+position = Vector3(9.3,1.42,0)
+[node name="Sunstone4"  parent="Gameplay/Collectibles" instance=ExtResource("e14")]
+position = Vector3(12,1.65,0)
+[node name="Coin0"  parent="Gameplay/Collectibles" instance=ExtResource("e15")]
+position = Vector3(16.6,2.03,0)
+[node name="Coin1"  parent="Gameplay/Collectibles" instance=ExtResource("e15")]
+position = Vector3(17.6,2.3,0)
+[node name="Coin2"  parent="Gameplay/Collectibles" instance=ExtResource("e15")]
+position = Vector3(18.55,2.6,0)
+[node name="Aether0"  parent="Gameplay/Collectibles" instance=ExtResource("e16")]
+position = Vector3(20.1,3.23,0)
+[node name="Sporeling"  parent="Gameplay/Enemies" instance=ExtResource("e17")]
+position = Vector3(14,0.65,0)
+[node name="Beacon" type="Area3D" parent="Gameplay/Checkpoints"]
+position = Vector3(11,0.95,0)
+rotation = Vector3(0,0,0)
+[node name="Collision" type="CollisionShape3D" parent="Gameplay/Checkpoints/Beacon"]
+shape = SubResource("shape44")
+[node name="Flame"  parent="Gameplay/Checkpoints/Beacon" instance=ExtResource("e18")]
+position = Vector3(0,0.8,-0.67)
+scale = Vector3(0.48,0.65,0.48)
+rotation = Vector3(0,0,0)
+[node name="Player"  parent="." instance=ExtResource("e19")]
+position = Vector3(-3,0.12,0)
+[node name="CameraRig" type="Camera3D" parent="."]
+script = ExtResource("e20")
+fov = 39
+current = true
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+script = ExtResource("e21")
+
+[node name="Rosette0" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(-0.7191769700096069,0,-1.5670419373310684)
+scale = Vector3(0.8864045537875535,0.8864045537875535,0.8864045537875535)
+
+[node name="Rosette1" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(2.22696233663126,0,-1.9044470486539748)
+scale = Vector3(1.2015929748498557,1.2015929748498557,1.2015929748498557)
+
+[node name="Rosette2" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(1.030585721010432,0,1.922196850256464)
+scale = Vector3(0.7619818189385115,0.7619818189385115,0.7619818189385115)
+
+[node name="Rosette3" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(2.5807117218191458,0,-1.9739325841679285)
+scale = Vector3(1.1307593843615147,1.1307593843615147,1.1307593843615147)
+
+[node name="Rosette4" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(-1.4293624447345348,0,-1.8354118970854008)
+scale = Vector3(0.7274419639666815,0.7274419639666815,0.7274419639666815)
+
+[node name="Rosette5" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(0.5010067632493449,0,1.7507088147143925)
+scale = Vector3(1.372360195494451,1.372360195494451,1.372360195494451)
+
+[node name="Rosette6" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(-6.006152528860381,0,1.77184546299351)
+scale = Vector3(0.7320136756950686,0.7320136756950686,0.7320136756950686)
+
+[node name="Rosette7" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(2.9655870421801485,0,-1.670598746764287)
+scale = Vector3(0.927864098141985,0.927864098141985,0.927864098141985)
+
+[node name="Rosette8" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(-4.543946107965568,0,2.0688888276400634)
+scale = Vector3(1.4699802665240909,1.4699802665240909,1.4699802665240909)
+
+[node name="Rosette9" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(1.6075528997717914,0,1.7520504533470322)
+scale = Vector3(0.7155501067716293,0.7155501067716293,0.7155501067716293)
+
+[node name="Rosette10" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(-5.240554848252623,0,1.6339444521604864)
+scale = Vector3(1.450730918356467,1.450730918356467,1.450730918356467)
+
+[node name="Rosette11" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(-0.3010364850404157,0,1.765026692539137)
+scale = Vector3(1.2600926309573355,1.2600926309573355,1.2600926309573355)
+
+[node name="Rosette12" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(1.0779083868106243,0,1.5638329376612932)
+scale = Vector3(1.208068879988391,1.208068879988391,1.208068879988391)
+
+[node name="Rosette13" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(3.587767431074381,0,-1.9983401236883447)
+scale = Vector3(0.8824820399235389,0.8824820399235389,0.8824820399235389)
+
+[node name="Rosette14" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(0.3412534040036501,0,1.9504991502390243)
+scale = Vector3(1.2416417770188104,1.2416417770188104,1.2416417770188104)
+
+[node name="Rosette15" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(2.5533164626297022,0,-1.8856083010521105)
+scale = Vector3(1.0396248256303835,1.0396248256303835,1.0396248256303835)
+
+[node name="Rosette16" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(-3.8297601971461845,0,1.663256671955743)
+scale = Vector3(1.0912755067662292,1.0912755067662292,1.0912755067662292)
+
+[node name="Rosette17" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(14.059646907719571,0.65,1.851030989674634)
+scale = Vector3(1.4662020496488806,1.4662020496488806,1.4662020496488806)
+
+[node name="Rosette18" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(18.821526031669872,0.65,1.6640142888161782)
+scale = Vector3(0.6677812696824744,0.6677812696824744,0.6677812696824744)
+
+[node name="Rosette19" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(13.636786840102802,0.65,-1.626058432762924)
+scale = Vector3(1.3333400319259558,1.3333400319259558,1.3333400319259558)
+
+[node name="Rosette20" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(20.3548728379932,0.65,-1.9213676935063804)
+scale = Vector3(0.9335015839430715,0.9335015839430715,0.9335015839430715)
+
+[node name="Rosette21" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(15.540269608510277,0.65,1.7561712534470428)
+scale = Vector3(1.3904641116458194,1.3904641116458194,1.3904641116458194)
+
+[node name="Rosette22" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(17.092199356029415,0.65,1.774266600297228)
+scale = Vector3(0.9518526203383919,0.9518526203383919,0.9518526203383919)
+
+[node name="Rosette23" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(16.336877880794617,0.65,-1.7807391883114188)
+scale = Vector3(1.2209124572298473,1.2209124572298473,1.2209124572298473)
+
+[node name="Rosette24" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(18.782495304726066,0.65,1.9871136596686518)
+scale = Vector3(0.7350535567747128,0.7350535567747128,0.7350535567747128)
+
+[node name="Rosette25" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(17.172542697593407,0.65,1.935394347022246)
+scale = Vector3(1.453025261655915,1.453025261655915,1.453025261655915)
+
+[node name="Rosette26" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(14.191679455284696,0.65,1.899322661410461)
+scale = Vector3(0.8040932857524582,0.8040932857524582,0.8040932857524582)
+
+[node name="Rosette27" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(14.559312318594776,0.65,-1.8616734045086232)
+scale = Vector3(1.0384341065575242,1.0384341065575242,1.0384341065575242)
+
+[node name="Rosette28" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(14.204218520854182,0.65,-1.9178657814805766)
+scale = Vector3(1.0951208555402547,1.0951208555402547,1.0951208555402547)
+
+[node name="Rosette29" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(13.484700522898043,0.65,-1.9929770141906076)
+scale = Vector3(1.3245988677832932,1.3245988677832932,1.3245988677832932)
+
+[node name="Rosette30" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(20.40060363350655,0.65,-1.761410168577152)
+scale = Vector3(0.9818485920343172,0.9818485920343172,0.9818485920343172)
+
+[node name="Rosette31" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(12.871882378304106,0.65,1.7796595640697566)
+scale = Vector3(0.9740292297161826,0.9740292297161826,0.9740292297161826)
+
+[node name="Rosette32" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(12.178419601005299,0.65,-2.051837191238469)
+scale = Vector3(1.0495827407894662,1.0495827407894662,1.0495827407894662)
+
+[node name="Rosette33" parent="Environment/Vegetation" instance=ExtResource("fern")]
+position = Vector3(15.468747541430352,0.65,-1.8951274086000598)
+scale = Vector3(1.0355260201850685,1.0355260201850685,1.0355260201850685)
+
+[node name="Pennant0" parent="Environment/DecorativeProps" instance=ExtResource("banner")]
+position = Vector3(12.2,2.62,-1.03)
+
+[node name="Pennant1" parent="Environment/DecorativeProps" instance=ExtResource("banner")]
+position = Vector3(18.4,3.09,-1.02)
+
+[node name="Pennant2" parent="Environment/DecorativeProps" instance=ExtResource("banner")]
+position = Vector3(8.55,7.53,-27.68)
+
+[node name="Pennant3" parent="Environment/DecorativeProps" instance=ExtResource("banner")]
+position = Vector3(0.9,4.62,-15.7)
+
+[node name="Ruin0_0" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(-1.95,2.7,-16.2)
+scale = Vector3(0.6628264414015221,0.6628264414015221,0.6628264414015221)
+
+[node name="Ruin0_1" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(-1.17,2.7,-16.2)
+scale = Vector3(0.5332484216630504,0.5332484216630504,0.5332484216630504)
+
+[node name="Ruin0_2" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(-0.3899999999999999,2.7,-16.2)
+scale = Vector3(0.5553984508970089,0.5553984508970089,0.5553984508970089)
+
+[node name="Ruin1_0" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(7.05,6,-28.2)
+scale = Vector3(0.4895214192105206,0.4895214192105206,0.4895214192105206)
+
+[node name="Ruin1_1" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(7.829999999999999,6,-28.2)
+scale = Vector3(0.41522111407265583,0.41522111407265583,0.41522111407265583)
+
+[node name="Ruin1_2" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(8.610000000000001,6,-28.2)
+scale = Vector3(0.49016781841087675,0.49016781841087675,0.49016781841087675)
+
+[node name="Ruin2_0" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(20.05,4,-17.2)
+scale = Vector3(0.4335812367598726,0.4335812367598726,0.4335812367598726)
+
+[node name="Ruin2_1" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(20.830000000000002,4,-17.2)
+scale = Vector3(0.4177864495235155,0.4177864495235155,0.4177864495235155)
+
+[node name="Ruin2_2" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(21.61,4,-17.2)
+scale = Vector3(0.4299331461661686,0.4299331461661686,0.4299331461661686)
+
+[node name="Ruin3_0" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(-13.95,4,-24.2)
+scale = Vector3(0.3902207164631084,0.3902207164631084,0.3902207164631084)
+
+[node name="Ruin3_1" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(-13.17,4,-24.2)
+scale = Vector3(0.5515567351802902,0.5515567351802902,0.5515567351802902)
+
+[node name="Ruin3_2" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(-12.389999999999999,4,-24.2)
+scale = Vector3(0.4169161272080145,0.4169161272080145,0.4169161272080145)
+
+[node name="Ruin4_0" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(30.05,7,-26.2)
+scale = Vector3(0.5727295714545327,0.5727295714545327,0.5727295714545327)
+
+[node name="Ruin4_1" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(30.830000000000002,7,-26.2)
+scale = Vector3(0.49403675007467224,0.49403675007467224,0.49403675007467224)
+
+[node name="Ruin4_2" parent="Background/DistantRuins" instance=ExtResource("e9")]
+position = Vector3(31.610000000000003,7,-26.2)
+scale = Vector3(0.6610999908930771,0.6610999908930771,0.6610999908930771)

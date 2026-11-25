@@ -1,0 +1,25 @@
+extends Area3D
+@export var limits := Vector2(11.0,15.2)
+@export var speed := 1.1
+var direction := -1
+var clock := 0.0
+var defeated := false
+func _physics_process(dt: float) -> void:
+	if defeated: return
+	clock += dt
+	position.x += direction*dt*speed
+	if position.x <= limits.x or position.x >= limits.y or not $Edge.is_colliding():
+		direction = 1 if direction<0 else -1
+	$Edge.position.x = direction*.42
+	$Visual.position.y = absf(sin(clock*6))*.07
+	$Visual.rotation.z = sin(clock*6)*.065
+	for body: Node3D in get_overlapping_bodies():
+		if not body.is_in_group("player"): continue
+		if body.get("velocity").y<0 and body.global_position.y>global_position.y+.48:
+			defeated = true
+			body.call("bounce")
+			Game.collect(1)
+			var t := create_tween()
+			t.tween_property($Visual,"scale",Vector3(1.25,.12,1.25),.16)
+			t.tween_callback(queue_free)
+		else: body.call("hurt",global_position.x)
