@@ -1,0 +1,54 @@
+name: Publicar Skybound no GitHub Pages
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: skybound-pages
+  cancel-in-progress: false
+jobs:
+  export:
+    runs-on: ubuntu-latest
+    env:
+      GODOT_VERSION: 4.7.2
+    steps:
+      - uses: actions/checkout@v4
+      - name: Instalar Godot e template Web
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="${GODOT_VERSION}-stable"
+          base="https://github.com/godotengine/godot-builds/releases/download/$tag/Godot_v$tag"
+          curl -fLsS --retry 3 "${base}_linux.x86_64.zip" -o "$RUNNER_TEMP/editor.zip"
+          unzip -q "$RUNNER_TEMP/editor.zip" -d "$RUNNER_TEMP/godot-bin"
+          mv "$RUNNER_TEMP/godot-bin/Godot_v${tag}_linux.x86_64" "$RUNNER_TEMP/godot-bin/godot"
+          echo "$RUNNER_TEMP/godot-bin" >> "$GITHUB_PATH"
+          curl -fLsS --retry 3 "${base}_export_templates.tpz" -o "$RUNNER_TEMP/templates.tpz"
+          dir="$HOME/.local/share/godot/export_templates/${GODOT_VERSION}.stable"
+          mkdir -p "$dir"
+          unzip -j "$RUNNER_TEMP/templates.tpz" templates/web_nothreads_release.zip -d "$dir"
+      - name: Importar, testar e exportar
+        run: |
+          godot --headless --editor --import
+          godot --headless tests/route.tscn
+          mkdir -p build/web
+          godot --headless --export-release Web build/web/index.html
+          test -s build/web/index.wasm && test -s build/web/index.pck
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: build/web
+  deploy:
+    needs: export
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.publish.outputs.page_url }}
+    steps:
+      - name: Publicar
+        id: publish
+        uses: actions/deploy-pages@v4
