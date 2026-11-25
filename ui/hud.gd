@@ -17,11 +17,13 @@ func panel(bg: Color, border: Color, radius: int) -> StyleBoxFlat:
 	box.set_corner_radius_all(radius)
 	return box
 func label_style(label: Label, px: int, color: Color) -> void:
+	label.add_theme_font_override("font",preload("res://ui/fonts/hud.ttf"))
 	label.add_theme_font_size_override("font_size",px)
 	label.modulate = color
 	label.add_theme_constant_override("outline_size",5)
 	label.add_theme_color_override("font_outline_color",Color("#362b31"))
 func button(b: Button, caption: String, callback: Callable) -> void:
+	b.add_theme_font_override("font",preload("res://ui/fonts/hud.ttf"))
 	b.text = caption
 	b.custom_minimum_size = Vector2(0,74)
 	b.add_theme_font_size_override("font_size",32)
