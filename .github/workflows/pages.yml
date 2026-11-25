@@ -43,12 +43,27 @@ jobs:
     needs: export
     runs-on: ubuntu-latest
     permissions:
+      contents: write
       pages: write
-      id-token: write
-    environment:
-      name: github-pages
-      url: ${{ steps.publish.outputs.page_url }}
     steps:
-      - name: Publicar
-        id: publish
-        uses: actions/deploy-pages@v4
+      - uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+      - uses: actions/download-artifact@v4
+        with:
+          name: github-pages
+          path: ${{ runner.temp }}/pages
+      - name: Atualizar a branch publicada
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          tar -xf "$RUNNER_TEMP/pages/artifact.tar"
+          touch .nojekyll
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add .
+          if ! git diff --cached --quiet; then
+            git commit -m "Publicar Skybound de ${GITHUB_SHA}"
+            git push origin HEAD:gh-pages
+          fi
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/pages/builds"
