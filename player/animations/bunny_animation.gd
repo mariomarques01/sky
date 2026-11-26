@@ -45,6 +45,13 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 		if library.current_animation != clip:
 			library.play(clip)
 		library.seek(gait * library.get_animation(clip).length, true)
+		# Keep the stride, with a tighter arm swing around the cuffs and belt.
+		for side in ["Left", "Right"]:
+			for label in ["Arm", "ForeArm", "Hand"]:
+				var index := joint(side + label)
+				var neutral := rig.get_bone_rest(index).basis.get_rotation_quaternion()
+				var animated := rig.get_bone_pose_rotation(index)
+				rig.set_bone_pose_rotation(index, neutral.slerp(animated, .63))
 	else:
 		rig.reset_bone_poses()
 		pose_action(next, speed, dt, vertical_speed)
@@ -56,8 +63,6 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 
 	var spin := Vector3.ZERO
 	match next:
-		&"DoubleJump", &"ChainJump":
-			spin.y = TAU * smoothstep(0.0, .48, pose_time)
 		&"TripleJump", &"SideFlip", &"Rollout":
 			spin.x = TAU * smoothstep(0.0, .54, pose_time)
 		&"Backflip":
@@ -144,10 +149,10 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 		&"Jump", &"DoubleJump", &"ChainJump", &"TripleJump", &"Backflip", &"SideFlip", &"Bounce", &"WallKick", &"PoleJump", &"Fall", &"Rollout":
 			var tuck := smoothstep(-8.0, 4.0, vertical_speed)
 			lean = lerpf(-8.0, 18.0, tuck)
-			arms = Vector2(-30.0 - 48.0 * tuck, 18.0 - 48.0 * tuck)
-			feet[0] = Vector3(0, .08 + .28 * tuck, .04 + .18 * tuck)
-			feet[1] = Vector3(0, .03 + .16 * tuck, -.10)
-			toe_angle = 20.0 * tuck
+			arms = Vector2(-18.0 - 29.0 * tuck, 12.0 - 30.0 * tuck)
+			feet[0] = Vector3(0, .055 + .19 * tuck, .035 + .14 * tuck)
+			feet[1] = Vector3(0, .025 + .12 * tuck, -.085)
+			toe_angle = 13.0 * tuck
 		&"LongJump", &"AirKick", &"Kick":
 			lean = 25.0 if next == &"LongJump" else -20.0
 			arms = Vector2(-73.0, -19.0)

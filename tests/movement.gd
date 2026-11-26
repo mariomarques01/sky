@@ -82,11 +82,25 @@ func _ready() -> void:
 	player.ground_pound.connect(func(_point: Vector3) -> void: impacts += 1)
 	await reset_at(Vector3.ZERO)
 
+	Input.action_press("right")
+	await frames(26)
 	await jump()
+	var first_impulse: float = player.velocity.y
 	Input.action_release("jump")
 	await frames(3)
+	var second_takeoff: Vector3 = player.position
 	await jump()
-	check(player.air_move == &"DoubleJump" and player.velocity.y > 5, "segundo impulso no ar")
+	check(player.air_move == &"DoubleJump" and player.velocity.y > first_impulse,
+		"segundo impulso no ar é mais forte")
+	var visual := player.get_node("Visual")
+	var stays_straight := true
+	var rise := 0.0
+	for index in 25:
+		stays_straight = stays_straight and player.velocity.x > 0 and absf(player.position.z) < .001 \
+			and visual.explorer.quaternion.angle_to(Quaternion.IDENTITY) < .001
+		rise = maxf(rise, player.position.y - second_takeoff.y)
+		await frames(1)
+	check(stays_straight and rise > 1.85, "salto duplo sobe em linha reta e sem giro")
 	Input.action_release("jump")
 
 	await reset_at(Vector3(-25, 0, 0))
