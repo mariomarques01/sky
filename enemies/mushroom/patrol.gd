@@ -16,7 +16,7 @@ func _physics_process(dt: float) -> void:
 	for body: Node3D in get_overlapping_bodies():
 		if not body.is_in_group("player"): continue
 		var stomp: bool = body.get("velocity").y < 0 and body.global_position.y > global_position.y + .48
-		if stomp or body.get("sliding"):
+		if stomp or body.call("is_striking"):
 			defeated = true
 			if stomp:
 				body.call("bounce")
