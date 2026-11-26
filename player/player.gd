@@ -325,17 +325,28 @@ func start_dive(grounded: bool) -> void:
 	velocity.x = facing * minf(speed + 3.52, 10.5)
 	velocity.y = 4.9 if grounded else maxf(velocity.y, 0.0)
 
-func try_step_up(direction: float) -> bool:
-	var rise := Vector3.UP * .31
-	var forward := Vector3.RIGHT * direction * (capsule.radius + .08)
-	var raised := global_transform.translated(rise)
-	if test_move(global_transform, rise) or test_move(raised, forward):
+func try_step_up(dt: float) -> bool:
+	var motion := Vector3(velocity.x * dt, 0, 0)
+	if motion.length() < .001:
 		return false
-	var ahead := global_position + forward
-	var surface := surface_between(ahead + rise, ahead + Vector3.UP * .04)
-	if surface.is_empty() or surface.normal.y < .85 or not capsule_fits(surface.position):
+	var contact := KinematicCollision3D.new()
+	if not test_move(global_transform, motion, contact) or contact.get_normal().y > .65:
 		return false
-	global_position = surface.position + Vector3.UP * .004
+	var obstacle := contact.get_collider() as Node
+	if is_instance_valid(obstacle) and obstacle.has_method("take_movement_hit"):
+		return false
+	var lift := Vector3.UP * .36
+	var raised := global_transform.translated(lift)
+	var forward := Vector3.RIGHT * signf(motion.x) * maxf(motion.length(), capsule.radius + .06)
+	if test_move(global_transform, lift) or test_move(raised, forward):
+		return false
+	if not test_move(raised.translated(forward), -lift, contact) or contact.get_normal().y < .7:
+		return false
+	var height := lift.y + contact.get_travel().y
+	if height < .008 or height > lift.y:
+		return false
+	global_position.y += height + .004
+	$Visual.soften_step(height)
 	return true
 
 func handle_wall(pre_velocity: Vector3, grounded_before: bool, rushing: bool) -> void:
@@ -451,6 +462,7 @@ func _physics_process(dt: float) -> void:
 			states.enter(&"Respawn")
 			dash.reset()
 			$Visual.scale = Vector3.ONE
+			$Visual.step_offset = 0
 			stun = 0
 			jumps = 0
 		return
@@ -526,16 +538,13 @@ func _physics_process(dt: float) -> void:
 	velocity.x += wind
 	var pre_velocity := velocity
 	var rushing: bool = sliding or belly_slide or dash.remaining > 0 or air_move == &"Dive"
+	var stepped := floor_before and air_move == &"" and pre_velocity.y <= 0 and try_step_up(dt)
 	move_and_slide()
+	if stepped:
+		apply_floor_snap()
 	if not is_on_wall():
 		velocity.x -= wind
-	var stepped := false
-	if floor_before and is_on_wall() and not rushing and not crouched and absf(pre_velocity.x) > .4:
-		stepped = try_step_up(signf(pre_velocity.x))
-		if stepped:
-			velocity.x = pre_velocity.x
-	if not stepped:
-		handle_wall(pre_velocity, floor_before, rushing)
+	handle_wall(pre_velocity, floor_before, rushing)
 	if not is_on_floor():
 		sliding = false
 		belly_slide = false
@@ -563,4 +572,4 @@ func _physics_process(dt: float) -> void:
 	elif absf(velocity.x)>4: next = &"Run"
 	elif absf(velocity.x)>.1: next = &"Walk"
 	states.enter(next)
-	$Visual.update_pose(next,facing,absf(velocity.x),dt,health.shield)
+	$Visual.update_pose(next,facing,absf(velocity.x),dt,health.shield,velocity.y)
