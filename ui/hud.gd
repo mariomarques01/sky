@@ -1,14 +1,22 @@
 extends CanvasLayer
 const Pad = preload("res://ui/touch_pad.gd")
 var safe := Control.new()
-var health := Label.new()
-var totals := Label.new()
+const STATUS = preload("res://ui/hud_art/status.png")
+const HEART = preload("res://ui/hud_art/heart.png")
+const CHARGE = preload("res://ui/hud_art/charge.png")
+const PAUSE = preload("res://ui/hud_art/pause.png")
+
+var status := TextureRect.new()
+var hearts: Array[TextureRect] = []
+var totals: Array[Label] = []
+var charge := TextureProgressBar.new()
+var pause_button := TextureButton.new()
+@onready var dash: Node = get_parent().get_node("Player/Dash")
 var pad := Pad.new()
 var modal := ColorRect.new()
 var title := Label.new()
 var resume := Button.new()
 var profile := Button.new()
-var portrait := TextureRect.new()
 func panel(bg: Color, border: Color, radius: int) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
 	box.bg_color = bg
@@ -27,45 +35,42 @@ func button(b: Button, caption: String, callback: Callable) -> void:
 	b.text = caption
 	b.custom_minimum_size = Vector2(0,74)
 	b.add_theme_font_size_override("font_size",32)
-	b.add_theme_stylebox_override("normal",panel(Color("#243c50ed"),Color("#cbab68"),16))
+	b.add_theme_stylebox_override("normal",panel(Color("#23252fee"),Color("#e4a545"),16))
 	b.pressed.connect(callback)
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	add_child(safe)
 	safe.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	var bar := Panel.new()
-	safe.add_child(bar)
-	bar.position = Vector2(22,20)
-	bar.size = Vector2(468,106)
-	bar.add_theme_stylebox_override("panel",panel(Color("#203343db"),Color("#a88749"),54))
-	var frame := Panel.new()
-	bar.add_child(frame)
-	frame.position = Vector2(3,3)
-	frame.size = Vector2(100,100)
-	frame.add_theme_stylebox_override("panel",panel(Color("#d6a653"),Color("#ffe5ac"),50))
-	frame.add_child(portrait)
-	portrait.position = Vector2(5,5)
-	portrait.size = Vector2(90,90)
-	portrait.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-	portrait.texture = preload("res://ui/portrait.jpg")
-	var shader := Shader.new()
-	shader.code = "shader_type canvas_item; void fragment(){COLOR=texture(TEXTURE,UV); COLOR.a*=1.0-smoothstep(.48,.50,distance(UV,vec2(.5)));}"
-	var matte := ShaderMaterial.new()
-	matte.shader = shader
-	portrait.material = matte
-	bar.add_child(health)
-	health.position = Vector2(118,0)
-	label_style(health,47,Color("#ff6357"))
-	bar.add_child(totals)
-	totals.position = Vector2(122,56)
-	label_style(totals,25,Color("#ffdc84"))
-	var pause_button := Button.new()
+	safe.add_child(status)
+	status.texture = STATUS
+	status.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	for index in 3:
+		var heart := TextureRect.new()
+		status.add_child(heart)
+		heart.texture = HEART
+		heart.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		heart.position = Vector2(192 + 60 * index, 16)
+		hearts.append(heart)
+	status.add_child(charge)
+	charge.position = Vector2(190, 73)
+	charge.texture_progress = CHARGE
+	charge.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	charge.max_value = 1
+	charge.step = 0
+	charge.value = 1
+	for x in [241, 387, 527]:
+		var label := Label.new()
+		status.add_child(label)
+		label.position = Vector2(x, 120)
+		label_style(label, 29, Color("#ffe06e"))
+		label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+		totals.append(label)
 	safe.add_child(pause_button)
-	pause_button.set_anchors_and_offsets_preset(Control.PRESET_TOP_RIGHT)
-	pause_button.offset_left = -110
-	pause_button.offset_right = -24
-	pause_button.offset_top = 24
-	button(pause_button,"Ⅱ",toggle_pause)
+	pause_button.texture_normal = PAUSE
+	pause_button.ignore_texture_size = true
+	pause_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
+	pause_button.tooltip_text = "Pausar"
+	pause_button.pressed.connect(toggle_pause)
 	safe.add_child(pad)
 	pad.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	pad.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -73,7 +78,7 @@ func _ready() -> void:
 	pad.resized.connect(pad.layout)
 	add_child(modal)
 	modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	modal.color = Color("#14293bdc")
+	modal.color = Color("#14151edc")
 	var center := CenterContainer.new()
 	modal.add_child(center)
 	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -108,10 +113,23 @@ func layout() -> void:
 		if screen.x>0 and rect.has_area():
 			safe.position = Vector2(rect.position)*visible_size/screen
 			safe.size = Vector2(rect.size)*visible_size/screen
+	var unit := minf(safe.size.x / 1280.0, safe.size.y / 590.0)
+	status.position = Vector2(16, 15) * unit
+	status.scale = Vector2.ONE * .555 * unit
+	var pause_diameter := 64.0 * unit * (1.25 if safe.size.x < safe.size.y else 1.0)
+	pause_button.size = Vector2.ONE * pause_diameter
+	pause_button.position = Vector2(safe.size.x - pause_diameter - 16 * unit, 15 * unit)
 	pad.layout()
+
+func _process(_delta: float) -> void:
+	charge.value = clampf(1.0 - float(dash.cooldown) / maxf(float(dash.recharge), .001), 0, 1) if dash.air_available else 0
+
 func refresh() -> void:
-	health.text = "♥".repeat(Game.health)+"♡".repeat(3-Game.health)
-	totals.text = "◆  %03d     ●  %02d     ◈  %d" % Game.counts
+	for index in hearts.size():
+		hearts[index].modulate = Color.WHITE if index < Game.health else Color(.33, .30, .35, .73)
+	totals[0].text = "%03d" % Game.counts[0]
+	totals[1].text = "%02d" % Game.counts[1]
+	totals[2].text = str(Game.counts[2])
 func cycle_profile() -> void:
 	var world := get_parent()
 	var q := (int(world.get("quality"))+1)%3
