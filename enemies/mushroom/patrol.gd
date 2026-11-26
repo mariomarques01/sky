@@ -15,9 +15,11 @@ func _physics_process(dt: float) -> void:
 	$Visual.rotation.z = sin(clock*6)*.065
 	for body: Node3D in get_overlapping_bodies():
 		if not body.is_in_group("player"): continue
-		if body.get("velocity").y<0 and body.global_position.y>global_position.y+.48:
+		var stomp: bool = body.get("velocity").y < 0 and body.global_position.y > global_position.y + .48
+		if stomp or body.call("is_striking"):
 			defeated = true
-			body.call("bounce")
+			if stomp:
+				body.call("bounce")
 			Game.collect(1)
 			var t := create_tween()
 			t.tween_property($Visual,"scale",Vector3(1.25,.12,1.25),.16)

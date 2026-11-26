@@ -4,7 +4,7 @@ O repositório remoto consultado não anunciou refs Git. O workspace inicial con
 
 | Item auditado | Conteúdo |
 |---|---|
-| Personagem | Meshy_AI_The_Brave_Bunny_Explorer_20261109_animated_mixamo_All_animation.glb copiado integralmente como assets/models/Bunny.glb |
+| Personagem | Meshy_AI_The_Brave_Bunny_Explorer_20261109_animated_mixamo_All_animation.glb importado como `assets/models/Bunny.glb` com pesos de skinning revisados nas mãos, no quadril e nas pernas |
 | Geometria | Mesh_0, uma primitiva indexada, 71.393 vértices e 127.420 triângulos |
 | Material | Material_0 com três imagens JPEG embutidas de 2048 × 2048, extraídas pelo importador Godot |
 | Esqueleto | SmartRigArmature, 32 juntas com skinning |
