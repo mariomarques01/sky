@@ -5,6 +5,10 @@ extends PhysicsBody3D
 	set(value):
 		dimensions = value
 		_fit()
+@export var visual_overlap := 0.0:
+	set(value):
+		visual_overlap = value
+		_fit()
 @export var meadow := false:
 	set(value):
 		meadow = value
@@ -25,7 +29,7 @@ func _fit() -> void:
 		child.queue_free()
 	var cliffs := (Meadow if meadow else Horizon).instantiate() as Node3D
 	var reference := Vector3(11.5, 5.0, 4.6) if meadow else Vector3(7.66, 5.0, 3.4)
-	cliffs.scale = dimensions / reference
+	cliffs.scale = (dimensions + Vector3.RIGHT * visual_overlap) / reference
 	visual.add_child(cliffs)
 	var collision := $Collision as CollisionShape3D
 	var shape := BoxShape3D.new()

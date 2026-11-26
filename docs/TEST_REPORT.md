@@ -1,6 +1,14 @@
 # Relatório de validação
 
-## Expansão dos Jardins Celestiais
+## Prado Florido
+
+A continuação acrescenta cerca de 35 unidades de percurso horizontal entre o templo e o novo ponto de conclusão. Os três módulos de chão têm colisões sobrepostas nas junções, e as rampas ligam os dois terraços ao caminho principal.
+
+- `tests/expansion.tscn` percorre o templo e o prado com as ações do jogador. Verifica o impacto lateral, a quebra das quatro caixas por cima, moeda, cristal, coração, a subida opcional, o checkpoint, o respawn e a nova conclusão.
+- Caixas abertas continuam abertas após um respawn e voltam numa nova partida. As regras de gravação dos tesouros únicos continuam cobertas pelo teste.
+- As cenas `route` e `playthrough` passaram no Godot 4.7.2, assim como a exportação com o preset Web. A composição foi inspecionada no Chromium com WebGL 2. O desempenho em celulares físicos não foi medido.
+
+## Expansão dos Jardins Celestiais antes do Prado Florido
 
 Validada no Godot 4.7.2 com as cenas `tests/route.tscn`, `tests/playthrough.tscn` e `tests/expansion.tscn` a 60 Hz. Cada cena usa uma pasta de dados temporária no workflow do GitHub Pages.
 

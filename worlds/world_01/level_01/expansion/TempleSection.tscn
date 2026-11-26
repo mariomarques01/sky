@@ -10,7 +10,6 @@
 [ext_resource type="PackedScene" path="res://environment/Blossoms.glb" id="Blossoms"]
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RareCollectible.tscn" id="RareCollectible"]
 [ext_resource type="Resource" path="res://collectibles/rarities/legendary.tres" id="legendary"]
-[ext_resource type="Script" path="res://worlds/world_01/level_01/expansion/finish.gd" id="finish"]
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Waterfall.tscn" id="Waterfall"]
 
 [sub_resource type="StandardMaterial3D" id="TempleStone"]
@@ -40,9 +39,6 @@ material = SubResource("TempleStone")
 [sub_resource type="BoxMesh" id="TempleStairsStep4Mesh"]
 size = Vector3(0.49, 0.95, 2.4)
 material = SubResource("TempleStone")
-
-[sub_resource type="BoxShape3D" id="FinishShape"]
-size = Vector3(0.85, 6.8, 1.5)
 
 [node name="TempleSection" type="Node3D"]
 
@@ -175,13 +171,6 @@ scale = Vector3(0.65, 0.77, 0.65)
 position = Vector3(62, 4.02, 0)
 reward = ExtResource("legendary")
 persistent_id = "temple_crystal"
-
-[node name="Finish" type="Area3D" parent="."]
-position = Vector3(66.3, 4.4, 0)
-script = ExtResource("finish")
-
-[node name="Collision" type="CollisionShape3D" parent="Finish"]
-shape = SubResource("FinishShape")
 
 [node name="WaterfallTemple" parent="." instance=ExtResource("Waterfall")]
 position = Vector3(61.35, -1.02, 2.05)
