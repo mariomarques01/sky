@@ -107,7 +107,20 @@ func layout() -> void:
 	var visible_size := get_viewport().get_visible_rect().size
 	safe.position = Vector2.ZERO
 	safe.size = visible_size
-	if OS.has_feature("mobile"):
+	if OS.has_feature("web"):
+		var region = JavaScriptBridge.eval("""(() => {
+			const guide = document.getElementById("skybound-safe-area");
+			if (!guide || !innerWidth || !innerHeight) return "";
+			const bounds = guide.getBoundingClientRect();
+			return JSON.stringify([bounds.x / innerWidth, bounds.y / innerHeight,
+				bounds.width / innerWidth, bounds.height / innerHeight]);
+		})()""")
+		if region is String and not region.is_empty():
+			var rectangle = JSON.parse_string(region)
+			if rectangle is Array and rectangle.size() == 4:
+				safe.position = Vector2(rectangle[0], rectangle[1]) * visible_size
+				safe.size = Vector2(rectangle[2], rectangle[3]) * visible_size
+	elif OS.has_feature("mobile"):
 		var rect := DisplayServer.get_display_safe_area()
 		var screen := Vector2(DisplayServer.window_get_size())
 		if screen.x>0 and rect.has_area():
