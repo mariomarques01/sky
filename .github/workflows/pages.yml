@@ -39,7 +39,9 @@ jobs:
           done
           mkdir -p build/web
           godot --headless --export-release Web build/web/index.html
-          test -s build/web/index.wasm && test -s build/web/index.pck
+          python3 web/package_pwa.py build/web "$GITHUB_SHA"
+          test -s "build/web/releases/$GITHUB_SHA/index.wasm"
+          test -s "build/web/releases/$GITHUB_SHA/index.pck"
       - uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
@@ -61,7 +63,16 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          tar -xf "$RUNNER_TEMP/pages/artifact.tar"
+          mkdir -p "$RUNNER_TEMP/pages/site"
+          tar -xf "$RUNNER_TEMP/pages/artifact.tar" -C "$RUNNER_TEMP/pages/site"
+          # Keep one previous release reachable while installed clients update.
+          current_release=$(find "$RUNNER_TEMP/pages/site/releases" -mindepth 1 -maxdepth 1 -type d -printf '%f')
+          previous_release=$(sed -n 's|.*<base href="./releases/\([A-Za-z0-9_-]*\)/">.*|\1|p' index.html)
+          if [ -n "$previous_release" ] && [ "$previous_release" != "$current_release" ] && [ -d "releases/$previous_release" ]; then
+            cp -r "releases/$previous_release" "$RUNNER_TEMP/pages/site/releases/"
+          fi
+          git rm -r --ignore-unmatch -- 'index.*' releases icons manifest.webmanifest service-worker.js
+          cp -a "$RUNNER_TEMP/pages/site/." .
           touch .nojekyll
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
