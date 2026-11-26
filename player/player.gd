@@ -10,6 +10,7 @@ signal ground_pound(point: Vector3)
 @export var braking := 35.0
 @export var air_control := .7
 @export var jump_speed := 8.6
+@export var double_jump_multiplier := 1.22
 @export var gravity := 23.0
 @export var grace := .13
 @export var buffer_window := .14
@@ -240,7 +241,7 @@ func try_jump(axis: float, wants_crouch: bool) -> void:
 		facing = wall_direction
 		air_move = &"WallKick"
 	elif coyote <= 0:
-		velocity.y = jump_speed * .9
+		velocity.y = jump_speed * double_jump_multiplier
 		air_move = &"DoubleJump"
 	elif belly_slide:
 		velocity.y = jump_speed * .82
