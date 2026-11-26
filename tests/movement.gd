@@ -49,6 +49,35 @@ func add_block(center: Vector3, size: Vector3) -> StaticBody3D:
 	body.position = center
 	return body
 
+func check_grounded_poses() -> void:
+	await reset_at(Vector3(0, 0, 0))
+	Input.action_press("right")
+	await frames(35)
+	Input.action_release("right")
+	await frames(26)
+	var visual := player.get_node("Visual")
+	var rig: Skeleton3D = visual.rig
+	var left := rig.find_bone("mixamorig_LeftFoot")
+	var right := rig.find_bone("mixamorig_RightFoot")
+	var knee := rig.find_bone("mixamorig_LeftLeg")
+	var hips := rig.find_bone("mixamorig_Hips")
+	var idle_hips := rig.get_bone_global_pose(hips).origin
+	var idle_left := rig.get_bone_global_pose(left).origin
+	var idle_right := rig.get_bone_global_pose(right).origin
+	check(visual.pose_name == &"Idle" and absf(idle_left.y - idle_right.y) < .012,
+		"ao parar, os dois pés voltam ao chão")
+
+	Input.action_press("crouch")
+	await frames(15)
+	var crouch_hips := rig.get_bone_global_pose(hips).origin
+	check(crouch_hips.y < idle_hips.y - .20 and rig.get_bone_global_pose(knee).origin.z > .16,
+		"agachamento dobra quadril e joelho")
+	check(visual.explorer.scale.is_equal_approx(Vector3.ONE)
+		and absf(rig.get_bone_global_pose(left).origin.y - idle_left.y) < .014
+		and absf(rig.get_bone_global_pose(right).origin.y - idle_right.y) < .014,
+		"agachamento mantém proporções e pés apoiados")
+	Input.action_release("crouch")
+
 func _ready() -> void:
 	player.ground_pound.connect(func(_point: Vector3) -> void: impacts += 1)
 	await reset_at(Vector3.ZERO)
@@ -138,11 +167,19 @@ func _ready() -> void:
 	await jump()
 	check(player.ledge == null and player.position.y > 1.3, "sobe da borda com salto")
 
+	await check_grounded_poses()
 	add_block(Vector3(10, .12, 0), Vector3(1.3, .24, 2))
 	await reset_at(Vector3(8.5, 0, 0))
 	Input.action_press("right")
 	await frames(23)
 	check(player.position.x > 9.35 and player.position.y > .22, "sobe degrau baixo sem salto")
+	await reset_at(Vector3(8.5, 0, 0))
+	Input.action_press("crouch")
+	await frames(3)
+	Input.action_press("right")
+	await frames(40)
+	check(player.position.x > 9.35 and player.position.y > .22 and player.crouched,
+		"degrau também é transitável andando agachado")
 
 	var objects := preload("res://environment/movement/MovementObjects.tscn").instantiate() as Node3D
 	add_child(objects)
