@@ -13,7 +13,6 @@ var charge := TextureProgressBar.new()
 var pause_button := TextureButton.new()
 @onready var dash: Node = get_parent().get_node("Player/Dash")
 var pad := Pad.new()
-var touch_input_seen := false
 var touch_visibility_overridden := false
 var modal := ColorRect.new()
 var title := Label.new()
@@ -76,6 +75,8 @@ func _ready() -> void:
 	safe.add_child(pad)
 	pad.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	pad.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	# Web play keeps the virtual controls available even when the browser reports no touchscreen.
+	pad.visible = OS.has_feature("web") or OS.has_feature("mobile") or DisplayServer.is_touchscreen_available()
 	pad.resized.connect(pad.layout)
 	add_child(modal)
 	modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
@@ -104,18 +105,7 @@ func _ready() -> void:
 	fade_in()
 	layout()
 	refresh()
-func update_touch_visibility() -> void:
-	if touch_visibility_overridden:
-		return
-	var supports_touch := touch_input_seen or OS.has_feature("mobile") or DisplayServer.is_touchscreen_available()
-	if not supports_touch and OS.has_feature("web"):
-		supports_touch = JavaScriptBridge.eval("""
-			navigator.maxTouchPoints > 0 || window.matchMedia("(any-pointer: coarse)").matches
-		""") == true
-	pad.visible = supports_touch
-
 func layout() -> void:
-	update_touch_visibility()
 	var visible_size := get_viewport().get_visible_rect().size
 	safe.position = Vector2.ZERO
 	safe.size = visible_size
@@ -124,6 +114,7 @@ func layout() -> void:
 			const guide = document.getElementById("skybound-safe-area");
 			if (!guide || !innerWidth || !innerHeight) return "";
 			const bounds = guide.getBoundingClientRect();
+			if (bounds.width <= 0 || bounds.height <= 0) return "";
 			return JSON.stringify([bounds.x / innerWidth, bounds.y / innerHeight,
 				bounds.width / innerWidth, bounds.height / innerHeight]);
 		})()""")
@@ -187,12 +178,10 @@ func _input(event: InputEvent) -> void:
 		touch_visibility_overridden = true
 		pad.release_all()
 		pad.visible = not pad.visible
-	if event is InputEventScreenTouch and event.pressed and not touch_input_seen:
-		touch_input_seen = true
-		if not touch_visibility_overridden and not pad.visible:
-			pad.show()
-			if not modal.visible:
-				pad.handle_touch(event)
+	if event is InputEventScreenTouch and event.pressed and not touch_visibility_overridden and not pad.visible:
+		pad.show()
+		if not modal.visible:
+			pad.handle_touch(event)
 
 func fade_in() -> void:
 	var veil := ColorRect.new()
