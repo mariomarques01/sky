@@ -83,7 +83,10 @@ func _physics_process(dt: float) -> void:
 	if dash.remaining<=0:
 		velocity.y = maxf(-18,velocity.y-gravity*dt)
 	velocity.z = 0
+	var fall_speed := velocity.y
 	move_and_slide()
+	if not floor_before and fall_speed < -1.0 and is_on_floor():
+		_break_crate_on_landing()
 	position.z = 0
 	if position.y < -7:
 		die()
@@ -99,3 +102,14 @@ func _physics_process(dt: float) -> void:
 	elif absf(velocity.x)>.1: next = &"Walk"
 	states.enter(next)
 	$Visual.update_pose(next,facing,absf(velocity.x),dt,health.shield)
+
+
+func _break_crate_on_landing() -> void:
+	for index in get_slide_collision_count():
+		var contact := get_slide_collision(index)
+		if contact.get_normal().y < 0.7:
+			continue
+		var surface := contact.get_collider() as Node
+		if surface and surface.is_in_group("surprise_crate") and surface.break_from_above(self):
+			bounce()
+			return

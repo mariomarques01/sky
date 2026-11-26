@@ -1,0 +1,56 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://worlds/world_01/level_01/expansion/surprise_crate.gd" id="CrateScript"]
+[ext_resource type="PackedScene" path="res://environment/Crate.glb" id="CrateModel"]
+
+[ext_resource type="ArrayMesh" path="res://environment/SurpriseStar.obj" id="StarMesh"]
+
+[sub_resource type="BoxShape3D" id="CrateShape"]
+size = Vector3(0.90, 0.82, 0.83)
+
+[sub_resource type="StandardMaterial3D" id="Gold"]
+albedo_color = Color(0.98, 0.6, 0.10, 1)
+emission_enabled = true
+emission = Color(0.32, 0.15, 0.02, 1)
+metallic = 0.3
+roughness = 0.56
+
+[sub_resource type="BoxMesh" id="CrossbarMesh"]
+size = Vector3(0.91, 0.085, 0.095)
+material = SubResource("Gold")
+
+[sub_resource type="BoxMesh" id="UprightMesh"]
+size = Vector3(0.085, 0.67, 0.095)
+material = SubResource("Gold")
+
+[node name="SurpriseCrate" type="StaticBody3D" groups=["surprise_crate"]]
+script = ExtResource("CrateScript")
+
+[node name="Collision" type="CollisionShape3D" parent="."]
+position = Vector3(0, 0.41, 0)
+shape = SubResource("CrateShape")
+
+[node name="Visual" type="Node3D" parent="."]
+
+[node name="Crate" parent="Visual" instance=ExtResource("CrateModel")]
+
+[node name="TopTrim" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.751, 0.445)
+mesh = SubResource("CrossbarMesh")
+
+[node name="BottomTrim" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.078, 0.445)
+mesh = SubResource("CrossbarMesh")
+
+[node name="LeftTrim" type="MeshInstance3D" parent="Visual"]
+position = Vector3(-0.41, 0.415, 0.445)
+mesh = SubResource("UprightMesh")
+
+[node name="RightTrim" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0.41, 0.415, 0.445)
+mesh = SubResource("UprightMesh")
+
+[node name="Star" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.43, 0.50)
+mesh = ExtResource("StarMesh")
+material_override = SubResource("Gold")

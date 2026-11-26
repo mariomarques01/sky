@@ -71,6 +71,50 @@ func run_to(x: float, limit: int) -> bool:
 	stop_input()
 	return false
 
+func stomp(crate: Node3D) -> bool:
+	var target_x := crate.global_position.x
+	await frames(2)
+	Input.action_press("jump")
+	for frame in 75:
+		steer(target_x)
+		await frames(1)
+		if not is_instance_valid(crate):
+			stop_input()
+			var bounced := player.velocity.y > 0
+			await frames(50)
+			return bounced
+	stop_input()
+	return false
+
+func test_meadow() -> void:
+	var meadow := expansion.get_node("FlowerMeadow")
+	check(await run_to(71.9, 350) and player.is_on_floor() and not Game.complete, "continua pelo templo até o prado")
+	var first := meadow.get_node("EntryCrate") as StaticBody3D
+	var coins: int = Game.counts[1]
+	check(not await run_to(first.position.x, 42) and is_instance_valid(first), "impacto lateral conserva a caixa")
+	await run_to(71.95, 55)
+	check(await stomp(first) and Game.counts[1] == coins + 1, "aterrissagem quebra a primeira caixa e libera uma moeda")
+
+	check(await run_to(79.95, 150) and player.position.y > 2.7, "primeira subida gramada a pé")
+	var gold: int = Game.counts[0]
+	check(await stomp(meadow.get_node("FirstTerraceCrate")) and Game.counts[0] == gold + 1, "caixa do primeiro terraço libera cristal")
+	check(await run_to(85.9, 150) and player.position.y > 3.2, "segunda subida gramada a pé")
+	Game.health = 2
+	check(await stomp(meadow.get_node("SecondTerraceCrate")) and Game.health == 3, "caixa do segundo terraço libera coração")
+	var shelf_entry := Marker3D.new()
+	shelf_entry.name = "Prateleira de flores"
+	meadow.add_child(shelf_entry)
+	shelf_entry.position = Vector3(88.85, 5.23, 0)
+	await jump_to(shelf_entry, true, false, 14)
+	check(await stomp(meadow.get_node("ShelfCrate")), "caixa da saliência opcional pode ser quebrada")
+	check(await run_to(96.05, 185) and Game.checkpoint.x > 96.0, "checkpoint do prado após os terraços")
+	player.position.y = -9
+	await frames(45)
+	check(absf(player.position.x - Game.checkpoint.x) < 0.12 and not meadow.has_node("EntryCrate"), "respawn do prado mantém as caixas já abertas")
+	check(await run_to(101.1, 130) and Game.complete and player.position.y > 2.6, "conclusão no mirante")
+	var camera := world.get_node("CameraRig") as Camera3D
+	check(camera.position.x > 98.0, "câmera acompanha o mirante")
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	world.process_mode = Node.PROCESS_MODE_PAUSABLE
@@ -136,7 +180,7 @@ func _ready() -> void:
 	player.position.y = -9
 	await frames(45)
 	check(Game.counts[2] == rare_count and not chest.monitoring, "respawn preserva as coletas e o baú aberto")
-	check(await run_to(66.4, 250) and Game.complete, "conclusão após o templo")
+	await test_meadow()
 	get_tree().paused = false
 	Audio.voice.stop()
 	world.queue_free()
@@ -149,7 +193,8 @@ func _ready() -> void:
 	await frames(3)
 	route = world.get_node("Expansion/TreasureRoute")
 	check(not route.has_node("Sapphire") and not route.has_node("Amethyst") and not route.has_node("GoldenChest"), "recarregamento não duplica tesouros")
-	world.get_node("Player").position = Vector3(66.3, 2.31, 0)
+	check(world.get_node("Expansion/FlowerMeadow").has_node("EntryCrate"), "caixas comuns voltam em nova partida")
+	world.get_node("Player").position = Vector3(101.1, 2.74, 0)
 	await frames(6)
 	check(Game.complete and Game.counts[2] == 0, "conclusão disponível em nova partida")
 	get_tree().paused = false

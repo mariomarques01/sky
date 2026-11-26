@@ -7,7 +7,6 @@
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RareCollectible.tscn" id="RareCollectible"]
 [ext_resource type="Resource" path="res://collectibles/rarities/rare.tres" id="rare"]
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RecoveryHeart.tscn" id="RecoveryHeart"]
-[ext_resource type="Resource" path="res://collectibles/rarities/heart.tres" id="heart"]
 [ext_resource type="Resource" path="res://collectibles/rarities/epic.tres" id="epic"]
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/TreasureChest.tscn" id="TreasureChest"]
 [ext_resource type="Resource" path="res://collectibles/rarities/legendary.tres" id="legendary"]
@@ -88,7 +87,6 @@ persistent_id = "sapphire_route"
 
 [node name="Heart" parent="." instance=ExtResource("RecoveryHeart")]
 position = Vector3(29.9, 6.05, 0)
-reward = ExtResource("heart")
 
 [node name="Amethyst" parent="." instance=ExtResource("RareCollectible")]
 position = Vector3(39.9, 7.4, 0)

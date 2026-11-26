@@ -1,0 +1,385 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FloatingPlatform.tscn" id="FloatingPlatform"]
+[ext_resource type="Script" path="res://worlds/world_01/level_01/expansion/flower_bed.gd" id="flower_bed"]
+[ext_resource type="PackedScene" path="res://environment/Rosette.glb" id="Rosette"]
+[ext_resource type="PackedScene" path="res://collectibles/Coin.tscn" id="Coin"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/SurpriseCrate.tscn" id="SurpriseCrate"]
+[ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="Sunstone"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RecoveryHeart.tscn" id="RecoveryHeart"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Checkpoint.tscn" id="Checkpoint"]
+[ext_resource type="PackedScene" path="res://environment/Pillar.glb" id="Pillar"]
+[ext_resource type="PackedScene" path="res://environment/Sign.glb" id="Sign"]
+[ext_resource type="Script" path="res://worlds/world_01/level_01/expansion/finish.gd" id="finish"]
+[ext_resource type="PackedScene" path="res://environment/Horizon.glb" id="Horizon"]
+[ext_resource type="PackedScene" path="res://environment/Arch.glb" id="Arch"]
+[ext_resource type="Shader" path="res://shaders/cloud.gdshader" id="cloud"]
+
+[sub_resource type="BoxShape3D" id="FinishShape"]
+size = Vector3(0.8, 7, 1.5)
+
+[sub_resource type="QuadMesh" id="CloudPlane"]
+size = Vector2(1, 1)
+
+[sub_resource type="ShaderMaterial" id="CloudMaterial"]
+shader = ExtResource("cloud")
+
+[node name="FlowerMeadow" type="Node3D"]
+
+[node name="MeadowFloor1" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(73.47, 2.3, 0)
+dimensions = Vector3(11.62, 5.5, 5.45)
+visual_overlap = 1.15
+meadow = true
+rotation = Vector3(0, 0, 0)
+
+[node name="FlowerBedFront1" type="MultiMeshInstance3D" parent="."]
+position = Vector3(73.47, 2.3, 1.55)
+script = ExtResource("flower_bed")
+width = 7.6
+amount = 29
+seed_value = 1
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="FlowerBedBack1" type="MultiMeshInstance3D" parent="."]
+position = Vector3(73.47, 2.3, -1.62)
+script = ExtResource("flower_bed")
+width = 7.6
+amount = 29
+seed_value = 0
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="Fern0" parent="." instance=ExtResource("Rosette")]
+position = Vector3(70.62, 2.3, -1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern1" parent="." instance=ExtResource("Rosette")]
+position = Vector3(72.52, 2.3, 1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern2" parent="." instance=ExtResource("Rosette")]
+position = Vector3(74.42, 2.3, -1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern3" parent="." instance=ExtResource("Rosette")]
+position = Vector3(76.32, 2.3, 1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="MeadowFloor2" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(84.96, 2.3, 0)
+dimensions = Vector3(11.62, 5.5, 5.45)
+visual_overlap = 1.15
+meadow = true
+rotation = Vector3(0, 0, 0)
+
+[node name="FlowerBedFront2" type="MultiMeshInstance3D" parent="."]
+position = Vector3(84.96, 2.3, 1.55)
+script = ExtResource("flower_bed")
+width = 7.6
+amount = 29
+seed_value = 5
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="FlowerBedBack2" type="MultiMeshInstance3D" parent="."]
+position = Vector3(84.96, 2.3, -1.62)
+script = ExtResource("flower_bed")
+width = 7.6
+amount = 29
+seed_value = 4
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="Fern4" parent="." instance=ExtResource("Rosette")]
+position = Vector3(82.11, 2.3, -1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern5" parent="." instance=ExtResource("Rosette")]
+position = Vector3(84.01, 2.3, 1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern6" parent="." instance=ExtResource("Rosette")]
+position = Vector3(85.91, 2.3, -1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern7" parent="." instance=ExtResource("Rosette")]
+position = Vector3(87.81, 2.3, 1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="MeadowFloor3" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(96.45, 2.3, 0)
+dimensions = Vector3(11.62, 5.5, 5.45)
+visual_overlap = 1.15
+meadow = true
+rotation = Vector3(0, 0, 0)
+
+[node name="FlowerBedFront3" type="MultiMeshInstance3D" parent="."]
+position = Vector3(96.45, 2.3, 1.55)
+script = ExtResource("flower_bed")
+width = 7.6
+amount = 29
+seed_value = 9
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="FlowerBedBack3" type="MultiMeshInstance3D" parent="."]
+position = Vector3(96.45, 2.3, -1.62)
+script = ExtResource("flower_bed")
+width = 7.6
+amount = 29
+seed_value = 8
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="Fern8" parent="." instance=ExtResource("Rosette")]
+position = Vector3(93.6, 2.3, -1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern9" parent="." instance=ExtResource("Rosette")]
+position = Vector3(95.5, 2.3, 1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern10" parent="." instance=ExtResource("Rosette")]
+position = Vector3(97.4, 2.3, -1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="Fern11" parent="." instance=ExtResource("Rosette")]
+position = Vector3(99.3, 2.3, 1.3)
+scale = Vector3(0.77, 0.9, 0.77)
+
+[node name="FirstSlope" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(78.45, 2.535, 0)
+dimensions = Vector3(2.24195, 1.35, 3.8)
+meadow = false
+rotation = Vector3(0, 0, 0.22018)
+
+[node name="FirstTerrace" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(81.08, 2.77, 0)
+dimensions = Vector3(3.22, 1.3, 3.62)
+meadow = false
+rotation = Vector3(0, 0, 0)
+
+[node name="SecondSlope" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(83.66, 3.01, 0)
+dimensions = Vector3(2.18571, 1.35, 3.8)
+meadow = false
+rotation = Vector3(0, 0, 0.23109)
+
+[node name="SecondTerrace" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(87.1, 3.25, 0)
+dimensions = Vector3(4.92, 1.44, 3.65)
+meadow = false
+rotation = Vector3(0, 0, 0)
+
+[node name="MeadowDescent" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(91.075, 2.775, 0)
+dimensions = Vector3(3.38014, 1.35, 3.8)
+meadow = false
+rotation = Vector3(0, 0, -0.29291)
+
+[node name="FlowerShelf" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(89.65, 5.23, 0)
+dimensions = Vector3(3.1, 1.3, 2.34)
+meadow = false
+rotation = Vector3(0, 0, 0)
+
+[node name="FlowerBedTerrace1" type="MultiMeshInstance3D" parent="."]
+position = Vector3(81.08, 2.77, -0.73)
+script = ExtResource("flower_bed")
+width = 2.1
+amount = 12
+seed_value = 20
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="FlowerBedTerrace2" type="MultiMeshInstance3D" parent="."]
+position = Vector3(87.1, 3.25, 0.92)
+script = ExtResource("flower_bed")
+width = 3.0
+amount = 15
+seed_value = 21
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="FlowerBedShelf" type="MultiMeshInstance3D" parent="."]
+position = Vector3(89.65, 5.23, -0.49)
+script = ExtResource("flower_bed")
+width = 1.35
+amount = 7
+seed_value = 22
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="EntryCrate" parent="." instance=ExtResource("SurpriseCrate")]
+position = Vector3(73.25, 2.3, 0)
+prize = ExtResource("Coin")
+
+[node name="FirstTerraceCrate" parent="." instance=ExtResource("SurpriseCrate")]
+position = Vector3(81.05, 2.77, 0)
+prize = ExtResource("Sunstone")
+
+[node name="SecondTerraceCrate" parent="." instance=ExtResource("SurpriseCrate")]
+position = Vector3(87, 3.25, 0)
+prize = ExtResource("RecoveryHeart")
+
+[node name="ShelfCrate" parent="." instance=ExtResource("SurpriseCrate")]
+position = Vector3(90.3, 5.23, 0)
+prize = ExtResource("Sunstone")
+
+[node name="DescentCrystal1" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(91.35, 5.55, 0)
+
+[node name="DescentCrystal2" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(92.2, 4.91, 0)
+
+[node name="DescentCrystal3" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(93.04, 4.2, 0)
+
+[node name="DescentCrystal4" parent="." instance=ExtResource("Sunstone")]
+position = Vector3(93.87, 3.52, 0)
+
+[node name="MeadowCheckpoint" parent="." instance=ExtResource("Checkpoint")]
+position = Vector3(96.05, 2.81, 0)
+
+[node name="LookoutSlope" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(98.61, 2.515, 0)
+dimensions = Vector3(1.70818, 1.35, 2.75)
+meadow = false
+rotation = Vector3(0, 0, 0.26896)
+
+[node name="Lookout" parent="." instance=ExtResource("FloatingPlatform")]
+position = Vector3(100.65, 2.73, 0)
+dimensions = Vector3(2.6, 0.85, 3.18)
+meadow = false
+rotation = Vector3(0, 0, 0)
+
+[node name="FlowerBedLookout" type="MultiMeshInstance3D" parent="."]
+position = Vector3(100.65, 2.73, 0.8)
+script = ExtResource("flower_bed")
+width = 1.7
+amount = 10
+seed_value = 25
+cast_shadow = 0
+visibility_range_end = 25.0
+visibility_range_end_margin = 4.0
+
+[node name="LookoutPillar0" parent="." instance=ExtResource("Pillar")]
+position = Vector3(99.43, 2.73, -1.16)
+scale = Vector3(0.52, 0.39, 0.58)
+
+[node name="LookoutPillar1" parent="." instance=ExtResource("Pillar")]
+position = Vector3(100.66, 2.73, -1.16)
+scale = Vector3(0.52, 0.39, 0.58)
+
+[node name="LookoutPillar2" parent="." instance=ExtResource("Pillar")]
+position = Vector3(101.89, 2.73, -1.16)
+scale = Vector3(0.52, 0.39, 0.58)
+
+[node name="LookoutRail0" parent="." instance=ExtResource("Pillar")]
+position = Vector3(100.59, 3.43, -1.16)
+scale = Vector3(0.5, 0.46, 0.55)
+rotation = Vector3(0, 0, 1.5708)
+
+[node name="LookoutRail1" parent="." instance=ExtResource("Pillar")]
+position = Vector3(101.82, 3.43, -1.16)
+scale = Vector3(0.5, 0.46, 0.55)
+rotation = Vector3(0, 0, 1.5708)
+
+[node name="LookoutSign" parent="." instance=ExtResource("Sign")]
+position = Vector3(101.75, 2.73, 0.67)
+scale = Vector3(0.79, 0.79, 0.79)
+
+[node name="Finish" type="Area3D" parent="."]
+position = Vector3(101.1, 4.95, 0)
+script = ExtResource("finish")
+
+[node name="Collision" type="CollisionShape3D" parent="Finish"]
+shape = SubResource("FinishShape")
+
+[node name="DistantIsland0" parent="." instance=ExtResource("Horizon")]
+position = Vector3(75.8, -1.1, -18)
+scale = Vector3(1.16, 1.16, 1.16)
+
+[node name="DistantArch0" parent="." instance=ExtResource("Arch")]
+position = Vector3(75.8, -1.1, -18)
+scale = Vector3(0.638, 0.638, 0.638)
+
+[node name="DistantIsland1" parent="." instance=ExtResource("Horizon")]
+position = Vector3(89.8, 4.6, -25)
+scale = Vector3(1, 1, 1)
+
+[node name="DistantArch1" parent="." instance=ExtResource("Arch")]
+position = Vector3(89.8, 4.6, -25)
+scale = Vector3(0.55, 0.55, 0.55)
+
+[node name="DistantIsland2" parent="." instance=ExtResource("Horizon")]
+position = Vector3(102.6, -2.2, -17)
+scale = Vector3(0.89, 0.89, 0.89)
+
+[node name="DistantArch2" parent="." instance=ExtResource("Arch")]
+position = Vector3(102.6, -2.2, -17)
+scale = Vector3(0.4895, 0.4895, 0.4895)
+
+[node name="DistantIsland3" parent="." instance=ExtResource("Horizon")]
+position = Vector3(115, 3.6, -23)
+scale = Vector3(1.1, 1.1, 1.1)
+
+[node name="DistantArch3" parent="." instance=ExtResource("Arch")]
+position = Vector3(115, 3.6, -23)
+scale = Vector3(0.605, 0.605, 0.605)
+
+[node name="Cloud0" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("CloudMaterial")
+position = Vector3(77, -3.7, -11)
+scale = Vector3(12, 3, 1)
+cast_shadow = 0
+visibility_range_end = 59.0
+visibility_range_end_margin = 5.0
+
+[node name="Cloud1" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("CloudMaterial")
+position = Vector3(86, 2, -17)
+scale = Vector3(13, 3.3, 1)
+cast_shadow = 0
+visibility_range_end = 59.0
+visibility_range_end_margin = 5.0
+
+[node name="Cloud2" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("CloudMaterial")
+position = Vector3(94, -4.85, -10)
+scale = Vector3(14, 4, 1)
+cast_shadow = 0
+visibility_range_end = 59.0
+visibility_range_end_margin = 5.0
+
+[node name="Cloud3" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("CloudMaterial")
+position = Vector3(104, 4, -21)
+scale = Vector3(16, 4.5, 1)
+cast_shadow = 0
+visibility_range_end = 59.0
+visibility_range_end_margin = 5.0
+
+[node name="Cloud4" type="MeshInstance3D" parent="."]
+mesh = SubResource("CloudPlane")
+material_override = SubResource("CloudMaterial")
+position = Vector3(114, -3.8, -16)
+scale = Vector3(15, 4.25, 1)
+cast_shadow = 0
+visibility_range_end = 59.0
+visibility_range_end_margin = 5.0
