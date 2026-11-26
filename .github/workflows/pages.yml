@@ -32,7 +32,7 @@ jobs:
       - name: Importar, testar e exportar
         run: |
           godot --headless --editor --import
-          for scene in route playthrough expansion; do
+          for scene in route playthrough expansion movement; do
             test_data="$(mktemp -d)"
             XDG_DATA_HOME="$test_data" godot --headless --fixed-fps 60 "tests/$scene.tscn"
             rm -rf "$test_data"
