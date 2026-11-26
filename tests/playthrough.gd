@@ -65,8 +65,9 @@ func _ready() -> void:
 	if "--capture" in OS.get_cmdline_user_args():
 		await RenderingServer.frame_post_draw
 		get_viewport().get_texture().get_image().save_png("/tmp/sky-start.png")
-	var pad := world.get_node("CanvasLayer").get("pad") as Control
-	pad.show()
+	var hud := world.get_node("CanvasLayer")
+	var pad := hud.get("pad") as Control
+	pad.hide()
 	var touch_targets: Array[Vector2] = [pad.get("stick_center") + Vector2.RIGHT * 66 * float(pad.get("unit")), pad.get("jump_center")]
 	for index in touch_targets.size():
 		var down := InputEventScreenTouch.new()
@@ -75,7 +76,7 @@ func _ready() -> void:
 		down.position=pad.global_position+touch_targets[index]
 		get_viewport().push_input(down,true)
 	await frames(2)
-	check(Input.is_action_pressed("right") and Input.is_action_pressed("jump"),"multitouch simultâneo")
+	check(pad.visible and Input.is_action_pressed("right") and Input.is_action_pressed("jump"), "primeiro toque revela os controles e permite multitouch")
 	for index in touch_targets.size():
 		var up := InputEventScreenTouch.new()
 		up.index=index
@@ -105,7 +106,14 @@ func _ready() -> void:
 	player.get_node("Dash").reset()
 	await frames(10)
 	check(not Input.is_action_pressed("jump") and not Input.is_action_pressed("right"),"liberação dos dedos")
-	pad.hide()
+	var toggle := InputEventAction.new()
+	toggle.action = &"touch_toggle"
+	toggle.pressed = true
+	get_viewport().push_input(toggle)
+	hud.layout()
+	check(not pad.visible, "atalho mantém os controles ocultos após recalcular o layout")
+	get_viewport().push_input(toggle)
+	check(pad.visible, "atalho volta a exibir os controles")
 	Input.action_press("right")
 	await frames(33)
 	check(player.velocity.x>5,"aceleração até corrida")
@@ -147,7 +155,6 @@ func _ready() -> void:
 	player.velocity = Vector3(0,-5,0)
 	await frames(32)
 	check(not is_instance_valid(enemy) and Game.counts[1]>0,"impacto e recompensa")
-	var hud := world.get_node("CanvasLayer")
 	hud.toggle_pause()
 	check(get_tree().paused,"menu pausa")
 	hud.toggle_pause()

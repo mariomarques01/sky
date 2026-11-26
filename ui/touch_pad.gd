@@ -81,7 +81,11 @@ func release_all() -> void:
 	queue_redraw()
 
 func _input(event: InputEvent) -> void:
-	if not is_visible_in_tree() or unit <= 0:
+	if is_visible_in_tree():
+		handle_touch(event)
+
+func handle_touch(event: InputEvent) -> void:
+	if unit <= 0:
 		return
 	var handled := false
 	if event is InputEventScreenTouch:
