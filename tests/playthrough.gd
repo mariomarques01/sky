@@ -67,20 +67,43 @@ func _ready() -> void:
 		get_viewport().get_texture().get_image().save_png("/tmp/sky-start.png")
 	var pad := world.get_node("CanvasLayer").get("pad") as Control
 	pad.show()
-	for index in [1,3]:
+	var touch_targets: Array[Vector2] = [pad.get("stick_center") + Vector2.RIGHT * 66 * float(pad.get("unit")), pad.get("jump_center")]
+	for index in touch_targets.size():
 		var down := InputEventScreenTouch.new()
 		down.index=index
 		down.pressed=true
-		down.position=pad.global_position+pad.get("centers")[index]
+		down.position=pad.global_position+touch_targets[index]
 		get_viewport().push_input(down,true)
 	await frames(2)
 	check(Input.is_action_pressed("right") and Input.is_action_pressed("jump"),"multitouch simultâneo")
-	for index in [1,3]:
+	for index in touch_targets.size():
 		var up := InputEventScreenTouch.new()
 		up.index=index
 		up.pressed=false
 		get_viewport().push_input(up,true)
+	var dash_touch := InputEventScreenTouch.new()
+	dash_touch.index = 4
+	dash_touch.position = pad.global_position + pad.get("dash_center")
+	dash_touch.pressed = true
+	get_viewport().push_input(dash_touch, true)
+	dash_touch.pressed = false
+	get_viewport().push_input(dash_touch, true)
+	check(Input.is_action_pressed("dash"), "toque no raio dispara dash")
+	await frames(5)
+	dash_touch.pressed = true
+	get_viewport().push_input(dash_touch, true)
+	var swipe := InputEventScreenDrag.new()
+	swipe.index = dash_touch.index
+	swipe.position = dash_touch.position + Vector2.UP * 46 * float(pad.get("unit"))
+	get_viewport().push_input(swipe, true)
+	dash_touch.pressed = false
+	get_viewport().push_input(dash_touch, true)
+	check(Input.is_action_pressed("dive") and not Input.is_action_pressed("dash"), "deslize no raio aciona mergulho sem dash")
 	await frames(70)
+	player.position = Vector3(-3, .12, 0)
+	player.velocity = Vector3.ZERO
+	player.get_node("Dash").reset()
+	await frames(10)
 	check(not Input.is_action_pressed("jump") and not Input.is_action_pressed("right"),"liberação dos dedos")
 	pad.hide()
 	Input.action_press("right")
