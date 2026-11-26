@@ -15,6 +15,8 @@
 [ext_resource type="PackedScene" path="res://environment/Arch.glb" id="Arch"]
 [ext_resource type="Shader" path="res://shaders/cloud.gdshader" id="cloud"]
 
+[ext_resource type="PackedScene" path="res://enemies/mushroom/Mushroom.tscn" id="Mushroom"]
+
 [sub_resource type="BoxShape3D" id="FinishShape"]
 size = Vector3(0.8, 7, 1.5)
 
@@ -186,8 +188,8 @@ meadow = false
 rotation = Vector3(0, 0, -0.29291)
 
 [node name="FlowerShelf" parent="." instance=ExtResource("FloatingPlatform")]
-position = Vector3(89.65, 5.23, 0)
-dimensions = Vector3(3.1, 1.3, 2.34)
+position = Vector3(89.85, 5.15, 0)
+dimensions = Vector3(3.3, 1.18, 2.34)
 meadow = false
 rotation = Vector3(0, 0, 0)
 
@@ -212,7 +214,7 @@ visibility_range_end = 25.0
 visibility_range_end_margin = 4.0
 
 [node name="FlowerBedShelf" type="MultiMeshInstance3D" parent="."]
-position = Vector3(89.65, 5.23, -0.49)
+position = Vector3(89.85, 5.15, -0.49)
 script = ExtResource("flower_bed")
 width = 1.35
 amount = 7
@@ -234,20 +236,35 @@ position = Vector3(87, 3.25, 0)
 prize = ExtResource("RecoveryHeart")
 
 [node name="ShelfCrate" parent="." instance=ExtResource("SurpriseCrate")]
-position = Vector3(90.3, 5.23, 0)
+position = Vector3(90.48, 5.15, 0)
 prize = ExtResource("Sunstone")
 
+[node name="TerraceSentry" parent="." instance=ExtResource("Mushroom")]
+position = Vector3(82.22, 2.77, 0)
+limits = Vector2(81.95, 82.55)
+speed = 0.8
+
+[node name="HeartGuardLeft" parent="." instance=ExtResource("Mushroom")]
+position = Vector3(85.39, 3.25, 0)
+limits = Vector2(85.13, 85.88)
+speed = 0.85
+
+[node name="HeartGuardRight" parent="." instance=ExtResource("Mushroom")]
+position = Vector3(88.55, 3.25, 0)
+limits = Vector2(88.19, 89.12)
+speed = 0.95
+
 [node name="DescentCrystal1" parent="." instance=ExtResource("Sunstone")]
-position = Vector3(91.35, 5.55, 0)
+position = Vector3(91.54, 5.61, 0)
 
 [node name="DescentCrystal2" parent="." instance=ExtResource("Sunstone")]
-position = Vector3(92.2, 4.91, 0)
+position = Vector3(92.20, 4.98, 0)
 
 [node name="DescentCrystal3" parent="." instance=ExtResource("Sunstone")]
-position = Vector3(93.04, 4.2, 0)
+position = Vector3(92.91, 4.27, 0)
 
 [node name="DescentCrystal4" parent="." instance=ExtResource("Sunstone")]
-position = Vector3(93.87, 3.52, 0)
+position = Vector3(93.67, 3.53, 0)
 
 [node name="MeadowCheckpoint" parent="." instance=ExtResource("Checkpoint")]
 position = Vector3(96.05, 2.81, 0)

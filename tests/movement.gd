@@ -211,18 +211,26 @@ func _ready() -> void:
 
 	await reset_at(Vector3(-4.95, 0.0, 0))
 	Input.action_press("climb")
-	await frames(20)
-	check(player.pole == objects.get_node("Pole") and player.position.y > .4, "subida pelo poste")
+	await frames(94)
+	check(player.pole == objects.get_node("Pole") and player.position.y > 2.7, "poste permite subir até perto do topo")
+	var falling := objects.get_node("FallingPlatform") as Node3D
+	var resting_position := falling.position
+	Input.action_press("left")
 	await jump()
 	check(player.air_move == &"PoleJump" and player.pole == null, "salto de saída do poste")
-
-	await reset_at(Vector3(-5.65, 3.64, 0))
-	var falling := objects.get_node("FallingPlatform") as Node3D
+	await frames(6)
+	Input.action_release("left")
+	Input.action_release("climb")
+	for frame in 90:
+		if player.is_on_floor():
+			break
+		await frames(1)
+	check(absf(player.position.y - resting_position.y) < .2, "salto pousa na plataforma que cai")
 	await frames(70)
 	check(falling.position.y < 2.6, "plataforma cai após contato")
 	await reset_at(Vector3.ZERO)
 	await frames(170)
-	check(is_equal_approx(falling.position.y, 3.5), "plataforma volta após a queda")
+	check(falling.position.is_equal_approx(resting_position), "plataforma volta após a queda")
 
 	Audio.voice.stop()
 	await get_tree().create_timer(.3).timeout

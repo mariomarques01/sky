@@ -1,0 +1,64 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://environment/effects/wood_burst.gd" id="Burst"]
+
+[sub_resource type="StandardMaterial3D" id="Wood"]
+albedo_color = Color(0.56, 0.28, 0.105, 1)
+roughness = 0.93
+
+[sub_resource type="StandardMaterial3D" id="FreshWood"]
+albedo_color = Color(0.79, 0.46, 0.20, 1)
+roughness = 0.85
+
+[sub_resource type="BoxMesh" id="Board"]
+material = SubResource("Wood")
+size = Vector3(0.39, 0.15, 0.075)
+
+[sub_resource type="BoxMesh" id="Chip"]
+material = SubResource("FreshWood")
+size = Vector3(0.12, 0.045, 0.035)
+
+[node name="WoodBurst" type="Node3D"]
+script = ExtResource("Burst")
+
+[node name="Boards" type="CPUParticles3D" parent="."]
+cast_shadow = 0
+amount = 5
+lifetime = 0.5
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("Board")
+emission_shape = 3
+emission_box_extents = Vector3(0.30, 0.20, 0.10)
+direction = Vector3(0, 1, 0)
+spread = 76.0
+gravity = Vector3(0, -12, 0)
+initial_velocity_min = 2.4
+initial_velocity_max = 4.0
+angular_velocity_min = -540.0
+angular_velocity_max = 540.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.7
+scale_amount_max = 1.2
+
+[node name="Splinters" type="CPUParticles3D" parent="."]
+cast_shadow = 0
+amount = 13
+lifetime = 0.61
+one_shot = true
+explosiveness = 1.0
+mesh = SubResource("Chip")
+emission_shape = 3
+emission_box_extents = Vector3(0.36, 0.27, 0.12)
+direction = Vector3(0, 1, 0)
+spread = 80.0
+gravity = Vector3(0, -11, 0)
+initial_velocity_min = 2.7
+initial_velocity_max = 5.7
+angular_velocity_min = -750.0
+angular_velocity_max = 750.0
+angle_min = -180.0
+angle_max = 180.0
+scale_amount_min = 0.55
+scale_amount_max = 1.45

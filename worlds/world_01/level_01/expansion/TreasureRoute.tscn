@@ -14,7 +14,7 @@
 [node name="TreasureRoute" type="Node3D"]
 
 [node name="TreasureIsland1" parent="." instance=ExtResource("FloatingPlatform")]
-position = Vector3(22.6, 3.78, 0)
+position = Vector3(22.7, 3.68, 0)
 dimensions = Vector3(1.7, 1.35, 2.050)
 
 [node name="Plant" parent="TreasureIsland1" instance=ExtResource("Rosette")]
@@ -25,7 +25,7 @@ scale = Vector3(0.58, 0.7, 0.58)
 position = Vector3(0, 0.72, 0)
 
 [node name="TreasureIsland2" parent="." instance=ExtResource("FloatingPlatform")]
-position = Vector3(26.1, 4.45, 0)
+position = Vector3(26.35, 4.65, 0)
 dimensions = Vector3(2.05, 1.55, 2.200)
 
 [node name="Plant" parent="TreasureIsland2" instance=ExtResource("Rosette")]
@@ -33,16 +33,16 @@ position = Vector3(0.12, 0, -0.56)
 scale = Vector3(0.58, 0.7, 0.58)
 
 [node name="TreasureIsland3" parent="." instance=ExtResource("FloatingPlatform")]
-position = Vector3(29.9, 5.28, 0)
-dimensions = Vector3(1.55, 1.45, 2.050)
+position = Vector3(30.05, 5.10, 0)
+dimensions = Vector3(1.72, 1.45, 2.050)
 
 [node name="Plant" parent="TreasureIsland3" instance=ExtResource("Rosette")]
 position = Vector3(0.12, 0, -0.56)
 scale = Vector3(0.58, 0.7, 0.58)
 
 [node name="TreasureIsland4" parent="." instance=ExtResource("MovingPlatform")]
-position = Vector3(34.6, 6.1, 0)
-travel = Vector3(0.8, 0.25, 0)
+position = Vector3(34.45, 5.78, 0)
+travel = Vector3(0.72, 0.18, 0)
 period = 5.0
 dimensions = Vector3(1.65, 1.6, 2.100)
 
@@ -54,15 +54,15 @@ scale = Vector3(0.58, 0.7, 0.58)
 position = Vector3(0, 0.72, 0)
 
 [node name="TreasureIsland5" parent="." instance=ExtResource("FloatingPlatform")]
-position = Vector3(39.9, 6.55, 0)
-dimensions = Vector3(1.45, 1.6, 1.980)
+position = Vector3(39.30, 6.42, 0)
+dimensions = Vector3(1.75, 1.6, 1.980)
 
 [node name="Plant" parent="TreasureIsland5" instance=ExtResource("Rosette")]
 position = Vector3(0.12, 0, -0.56)
 scale = Vector3(0.58, 0.7, 0.58)
 
 [node name="TreasureIsland6" parent="." instance=ExtResource("FloatingPlatform")]
-position = Vector3(44.1, 7.25, 0)
+position = Vector3(43.7, 7.06, 0)
 dimensions = Vector3(1.85, 1.85, 2.250)
 
 [node name="Plant" parent="TreasureIsland6" instance=ExtResource("Rosette")]
@@ -70,8 +70,8 @@ position = Vector3(0.12, 0, -0.56)
 scale = Vector3(0.58, 0.7, 0.58)
 
 [node name="TreasureIsland7" parent="." instance=ExtResource("FloatingPlatform")]
-position = Vector3(47.2, 5.5, 0)
-dimensions = Vector3(1.64, 1.5, 2.060)
+position = Vector3(47.25, 5.78, 0)
+dimensions = Vector3(1.83, 1.5, 2.060)
 
 [node name="Plant" parent="TreasureIsland7" instance=ExtResource("Rosette")]
 position = Vector3(0.12, 0, -0.56)
@@ -81,19 +81,19 @@ scale = Vector3(0.58, 0.7, 0.58)
 position = Vector3(0, 0.72, 0)
 
 [node name="Sapphire" parent="." instance=ExtResource("RareCollectible")]
-position = Vector3(26.1, 5.24, 0)
+position = Vector3(26.35, 5.44, 0)
 reward = ExtResource("rare")
 persistent_id = "sapphire_route"
 
 [node name="Heart" parent="." instance=ExtResource("RecoveryHeart")]
-position = Vector3(29.9, 6.05, 0)
+position = Vector3(30.05, 5.87, 0)
 
 [node name="Amethyst" parent="." instance=ExtResource("RareCollectible")]
-position = Vector3(39.9, 7.4, 0)
+position = Vector3(39.30, 7.27, 0)
 reward = ExtResource("epic")
 persistent_id = "amethyst_route"
 
 [node name="GoldenChest" parent="." instance=ExtResource("TreasureChest")]
-position = Vector3(44.1, 7.25, 0)
+position = Vector3(43.7, 7.06, 0)
 reward = ExtResource("legendary")
 persistent_id = "golden_chest"

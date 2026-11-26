@@ -73,6 +73,7 @@ func run_to(x: float, limit: int) -> bool:
 
 func stomp(crate: Node3D) -> bool:
 	var target_x := crate.global_position.x
+	var meadow := crate.get_parent()
 	await frames(2)
 	Input.action_press("jump")
 	for frame in 75:
@@ -81,8 +82,24 @@ func stomp(crate: Node3D) -> bool:
 		if not is_instance_valid(crate):
 			stop_input()
 			var bounced := player.velocity.y > 0
+			var burst := meadow.get_node_or_null("WoodBurst")
+			var splinters := burst.get_node("Splinters") as CPUParticles3D if burst else null
+			var scattered := is_instance_valid(splinters) and splinters.mesh != null and splinters.emitting
 			await frames(50)
-			return bounced
+			return bounced and scattered and not is_instance_valid(burst)
+	stop_input()
+	return false
+
+func stomp_patrol(patrol: Area3D) -> bool:
+	await frames(2)
+	Input.action_press("jump")
+	for frame in 75:
+		steer(patrol.global_position.x)
+		await frames(1)
+		if patrol.get("defeated"):
+			stop_input()
+			await frames(50)
+			return true
 	stop_input()
 	return false
 
@@ -93,18 +110,25 @@ func test_meadow() -> void:
 	var coins: int = Game.counts[1]
 	check(not await run_to(first.position.x, 42) and is_instance_valid(first), "impacto lateral conserva a caixa")
 	await run_to(71.95, 55)
-	check(await stomp(first) and Game.counts[1] == coins + 1, "aterrissagem quebra a primeira caixa e libera uma moeda")
+	check(await stomp(first) and Game.counts[1] == coins + 1, "aterrissagem anima a caixa, lança estilhaços e libera uma moeda")
 
 	check(await run_to(79.95, 150) and player.position.y > 2.7, "primeira subida gramada a pé")
 	var gold: int = Game.counts[0]
 	check(await stomp(meadow.get_node("FirstTerraceCrate")) and Game.counts[0] == gold + 1, "caixa do primeiro terraço libera cristal")
-	check(await run_to(85.9, 150) and player.position.y > 3.2, "segunda subida gramada a pé")
+	var sentry := meadow.get_node("TerraceSentry") as Area3D
+	check(await stomp_patrol(sentry), "sentinela do terraço pode ser derrotada por cima")
+	var heart_guard := meadow.get_node("HeartGuardLeft") as Area3D
+	var second_approach := heart_guard.position.x
+	check(await run_to(84.15, 150) and player.position.y > 3.0, "segunda subida gramada a pé")
+	check(absf(heart_guard.position.x - second_approach) > 0.06 and meadow.has_node("HeartGuardRight"), "dois inimigos cercam a caixa do coração")
+	check(await stomp_patrol(heart_guard), "salto abre espaço para a caixa escoltada")
+	await run_to(85.9, 100)
 	Game.health = 2
 	check(await stomp(meadow.get_node("SecondTerraceCrate")) and Game.health == 3, "caixa do segundo terraço libera coração")
 	var shelf_entry := Marker3D.new()
 	shelf_entry.name = "Prateleira de flores"
 	meadow.add_child(shelf_entry)
-	shelf_entry.position = Vector3(88.85, 5.23, 0)
+	shelf_entry.position = Vector3(88.85, 5.15, 0)
 	await jump_to(shelf_entry, true, false, 14)
 	check(await stomp(meadow.get_node("ShelfCrate")), "caixa da saliência opcional pode ser quebrada")
 	check(await run_to(96.05, 185) and Game.checkpoint.x > 96.0, "checkpoint do prado após os terraços")
