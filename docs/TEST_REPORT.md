@@ -1,5 +1,11 @@
 # Relatório de validação
 
+## Revisão dos saltos e das caixas
+
+A Travessia das Ilhas tem vãos de até 2,11 unidades entre bordas, incluindo os extremos da plataforma móvel. A rota elevada ainda permite usar o Dash. No início da fase, a plataforma que cai foi afastada do poste de escalada, e a plataforma orbital tem um curso menor perto dela. O teste sai do poste com um salto e confirma que a contagem da queda começa após a aterrissagem.
+
+Os testes verificam o contato por cima, a emissão e a remoção dos estilhaços, a coleta das recompensas e a derrota das patrulhas. A primeira caixa surpresa fica em terreno livre. Uma sentinela guarda a caixa de cristal e duas patrulhas ficam nos lados da caixa do coração.
+
 ## Prado Florido
 
 A continuação acrescenta cerca de 35 unidades de percurso horizontal entre o templo e o novo ponto de conclusão. Os três módulos de chão têm colisões sobrepostas nas junções, e as rampas ligam os dois terraços ao caminho principal.

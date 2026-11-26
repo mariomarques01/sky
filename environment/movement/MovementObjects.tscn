@@ -73,9 +73,9 @@ position = Vector3(0, 1.875, -0.25)
 mesh = SubResource("PoleMesh")
 
 [node name="FallingPlatform" parent="." instance=ExtResource("Platform")]
-position = Vector3(-5.65, 3.5, 0)
+position = Vector3(-6.35, 3.38, 0)
 script = ExtResource("Fall")
-dimensions = Vector3(1.8, 0.85, 1.55)
+dimensions = Vector3(1.7, 0.85, 1.55)
 
 [node name="Sensor" type="Area3D" parent="FallingPlatform"]
 position = Vector3(0, 0.14, 0)
@@ -85,13 +85,13 @@ collision_layer = 0
 shape = SubResource("PlatformSensor")
 
 [node name="OrbitingPlatform" parent="." instance=ExtResource("Platform")]
-position = Vector3(-7.75, 2.7, 0)
+position = Vector3(-8.9, 2.78, 0)
 script = ExtResource("Orbit")
-travel = Vector3(0.75, 0, 0)
-vertical_radius = 0.65
+travel = Vector3(0.55, 0, 0)
+vertical_radius = 0.46
 
 [node name="Wind" type="Area3D" parent="." groups=["movement_wind"]]
-position = Vector3(-8.2, 3.25, 0)
+position = Vector3(-8.85, 3.25, 0)
 collision_layer = 0
 metadata/horizontal_speed = 1.8
 
