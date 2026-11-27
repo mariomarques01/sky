@@ -29,3 +29,14 @@ contém o menu e o controle virtual. O mínimo físico usa o DPI informado pelo 
 Game emite `collected(kind)` e `checkpoint_activated` para os avisos do HUD.
 A conclusão apresenta o relógio de jogo da fase (pausas excluídas), as moedas da
 partida e o recorde persistente de cristais dourados.
+
+### Arena de inimigos
+
+Abra `worlds/test_enemies/Arena.tscn` com F6. Espinhos, voador e guardião
+especializam o deslocamento e o contato da patrulha do cogumelo. O impacto
+vertical também atinge espinhos próximos pelo sinal `ground_pound`. O barril
+usa um RigidBody3D restrito ao plano e uma Area3D para distinguir soco de dano.
+O chefe sinaliza a vida ao HUD ao entrar em combate e após cada acerto.
+
+O canhão captura na entrada e lança com Pulo ou Ação. O cipó fornece uma
+âncora móvel ao grupo `climb_pole`: segure cima para agarrar e Pulo para soltar.

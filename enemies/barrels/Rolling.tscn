@@ -1,9 +1,9 @@
 [gd_scene format=3]
 [ext_resource type="Script" path="res://enemies/barrels/rolling.gd" id="script"]
 [sub_resource type="StandardMaterial3D" id="Wood"]
-albedo_color = Color(.52,.25,.09,1)
+albedo_color = Color(0.52,0.25,0.09,1)
 [sub_resource type="StandardMaterial3D" id="Iron"]
-albedo_color = Color(.18,.19,.21,1)
+albedo_color = Color(0.18,0.19,0.21,1)
 [sub_resource type="CylinderMesh" id="Drum"]
 top_radius = 0.49
 bottom_radius = 0.49

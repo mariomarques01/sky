@@ -1,9 +1,9 @@
 [gd_scene format=3]
 [ext_resource type="Script" path="res://collectibles/cannon/cannon.gd" id="script"]
 [sub_resource type="StandardMaterial3D" id="Steel"]
-albedo_color = Color(.22,.35,.41,1)
+albedo_color = Color(0.22,0.35,0.41,1)
 [sub_resource type="StandardMaterial3D" id="Rim"]
-albedo_color = Color(.9,.58,.18,1)
+albedo_color = Color(0.9,0.58,0.18,1)
 [sub_resource type="CylinderMesh" id="TubeMesh"]
 top_radius = 0.6
 bottom_radius = 0.6
@@ -26,4 +26,4 @@ mesh = SubResource("TubeMesh")
 position = Vector3(0,0,0)
 [node name="Muzzle" type="MeshInstance3D" parent="Tube"]
 mesh = SubResource("RimMesh")
-position = Vector3(0,.7,0)
+position = Vector3(0,0.7,0)
