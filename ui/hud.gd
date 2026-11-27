@@ -26,6 +26,7 @@ var side_button := Button.new()
 var size_index := 1
 var opacity_index := 3
 var menu_buttons: Array[Button] = []
+var boss_bar: ProgressBar
 var notice := Label.new()
 var result := Label.new()
 var restart := Button.new()
@@ -143,6 +144,20 @@ func _ready() -> void:
 	notice.hide()
 	Game.checkpoint_activated.connect(show_checkpoint)
 	Game.collected.connect(pulse_counter)
+	for candidate in get_tree().get_nodes_in_group("arena_boss"):
+		if get_parent().is_ancestor_of(candidate):
+			boss_bar = ProgressBar.new()
+			safe.add_child(boss_bar)
+			boss_bar.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+			boss_bar.offset_left = -150
+			boss_bar.offset_right = 150
+			boss_bar.offset_top = 24
+			boss_bar.offset_bottom = 54
+			boss_bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			boss_bar.max_value = candidate.MAX_HEALTH
+			boss_bar.hide()
+			candidate.health_changed.connect(update_boss_health)
+			break
 	Game.changed.connect(refresh)
 	Game.finished.connect(finish)
 	get_viewport().size_changed.connect(layout)
@@ -221,6 +236,10 @@ func refresh() -> void:
 	totals[0].text = "%03d" % Game.counts[0]
 	totals[1].text = "%02d" % Game.counts[1]
 	totals[2].text = str(Game.counts[2])
+func update_boss_health(current: int) -> void:
+	boss_bar.value = current
+	boss_bar.visible = current > 0
+
 func pulse_counter(kind: int) -> void:
 	if counter_tweens.has(kind):
 		counter_tweens[kind].kill()
