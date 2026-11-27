@@ -111,7 +111,7 @@ func handle_touch(event: InputEvent) -> void:
 				handled = true
 			elif action_finger < 0 and point.distance_to(action_center) <= 48 * unit:
 				action_finger = event.index
-				set_action(&"dive", 1.0)
+				set_action(&"touch_attack", 1.0)
 				handled = true
 			elif gesture_finger < 0 and Rect2(Vector2(0, size.y * .5), Vector2(size.x, size.y * .5)).has_point(point):
 				gesture_finger = event.index
@@ -126,7 +126,7 @@ func handle_touch(event: InputEvent) -> void:
 			handled = true
 		elif event.index == action_finger:
 			action_finger = -1
-			set_action(&"dive", 0)
+			set_action(&"touch_attack", 0)
 			handled = true
 		elif event.index == gesture_finger:
 			gesture_finger = -1
@@ -140,6 +140,9 @@ func handle_touch(event: InputEvent) -> void:
 			var travel: Vector2 = point - gesture_origin
 			if absf(travel.x) >= 42 * unit and absf(travel.x) > absf(travel.y):
 				pulse(&"dash")
+				gesture_finger = -1
+			elif -travel.y >= 42 * unit and -travel.y > absf(travel.x):
+				pulse(&"dive")
 				gesture_finger = -1
 			handled = true
 		elif jump_fingers.has(event.index):

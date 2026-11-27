@@ -201,7 +201,7 @@ func enter_cannon(barrel: Node3D) -> void:
 	states.enter(&"Cannon")
 
 func update_cannon() -> void:
-	if not (Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("dive")):
+	if not (Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("dive") or Input.is_action_just_pressed("touch_attack")):
 		return
 	velocity = cannon.launch_velocity()
 	cannon = null
@@ -350,11 +350,11 @@ func update_strike(dt: float) -> void:
 	if not contact.is_empty() and contact.collider.has_method("take_movement_hit"):
 		contact.collider.call("take_movement_hit")
 
-func start_dive(grounded: bool) -> void:
+func start_dive(grounded: bool, attack_only := false) -> void:
 	if dive_used or crouched or dash.remaining > 0:
 		return
 	var speed := absf(velocity.x)
-	if grounded and speed < run_speed * .87:
+	if grounded and (attack_only or speed < run_speed * .87):
 		if strike_index < 0:
 			strike_index = 0
 			strike_time = 0
@@ -368,7 +368,7 @@ func start_dive(grounded: bool) -> void:
 	coyote = 0
 	wall_time = 0
 	skid_direction = 0
-	if not grounded and speed < run_speed * .87:
+	if not grounded and (attack_only or speed < run_speed * .87):
 		air_move = &"AirKick"
 		velocity.y = 4.9
 		return
@@ -594,7 +594,9 @@ func _physics_process(dt: float) -> void:
 				try_jump(axis, wants_crouch)
 			if Input.is_action_just_released("jump") and velocity.y > 2 and air_move not in [&"TripleJump", &"Backflip", &"SideFlip", &"Dive", &"AirKick"]:
 				velocity.y *= .52
-			if Input.is_action_just_pressed("dive"):
+			if Input.is_action_just_pressed("touch_attack"):
+				start_dive(floor_before and air_move == &"", true)
+			elif Input.is_action_just_pressed("dive"):
 				start_dive(floor_before and air_move == &"")
 			if Input.is_action_just_pressed("dash") and not crouched:
 				if not floor_before and absf(axis) > .1:

@@ -137,7 +137,7 @@ func _ready() -> void:
 		down.position=pad.global_position+touch_targets[index]
 		get_viewport().push_input(down,true)
 	await frames(2)
-	check(pad.visible and Input.is_action_pressed("right") and Input.is_action_pressed("jump") and Input.is_action_pressed("dive"), "primeiro toque revela os controles e permite multitouch")
+	check(pad.visible and Input.is_action_pressed("right") and Input.is_action_pressed("jump") and Input.is_action_pressed("touch_attack"), "primeiro toque revela os controles e permite multitouch")
 	for index in touch_targets.size():
 		var up := InputEventScreenTouch.new()
 		up.index=index
@@ -154,7 +154,7 @@ func _ready() -> void:
 	get_viewport().push_input(swipe, true)
 	dash_touch.pressed = false
 	get_viewport().push_input(dash_touch, true)
-	check(Input.is_action_pressed("dash") and not Input.is_action_pressed("dive"), "gesto horizontal dispara dash")
+	check(Input.is_action_pressed("dash") and not Input.is_action_pressed("touch_attack"), "gesto horizontal dispara dash")
 	await frames(70)
 	player.position = Vector3(-3, .12, 0)
 	player.velocity = Vector3.ZERO
