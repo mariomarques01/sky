@@ -10,6 +10,6 @@ func _activate(body: Node3D) -> void:
 	if activated or not body.is_in_group("player"):
 		return
 	activated = true
-	Game.checkpoint = global_position + respawn_offset
+	Game.activate_checkpoint(global_position + respawn_offset)
 	$Flame.scale *= 1.4
 	Audio.play(&"checkpoint")

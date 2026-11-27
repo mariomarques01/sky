@@ -26,6 +26,11 @@ var side_button := Button.new()
 var size_index := 1
 var opacity_index := 3
 var menu_buttons: Array[Button] = []
+var notice := Label.new()
+var result := Label.new()
+var restart := Button.new()
+var counter_tweens: Dictionary = {}
+var notice_tween: Tween
 var stack := VBoxContainer.new()
 
 func panel(bg: Color, border: Color, radius: int) -> StyleBoxFlat:
@@ -120,11 +125,23 @@ func _ready() -> void:
 	opacity_index = clampi(int(Save.data.get_value("toque", "opacidade", 3)), 0, OPACITIES.size()-1)
 	pad.left_handed = bool(Save.data.get_value("toque", "canhoto", false))
 	apply_touch_settings()
-	var restart := Button.new()
+	stack.add_child(result)
+	label_style(result, 36, Color.WHITE)
+	result.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	result.hide()
 	stack.add_child(restart)
 	button(restart,"Reiniciar fase",Scenes.restart)
 	menu_buttons = [resume, profile, size_button, opacity_button, side_button, restart]
 	modal.hide()
+	safe.add_child(notice)
+	notice.set_anchors_and_offsets_preset(Control.PRESET_CENTER_TOP)
+	notice.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	notice.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	notice.text = "Checkpoint ativado"
+	label_style(notice, 38, Color("#ffe4a7"))
+	notice.hide()
+	Game.checkpoint_activated.connect(show_checkpoint)
+	Game.collected.connect(pulse_counter)
 	Game.changed.connect(refresh)
 	Game.finished.connect(finish)
 	get_viewport().size_changed.connect(layout)
@@ -202,6 +219,26 @@ func refresh() -> void:
 	totals[0].text = "%03d" % Game.counts[0]
 	totals[1].text = "%02d" % Game.counts[1]
 	totals[2].text = str(Game.counts[2])
+func pulse_counter(kind: int) -> void:
+	if counter_tweens.has(kind):
+		counter_tweens[kind].kill()
+	var label := totals[kind]
+	label.pivot_offset = label.size * .5
+	label.scale = Vector2.ONE * 1.32
+	var tween := create_tween()
+	counter_tweens[kind] = tween
+	tween.tween_property(label, "scale", Vector2.ONE, .22).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+
+func show_checkpoint() -> void:
+	if notice_tween:
+		notice_tween.kill()
+	notice.modulate.a = 1
+	notice.show()
+	notice_tween = create_tween()
+	notice_tween.tween_interval(1.3)
+	notice_tween.tween_property(notice, "modulate:a", 0.0, .3)
+	notice_tween.tween_callback(notice.hide)
+
 func cycle_profile() -> void:
 	Audio.play(&"ui")
 	var world := get_parent()
@@ -223,13 +260,19 @@ func toggle_pause() -> void:
 	if modal.visible: resume.grab_focus()
 func finish() -> void:
 	title.text = "Jardins concluídos"
-	resume.hide()
+	for item in [resume, profile, size_button, opacity_button, side_button]:
+		item.hide()
+	notice.hide()
+	var seconds := floori(float(get_parent().get("clock")))
+	result.text = "Tempo · %d:%02d\nMoedas · %d\nRecorde de cristais dourados · %d" % [
+		seconds / 60, seconds % 60, Game.counts[1], Save.data.get_value("Jardins", "recorde", 0)]
+	result.show()
 	modal.show()
 	pad.release_all()
 	pad.set_process_input(false)
 	update_profile()
 	get_tree().paused = true
-	profile.grab_focus()
+	restart.grab_focus()
 func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("pause"): toggle_pause()
 	if event.is_action_pressed("touch_toggle"):
