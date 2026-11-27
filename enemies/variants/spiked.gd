@@ -4,7 +4,7 @@ func contact_player(body: CharacterBody3D) -> void:
 	if body.is_striking() and body.air_move == &"GroundPound":
 		defeat(body, false)
 	else:
-		body.hurt(global_position.x)
+		prepare_attack(body)
 
 func _ready() -> void:
 	var player := get_tree().get_first_node_in_group("player")

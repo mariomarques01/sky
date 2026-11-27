@@ -53,7 +53,13 @@ partida e o recorde persistente de cristais dourados.
 ### Arena de inimigos
 
 Abra `worlds/test_enemies/Arena.tscn` com F6. Espinhos, voador e guardião
-especializam o deslocamento e o contato da patrulha do cogumelo. O impacto
+especializam o deslocamento e o contato da patrulha do cogumelo. Cogumelos e
+espinhos se comprimem durante a pausa de 150 ms antes da virada. O voador
+antecipa os extremos horizontais do voo senoidal com a mesma compressão.
+O contato desses três inimigos causa dano após 150 ms de sobreposição contínua.
+Golpes válidos ainda podem derrotá-los durante a antecipação. Ao fim da
+animação de derrota, cada inimigo libera oito partículas de CPU de vida curta.
+O impacto
 vertical também atinge espinhos próximos pelo sinal `ground_pound`. O barril
 usa um RigidBody3D restrito ao plano e uma Area3D para distinguir soco de dano.
 O chefe sinaliza a vida ao HUD ao entrar em combate e após cada acerto.
