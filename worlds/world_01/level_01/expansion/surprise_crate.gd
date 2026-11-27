@@ -23,5 +23,5 @@ func _shatter() -> void:
 	var burst := WoodBurst.instantiate() as Node3D
 	burst.position = position + Vector3(0, 0.52, 0.24)
 	get_parent().add_child(burst)
-	Audio.cue(235)
+	Audio.play(&"crate")
 	queue_free()

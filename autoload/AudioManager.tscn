@@ -1,0 +1,36 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://autoload/audio_manager.gd" id="Manager"]
+
+[node name="Audio" type="Node"]
+process_mode = 3
+script = ExtResource("Manager")
+
+[node name="StageMusic" type="AudioStreamPlayer" parent="."]
+bus = &"Música"
+
+[node name="Effects" type="Node" parent="."]
+
+[node name="Voice1" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"
+
+[node name="Voice2" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"
+
+[node name="Voice3" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"
+
+[node name="Voice4" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"
+
+[node name="Voice5" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"
+
+[node name="Voice6" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"
+
+[node name="Voice7" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"
+
+[node name="Voice8" type="AudioStreamPlayer" parent="Effects"]
+bus = &"SFX"

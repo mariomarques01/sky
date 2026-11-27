@@ -206,7 +206,7 @@ func _ready() -> void:
 	check(Game.counts[2] == rare_count and not chest.monitoring, "respawn preserva as coletas e o baú aberto")
 	await test_meadow()
 	get_tree().paused = false
-	Audio.voice.stop()
+	Audio.stop_all()
 	world.queue_free()
 	await frames(3)
 	var from_disk := ConfigFile.new()
@@ -222,6 +222,6 @@ func _ready() -> void:
 	await frames(6)
 	check(Game.complete and Game.counts[2] == 0, "conclusão disponível em nova partida")
 	get_tree().paused = false
-	Audio.voice.stop()
+	Audio.stop_all()
 	await get_tree().create_timer(.5).timeout
 	get_tree().quit(failures)

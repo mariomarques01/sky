@@ -12,4 +12,4 @@ func _activate(body: Node3D) -> void:
 	activated = true
 	Game.checkpoint = global_position + respawn_offset
 	$Flame.scale *= 1.4
-	Audio.cue(890)
+	Audio.play(&"checkpoint")

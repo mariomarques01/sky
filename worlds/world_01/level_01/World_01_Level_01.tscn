@@ -27,6 +27,8 @@
 [ext_resource type="Resource" path="res://collectibles/rarities/rare.tres" id="rare_reward"]
 [ext_resource type="PackedScene" path="res://environment/movement/MovementObjects.tscn" id="MovementObjects"]
 
+[ext_resource type="AudioStream" path="res://audio/music/celestial_gardens_intro.wav" id="stage_intro"]
+[ext_resource type="AudioStream" path="res://audio/music/celestial_gardens_loop.wav" id="stage_loop"]
 [sub_resource type="ShaderMaterial" id="water"]
 shader = ExtResource("e0")
 [sub_resource type="ShaderMaterial" id="cloud"]
@@ -182,6 +184,8 @@ rings = 2
 size = Vector3(1,1.8,1.5)
 [node name="World_01_Level_01" type="Node3D"]
 script = ExtResource("e4")
+stage_music_intro = ExtResource("stage_intro")
+stage_music_loop = ExtResource("stage_loop")
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("env")
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]

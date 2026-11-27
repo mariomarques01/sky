@@ -63,7 +63,7 @@ func _touch(body: Node3D) -> void:
 	if reward and reward.healing:
 		Game.health += 1
 		Game.changed.emit()
-		Audio.cue(820)
+		Audio.play(&"heal")
 	else:
 		Game.collect(kind, completes_level)
 

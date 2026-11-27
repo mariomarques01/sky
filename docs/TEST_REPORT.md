@@ -1,5 +1,11 @@
 # Relatório de validação
 
+## Áudio e resposta ao impacto
+
+O autoload de áudio usa oito vozes de efeitos e um player dedicado à música. A faixa original de Jardins Celestiais começa com uma introdução de 4,8 segundos e repete o trecho até 24 segundos. Os arquivos WAV podem ser regenerados com `procedural/bake_audio.py`.
+
+O teste de partida verifica o pool, os buses, a reprodução simultânea e a configuração do loop. Dois stomps medem a pausa de três ciclos de física a 60 Hz e comparam o ápice com o botão de pulo solto e segurado. O teste também verifica a emissão de poeira no pouso e na derrapagem.
+
 ## Revisão dos saltos e das caixas
 
 A Travessia das Ilhas tem vãos de até 2,11 unidades entre bordas, incluindo os extremos da plataforma móvel. A rota elevada ainda permite usar o Dash. No início da fase, a plataforma que cai foi afastada do poste de escalada, e a plataforma orbital tem um curso menor perto dela. O teste sai do poste com um salto e confirma que a contagem da queda começa após a aterrissagem.

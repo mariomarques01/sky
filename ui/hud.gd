@@ -147,6 +147,7 @@ func refresh() -> void:
 	totals[1].text = "%02d" % Game.counts[1]
 	totals[2].text = str(Game.counts[2])
 func cycle_profile() -> void:
+	Audio.play(&"ui")
 	var world := get_parent()
 	var q := (int(world.get("quality"))+1)%3
 	world.call("set_quality",q)
@@ -156,6 +157,7 @@ func update_profile() -> void:
 	profile.text = "Gráficos · "+str(["Baixo","Médio","Alto"][int(get_parent().get("quality"))])
 func toggle_pause() -> void:
 	if Game.complete: return
+	Audio.play(&"ui")
 	modal.visible = not modal.visible
 	get_tree().paused = modal.visible
 	title.text = "Jardins Celestiais"

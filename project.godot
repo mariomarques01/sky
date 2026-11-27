@@ -6,7 +6,7 @@ config/features=PackedStringArray("4.4","Mobile")
 [autoload]
 Game="*res://autoload/game_manager.gd"
 Save="*res://autoload/save_manager.gd"
-Audio="*res://autoload/audio_manager.gd"
+Audio="*res://autoload/AudioManager.tscn"
 Scenes="*res://autoload/scene_manager.gd"
 [display]
 window/size/viewport_width=1920

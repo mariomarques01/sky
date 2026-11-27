@@ -1,6 +1,9 @@
 extends CharacterBody3D
 signal impact
 signal ground_pound(point: Vector3)
+
+const GroundDust = preload("res://environment/effects/GroundDust.tscn")
+const STOMP_STOP_SECONDS := 0.05
 @export var run_speed := 6.6
 @export var crouch_speed := 2.2
 @export var crouch_height := 0.92
@@ -22,6 +25,8 @@ var jumps := 0
 var stun := 0.0
 var recovery := 0.0
 var landing := 0.0
+var stomp_stop := 0.0
+var slide_dust_timer := 0.0
 var crouched := false
 var sliding := false
 const CHAIN_WINDOW := .25
@@ -201,8 +206,9 @@ func is_striking() -> bool:
 	return strike_is_active() or sliding or belly_slide or slope_slide or air_move in [&"Dive", &"AirKick", &"GroundPound"]
 
 func hurt(source_x: float) -> void:
-	if recovery == 0 and health.hit():
+	if recovery == 0 and stomp_stop <= 0.0 and health.hit():
 		impact.emit()
+		Audio.vibrate(45)
 		if Game.health <= 0:
 			die()
 		else:
@@ -213,6 +219,7 @@ func hurt(source_x: float) -> void:
 			var away := signf(global_position.x - source_x)
 			velocity = Vector3(4 * (away if away != 0 else -facing), 4, 0)
 func die() -> void:
+	stomp_stop = 0.0
 	reset_moves()
 	states.enter(&"Death")
 	recovery = .35
@@ -229,6 +236,13 @@ func bounce(launch_speed := 0.0) -> void:
 	air_move = &"Bounce"
 	jumps = 1
 	dash.air_available = true
+func stomp_enemy(held: bool) -> void:
+	bounce(jump_speed * 1.12 if held else 0.0)
+	stomp_stop = STOMP_STOP_SECONDS
+	impact.emit()
+	Audio.play(&"stomp")
+	Audio.vibrate(28)
+
 func try_jump(axis: float, wants_crouch: bool) -> void:
 	update_stance(false)
 	if crouched:
@@ -281,20 +295,24 @@ func try_jump(axis: float, wants_crouch: bool) -> void:
 	coyote = 0
 	chain_time = 0
 	dash.remaining = 0
-	Audio.cue(410)
+	Audio.play(&"jump")
 
 func update_strike(dt: float) -> void:
+	var was_active := strike_is_active()
 	strike_time += dt
 	if combo_buffered and strike_time >= STRIKE_ACTIVE_TO[strike_index]:
 		strike_index += 1
 		strike_time = 0
 		combo_buffered = false
+		was_active = false
 	if strike_time >= STRIKE_DURATIONS[strike_index]:
 		strike_index = -1
 		return
 	velocity.x = move_toward(velocity.x, facing * 1.8 if strike_is_active() else 0.0, 26.0 * dt)
 	if not strike_is_active():
 		return
+	if not was_active:
+		Audio.play(&"punch")
 	var contact := surface_between(global_position + Vector3.UP * .34,
 		global_position + Vector3.UP * .34 + Vector3.RIGHT * facing * .78)
 	if not contact.is_empty() and contact.collider.has_method("take_movement_hit"):
@@ -427,7 +445,21 @@ func update_vertical(dt: float) -> void:
 		if wall_time > 0:
 			velocity.y = maxf(velocity.y, -2.5)
 
+func emit_ground_dust(direction: Vector3, particles: int) -> void:
+	var dust := GroundDust.instantiate() as CPUParticles3D
+	dust.position = position + Vector3(0.0, 0.09, 0.25)
+	dust.direction = direction
+	dust.amount = particles
+	get_parent().add_child(dust)
+
 func handle_landing(incoming: Vector3) -> void:
+	if air_move == &"GroundPound":
+		Audio.play(&"pound")
+		Audio.vibrate(40)
+		emit_ground_dust(Vector3.UP, 13)
+	elif incoming.y <= -2.8:
+		Audio.play(&"land", -4.0)
+		emit_ground_dust(Vector3.UP, 7)
 	landing = .08
 	wall_time = 0
 	last_kick_wall = RID()
@@ -459,6 +491,11 @@ func handle_landing(incoming: Vector3) -> void:
 			break
 
 func _physics_process(dt: float) -> void:
+	if stomp_stop > 0.0:
+		stomp_stop = maxf(0.0, stomp_stop - dt)
+		if stomp_stop < 0.0001:
+			stomp_stop = 0.0
+		return
 	if recovery > 0:
 		recovery = maxf(0,recovery-dt)
 		$Visual.scale = Vector3.ONE*maxf(.02,recovery/.35)
@@ -563,6 +600,13 @@ func _physics_process(dt: float) -> void:
 		return
 	if is_on_floor() and not floor_before:
 		handle_landing(pre_velocity)
+	if is_on_floor() and (sliding or belly_slide or slope_slide or skid_direction != 0) and absf(velocity.x) > 2.0:
+		slide_dust_timer -= dt
+		if slide_dust_timer <= 0.0:
+			emit_ground_dust(Vector3(-signf(velocity.x), 0.38, 0.0).normalized(), 4)
+			slide_dust_timer = 0.10
+	else:
+		slide_dust_timer = 0.0
 	var next := &"Idle"
 	if stun>0: next = &"Hurt"
 	elif dash.remaining>0: next = &"Dash"

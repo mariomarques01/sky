@@ -11,7 +11,7 @@ func _ready() -> void:
 			Input.action_release("right")
 			Input.action_release("left")
 			get_tree().paused = false
-			Audio.voice.stop()
+			Audio.stop_all()
 			await get_tree().create_timer(.35).timeout
 			get_tree().quit()
 			return
