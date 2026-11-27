@@ -3,9 +3,15 @@ extends Node3D
 const BLEND_TIME := .14
 const LEG_BONES := [["LeftUpLeg", "LeftLeg", "LeftFoot"], ["RightUpLeg", "RightLeg", "RightFoot"]]
 
+@export_range(0.0, 0.4, 0.01) var stretch_intensity := 0.14
+@export_range(0.0, 0.4, 0.01) var landing_squash := 0.22
+
 @onready var explorer: Node3D = $Explorer
 @onready var rig := explorer.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
 @onready var library := explorer.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
+@onready var tree: AnimationTree = $AnimationTree
+@onready var machine := tree.tree_root as AnimationNodeStateMachine
+@onready var playback := tree.get("parameters/playback") as AnimationNodeStateMachinePlayback
 var rest: Array[Transform3D] = []
 var blend_from: Array[Transform3D] = []
 var spin_from := Quaternion.IDENTITY
@@ -19,13 +25,19 @@ func _ready() -> void:
 	rig.reset_bone_poses()
 	for index in rig.get_bone_count():
 		rest.append(rig.get_bone_global_rest(index))
+	tree.anim_player = tree.get_path_to(library)
 	library.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 
 func soften_step(rise: float) -> void:
 	step_offset -= rise
 	position.y = step_offset
 
-func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float, vertical_speed := 0.0) -> void:
+func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float, vertical_speed := 0.0, landing := 0.0) -> void:
+	var height := 1.0 + stretch_intensity * clampf(vertical_speed / 10.0, 0.0, 1.0)
+	height -= landing_squash * clampf(landing / 0.08, 0.0, 1.0)
+	var width := 1.0 / sqrt(height)
+	scale = Vector3(width, height, width)
+	$DashTrail.emitting = next == &"Dash"
 	if next != pose_name:
 		blend_from.clear()
 		for index in rig.get_bone_count():
@@ -38,7 +50,17 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 	step_offset = move_toward(step_offset, 0.0, 2.8 * dt)
 	position.y = step_offset
 
-	if next in [&"Walk", &"Run"]:
+	var state := &"Land" if next == &"Landing" else next
+	var authored := false
+	if machine.has_node(state):
+		var node := machine.get_node(state) as AnimationNodeAnimation
+		authored = node.animation != &"Walking"
+		if playback.get_current_node() != state or pose_time == dt:
+			playback.start(state)
+	tree.active = authored
+	if authored:
+		tree.advance(dt)
+	elif next in [&"Walk", &"Run"]:
 		var clip := &"Running" if next == &"Run" else &"Walking"
 		var stride := 2.6 if next == &"Run" else 1.65
 		gait = fposmod(gait + speed * dt / stride, 1.0)
@@ -55,6 +77,9 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 	else:
 		rig.reset_bone_poses()
 		pose_action(next, speed, dt, vertical_speed)
+
+	if next == &"Run":
+		pitch("Spine", 12.0 * clampf(speed / 7.0, 0.0, 1.0))
 
 	var weight := smoothstep(0.0, BLEND_TIME, pose_time)
 	if weight < 1.0:
@@ -73,6 +98,18 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 	var pivot := Vector3.UP * .72
 	explorer.position = pivot - explorer.basis * pivot
 	visible = shield <= 0 or fmod(shield, .14) < .1
+
+func death_arc(progress: float) -> void:
+	position.y = 4.0 * progress * (1.0 - progress) - 0.65 * progress
+	explorer.rotation.x = TAU * progress
+	var pivot := Vector3.UP * 0.72
+	explorer.position = pivot - explorer.basis * pivot
+
+func reset_after_death() -> void:
+	step_offset = 0.0
+	position.y = 0.0
+	explorer.rotation = Vector3.ZERO
+	explorer.position = Vector3.ZERO
 
 func joint(label: String) -> int:
 	return rig.find_bone("mixamorig_" + label)
@@ -132,7 +169,7 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 				feet[side] *= smoothstep(.03, .65, speed)
 		&"Slide", &"SlopeSlide", &"Skid":
 			sink = .24
-			lean = -22.0
+			lean = -8.0 - 26.0 * clampf(speed / 9.0, 0.0, 1.0)
 			arms = Vector2(-36.0, -43.0)
 			feet[0].z = .23
 			feet[1].z = .09

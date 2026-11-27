@@ -9,6 +9,40 @@
 resource_local_to_scene = true
 radius = 0.27
 height = 1.55
+[sub_resource type="SphereMesh" id="TrailMesh"]
+radius = 0.085
+height = 0.17
+radial_segments = 5
+rings = 2
+[sub_resource type="AnimationNodeAnimation" id="PoseIdle"]
+animation = &"Walking"
+[sub_resource type="AnimationNodeAnimation" id="PoseJump"]
+animation = &"Walking"
+[sub_resource type="AnimationNodeAnimation" id="PoseFall"]
+animation = &"Walking"
+[sub_resource type="AnimationNodeAnimation" id="PoseLand"]
+animation = &"Walking"
+[sub_resource type="AnimationNodeAnimation" id="PoseDash"]
+animation = &"Walking"
+[sub_resource type="AnimationNodeAnimation" id="PoseHurt"]
+animation = &"Walking"
+[sub_resource type="AnimationNodeAnimation" id="PoseDeath"]
+animation = &"Walking"
+[sub_resource type="AnimationNodeStateMachine" id="PoseMachine"]
+states/Idle/node = SubResource("PoseIdle")
+states/Idle/position = Vector2(300, 80)
+states/Jump/node = SubResource("PoseJump")
+states/Jump/position = Vector2(445, 80)
+states/Fall/node = SubResource("PoseFall")
+states/Fall/position = Vector2(590, 80)
+states/Land/node = SubResource("PoseLand")
+states/Land/position = Vector2(300, 170)
+states/Dash/node = SubResource("PoseDash")
+states/Dash/position = Vector2(445, 170)
+states/Hurt/node = SubResource("PoseHurt")
+states/Hurt/position = Vector2(590, 170)
+states/Death/node = SubResource("PoseDeath")
+states/Death/position = Vector2(300, 260)
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1")
 floor_snap_length = 0.22
@@ -26,3 +60,17 @@ script = ExtResource("3")
 [node name="Explorer" parent="Visual" instance=ExtResource("2")]
 [node name="Dash" type="Node" parent="."]
 script=ExtResource("6")
+[node name="DashTrail" type="CPUParticles3D" parent="Visual"]
+position = Vector3(0, 0.6, -0.2)
+emitting = false
+local_coords = false
+cast_shadow = 0
+amount = 8
+lifetime = 0.13
+gravity = Vector3(0,0,0)
+mesh = SubResource("TrailMesh")
+[node name="AnimationTree" type="AnimationTree" parent="Visual"]
+active = false
+callback_mode_process = 2
+tree_root = SubResource("PoseMachine")
+anim_player = NodePath("../Explorer/AnimationPlayer")
