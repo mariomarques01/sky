@@ -4,7 +4,7 @@ A cena em `worlds/world_01/level_01/` contém os terrenos, os vãos da ponte, os
 
 `player/player.tscn` compõe CharacterBody3D, colisão, máquina de estados, saúde, dash e visual com esqueleto. O controlador amostra ações por tick físico, aplica aceleração, gravidade, tolerância de borda e fila de salto, resolve o movimento com move_and_slide e seleciona o estado. A velocidade em Z é zero e o corpo retorna ao plano central. O estado emite entered quando muda. Dash controla duração, recarga e disponibilidade aérea. Health controla a janela de imunidade. As propriedades exportadas desses nós ajustam o comportamento no Inspector.
 
-O AnimationTree do visual usa uma AnimationNodeStateMachine com Walking e Running e transições de 140 ms. Os demais estados usam a pose disponível com tempo congelado, inclinação de dash, intermitência por dano ou redução de escala na morte. Respawn restaura escala, velocidade e vida. A câmera suaviza posição e antecipação e recebe o sinal impact para deslocamento transitório.
+A câmera suaviza posição e antecipação e recebe o sinal `impact` para deslocamento transitório.
 
 Cada coletável é uma Area3D com bloqueio de coleta dupla. O GameManager contabiliza por tipo e emite changed ou finished. O HUD escuta esses sinais. O patrulheiro usa limites e um RayCast3D apontado para o piso. A diferença entre os pés do jogador e o centro do inimigo, junto à velocidade vertical, caracteriza o impacto por cima.
 
@@ -12,13 +12,33 @@ Quatro autoloads concentram o estado da partida, persistência ConfigFile, sínt
 
 ### Animação do explorador
 
-O controlador passa a pose, velocidades e o tempo restante de pouso ao Visual.
-A deformação, o rastro e o arco de morte afetam apenas a apresentação.
-Em player/player.tscn, abra Visual/AnimationTree e troque Walking no nó
-Idle, Jump, Fall, Land, Dash, Hurt ou Death pelo clipe dedicado da biblioteca
-do Explorer. Walking marca uma pose procedural provisória. Landing usa Land.
-A árvore avança no passo de física apenas para clipes dedicados. Walk e Run
-continuam sincronizados com a distância e os golpes e acrobacias conservam suas poses.
+O controlador passa a pose, as velocidades e o tempo restante de pouso ao Visual.
+O AnimationTree em `player/player.tscn` tem um nó para cada clipe da tabela.
+Ao importar ou substituir o clipe com esse nome na biblioteca padrão do
+AnimationPlayer do Explorer, o nó passa a usá-lo automaticamente. Para escolher
+um clipe de outra biblioteca, selecione-o no campo **Animation** do nó da árvore.
+
+| Nó e nome exato do clipe | Duração recomendada | Reprodução |
+| --- | --- | --- |
+| `Idle` | 3,20 s | Loop |
+| `Jump` | 0,25 s | Uma vez, mantém a última pose |
+| `Fall` | 0,60 s | Loop |
+| `Land` | 0,08 s | Uma vez |
+| `Dash` | 0,16 s | Uma vez |
+| `Hurt` | 0,23 s | Uma vez |
+| `Death` | 0,35 s | Uma vez |
+
+As durações são de referência. A física controla a troca de estado e pode
+interromper o clipe. `Landing` seleciona `Land`. Anime o esqueleto no lugar,
+com os mesmos nomes de ossos. O deslocamento fica com o controlador.
+
+`Walking` é o marcador de fallback. Um clipe ausente também mantém a pose
+procedural, com respiração no Idle. O Bunny atual tem uma única malha sem
+blend shapes ou ossos de pálpebras. O piscar depende de um rig facial futuro.
+A árvore avança em passos de física e as poses têm blend de até 140 ms.
+Walk e Run seguem sincronizados com a distância. Squash/stretch, rastro do dash,
+intermitência de dano e deslocamento do arco de morte ficam na camada visual.
+A cambalhota procedural de morte cede lugar ao clipe `Death` quando disponível.
 
 ### HUD e toque
 

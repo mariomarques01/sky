@@ -16,6 +16,7 @@ var rest: Array[Transform3D] = []
 var blend_from: Array[Transform3D] = []
 var spin_from := Quaternion.IDENTITY
 var pose_name: StringName
+var authored_pose := false
 var pose_time := 0.0
 var gait := 0.0
 var low_gait := 0.0
@@ -27,6 +28,14 @@ func _ready() -> void:
 		rest.append(rig.get_bone_global_rest(index))
 	tree.anim_player = tree.get_path_to(library)
 	library.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
+	# Resolve imported clips on a private copy of the tree for this player.
+	machine = machine.duplicate(true) as AnimationNodeStateMachine
+	tree.tree_root = machine
+	playback = tree.get("parameters/playback") as AnimationNodeStateMachinePlayback
+	for state in machine.get_node_list():
+		var node := machine.get_node(state) as AnimationNodeAnimation
+		if node and node.animation == &"Walking" and library.has_animation(state):
+			node.animation = state
 
 func soften_step(rise: float) -> void:
 	step_offset -= rise
@@ -40,7 +49,8 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 	var width := 1.0 / sqrt(height)
 	scale = Vector3(width, height, width)
 	$DashTrail.emitting = next == &"Dash"
-	if next != pose_name:
+	var pose_changed := next != pose_name
+	if pose_changed:
 		blend_from.clear()
 		for index in rig.get_bone_count():
 			blend_from.append(rig.get_bone_pose(index))
@@ -53,14 +63,15 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 	position.y = step_offset
 
 	var state := &"Land" if next == &"Landing" else next
-	var authored := false
+	authored_pose = false
 	if machine.has_node(state):
 		var node := machine.get_node(state) as AnimationNodeAnimation
-		authored = node.animation != &"Walking"
-		if playback.get_current_node() != state or pose_time == dt:
+		authored_pose = node.animation != &"Walking" and library.has_animation(node.animation)
+	tree.active = authored_pose
+	if authored_pose:
+		if pose_changed or playback.get_current_node() != state:
+			rig.reset_bone_poses()
 			playback.start(state)
-	tree.active = authored
-	if authored:
 		tree.advance(dt)
 	elif next in [&"Walk", &"Run"]:
 		var clip := &"Running" if next == &"Run" else &"Walking"
@@ -107,7 +118,8 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 
 func death_arc(progress: float) -> void:
 	position.y = 4.0 * progress * (1.0 - progress) - 0.65 * progress
-	explorer.rotation.x = TAU * progress
+	if not authored_pose:
+		explorer.rotation.x = TAU * progress
 	var pivot := Vector3.UP * 0.72
 	explorer.position = pivot - explorer.basis * pivot
 
@@ -182,6 +194,11 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 	var feet := [Vector3.ZERO, Vector3.ZERO]
 	var toe_angle := 0.0
 	match next:
+		&"Idle":
+			var breath := sin(TAU * pose_time / 3.2)
+			sink = .006 * breath
+			lean = .5 * breath
+			pitch("Spine2", -.9 * breath)
 		&"Crouch":
 			sink = .26
 			lean = 31.0
