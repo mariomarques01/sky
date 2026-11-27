@@ -1,4 +1,6 @@
 extends Node
+
+const DustScript = preload("res://environment/effects/ground_dust.gd")
 var failed := 0
 @onready var world := $World
 @onready var player := $World/Player as CharacterBody3D
@@ -31,10 +33,14 @@ func check_stance() -> void:
 	await frames(4)
 	check(is_equal_approx(capsule.height, standing_height), "retorno à postura em pé após liberar espaço")
 
+func dust_is_visible() -> bool:
+	return world.get_children().any(func(child: Node) -> bool: return child.get_script() == DustScript)
+
 func check_slide() -> void:
-	player.global_position = Vector3(1.0, .12, 0)
+	player.global_position = Vector3(1.0, .8, 0)
 	player.velocity = Vector3.ZERO
-	await frames(15)
+	await frames(20)
+	check(player.is_on_floor() and dust_is_visible(), "pouso solta poeira")
 	Input.action_press("right")
 	await frames(24)
 	Input.action_press("crouch")
@@ -42,6 +48,7 @@ func check_slide() -> void:
 	Input.action_release("crouch")
 	Input.action_release("right")
 	check(player.get("sliding") and player.velocity.x > 6.6, "deslizada conserva impulso após soltar")
+	check(dust_is_visible(), "derrapagem solta poeira")
 	var wall := StaticBody3D.new()
 	var wall_collision := CollisionShape3D.new()
 	var box := BoxShape3D.new()
@@ -56,9 +63,63 @@ func check_slide() -> void:
 	check(not player.get("sliding") and impacts.size() == 1, "parede encerra deslizada e registra impacto")
 	wall.queue_free()
 
+func check_audio() -> void:
+	var music := Audio.music.stream as AudioStreamWAV
+	check(Audio.voices.size() == 8 and Audio.music.bus == &"Música" and Audio.music.playing, "oito vozes de efeitos e música dedicada")
+	check(music.loop_mode == AudioStreamWAV.LOOP_DISABLED and is_equal_approx(music.get_length(), 4.8)
+		and Audio.looping_track.loop_mode == AudioStreamWAV.LOOP_FORWARD
+		and is_equal_approx(Audio.looping_track.get_length(), 19.2), "intro única seguida por uma faixa em loop")
+	Audio.play(&"jump")
+	Audio.play(&"coin")
+	Audio.play(&"ui")
+	var jump_voice := Audio.voices[0]
+	var coin_voice := Audio.voices[1]
+	var ui_voice := Audio.voices[2]
+	check(jump_voice.playing and coin_voice.playing and ui_voice.playing
+		and jump_voice.stream != coin_voice.stream and jump_voice.bus == &"SFX" and ui_voice.bus == &"UI",
+		"pulo, moeda, UI e música podem tocar juntos")
+	check(jump_voice.pitch_scale >= .94 and jump_voice.pitch_scale <= 1.06, "pitch dos efeitos varia dentro do intervalo")
+
+func measure_stomp(enemy: Area3D, hold_jump: bool) -> float:
+	var impact_samples: Array = []
+	var record := func() -> void:
+		if player.get("stomp_stop") > 0.0:
+			impact_samples.append([Engine.get_physics_frames(), player.position])
+	player.connect("impact", record)
+	if hold_jump:
+		Input.action_press("jump")
+		await frames(2)
+	player.position = enemy.position + Vector3(0, 1.30, 0)
+	player.velocity = Vector3(0, -5, 0)
+	player.set("buffered", 0.0)
+	for frame in 16:
+		await frames(1)
+		if impact_samples.is_empty():
+			continue
+		player.disconnect("impact", record)
+		var launch := player.velocity.y
+		while player.get("stomp_stop") > 0.0:
+			await frames(1)
+		var impact_frame: int = impact_samples[0][0]
+		var impact_position: Vector3 = impact_samples[0][1]
+		check(player.position.is_equal_approx(impact_position) and Engine.get_physics_frames() - impact_frame == 3,
+			"stomp mantém o impacto por três ciclos a 60 Hz")
+		var peak := player.position.y
+		for sample in 32:
+			await frames(1)
+			peak = maxf(peak, player.position.y)
+		Input.action_release("jump")
+		check(launch > 0 and not is_instance_valid(enemy), "o inimigo derrotado libera o quique")
+		return peak - impact_position.y
+	player.disconnect("impact", record)
+	Input.action_release("jump")
+	check(false, "o salto deve atingir o inimigo por cima")
+	return 0.0
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	world.process_mode = Node.PROCESS_MODE_PAUSABLE
+	check_audio()
 	await frames(20)
 	check(player.is_on_floor(),"spawn e chão")
 	await check_stance()
@@ -151,10 +212,13 @@ func _ready() -> void:
 	check(Game.health==2,"dano lateral")
 	await frames(4)
 	check(Game.health==2,"invulnerabilidade")
-	player.position = enemy.position + Vector3(0,1.35,0)
-	player.velocity = Vector3(0,-5,0)
-	await frames(32)
-	check(not is_instance_valid(enemy) and Game.counts[1]>0,"impacto e recompensa")
+	var enemy_position := enemy.position
+	var normal_height := await measure_stomp(enemy, false)
+	var second_enemy := preload("res://enemies/mushroom/Mushroom.tscn").instantiate() as Area3D
+	second_enemy.position = enemy_position
+	world.get_node("Gameplay/Enemies").add_child(second_enemy)
+	var held_height := await measure_stomp(second_enemy, true)
+	check(Game.counts[1] >= 2 and held_height > normal_height + 0.55, "segurar pulo no stomp aumenta a altura do quique")
 	hud.toggle_pause()
 	check(get_tree().paused,"menu pausa")
 	hud.toggle_pause()
@@ -170,6 +234,6 @@ func _ready() -> void:
 	check(not Game.complete and Game.counts[2]==1 and not get_tree().paused,"cristal azul sem concluir a fase")
 	get_tree().paused = false
 	await check_slide()
-	Audio.voice.stop()
+	Audio.stop_all()
 	await get_tree().create_timer(.3,true,false,true).timeout
 	get_tree().quit(failed)

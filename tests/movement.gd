@@ -232,6 +232,6 @@ func _ready() -> void:
 	await frames(170)
 	check(falling.position.is_equal_approx(resting_position), "plataforma volta após a queda")
 
-	Audio.voice.stop()
+	Audio.stop_all()
 	await get_tree().create_timer(.3).timeout
 	get_tree().quit(failures)

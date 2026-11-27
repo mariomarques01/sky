@@ -13,7 +13,7 @@ func begin() -> void:
 	changed.emit()
 func collect(kind: int, completes_level := true) -> void:
 	counts[kind] += 1
-	Audio.cue(690.0+kind*170)
+	Audio.play(&"coin" if kind == 1 else &"crystal")
 	changed.emit()
 	if kind == 2 and completes_level:
 		finish_level()

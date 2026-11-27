@@ -9,7 +9,7 @@ func hit() -> bool:
 	shield = immunity
 	Game.health -= 1
 	Game.changed.emit()
-	Audio.cue(155)
+	Audio.play(&"hurt")
 	return true
 func restore() -> void:
 	Game.health = 3

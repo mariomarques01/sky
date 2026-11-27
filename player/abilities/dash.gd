@@ -14,7 +14,7 @@ func launch(grounded: bool) -> void:
 	remaining = duration
 	cooldown = recharge
 	air_available = grounded
-	Audio.cue(295)
+	Audio.play(&"dash")
 func reset() -> void:
 	remaining = 0
 	cooldown = 0

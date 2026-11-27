@@ -9,7 +9,7 @@ func take_movement_hit() -> void:
 		return
 	broken = true
 	$Collision.set_deferred("disabled", true)
-	Audio.cue(220)
+	Audio.play(&"crate")
 	var animation := create_tween()
 	animation.tween_property($Mesh, "scale", Vector3(1.1, 0.62, 1.08), .075)
 	animation.tween_callback(_shatter)

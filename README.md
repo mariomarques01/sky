@@ -37,7 +37,7 @@ A cena abre com a geometria do cenário já posicionada e editável. O GLB do pe
 
 ## Jogar no navegador
 
-Abra [Skybound no GitHub Pages](https://mariomarques01.github.io/sky/) em um navegador com WebGL 2. Os controles virtuais aparecem ao abrir o jogo na Web. No iPhone, abra o jogo no Safari e use **Compartilhar → Adicionar à Tela de Início**. No Android, use **Instalar app** no menu do navegador. Abra pelo ícone para jogar usando toda a área disponível, em pé ou na horizontal.
+Abra [Skybound no GitHub Pages](https://mariomarques01.github.io/sky/) em um navegador com WebGL 2. Os controles virtuais aparecem ao abrir o jogo na Web. O navegador libera o áudio após o primeiro toque ou tecla. No iPhone, abra o jogo no Safari e use **Compartilhar → Adicionar à Tela de Início**. No Android, use **Instalar app** no menu do navegador. Abra pelo ícone para jogar usando toda a área disponível, em pé ou na horizontal.
 
 Após o primeiro download, o jogo pode abrir offline. Com internet, ele verifica atualizações ao voltar para a tela, ao reconectar e a cada minuto. Quando o download da versão nova termina, o jogo recarrega automaticamente.
 

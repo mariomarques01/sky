@@ -19,9 +19,11 @@ func _physics_process(dt: float) -> void:
 		if stomp or body.call("is_striking"):
 			defeated = true
 			if stomp:
-				body.call("bounce")
+				body.call("stomp_enemy", Input.is_action_pressed("jump"))
 			Game.collect(1)
 			var t := create_tween()
+			if stomp:
+				t.tween_interval(float(body.get("stomp_stop")))
 			t.tween_property($Visual,"scale",Vector3(1.25,.12,1.25),.16)
 			t.tween_callback(queue_free)
 		else: body.call("hurt",global_position.x)

@@ -1,8 +1,12 @@
 extends Node3D
+@export var stage_music_intro: AudioStreamWAV
+@export var stage_music_loop: AudioStreamWAV
+
 var clock := 0.0
 var quality := 1
 func _ready() -> void:
 	Game.begin()
+	Audio.play_stage_music(stage_music_intro, stage_music_loop)
 	decorate()
 	$Player.position = Game.checkpoint
 	$Gameplay/Checkpoints/Beacon.body_entered.connect(_checkpoint)
@@ -10,7 +14,7 @@ func _ready() -> void:
 func _checkpoint(body: Node3D) -> void:
 	if body.is_in_group("player") and Game.checkpoint.x<0:
 		Game.checkpoint = Vector3(10.6,.8,0)
-		Audio.cue(890)
+		Audio.play(&"checkpoint")
 		$Gameplay/Checkpoints/Beacon/Flame.scale *= 1.4
 func set_quality(value: int) -> void:
 	quality = clampi(value,0,2)
