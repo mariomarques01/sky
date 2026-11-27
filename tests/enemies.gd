@@ -88,23 +88,30 @@ func _ready() -> void:
 		if child.get_script() == preload("res://environment/effects/sparkles.gd") and child.tint == Color("#ffca83"):
 			boss_spores = child.burst_amount == 8
 	)
+	var phase_loop := preload("res://audio/music/celestial_gardens_loop.wav")
+	Audio.play_stage_music(null, phase_loop)
 	var boss := $Arena/Guardian
 	player.position = boss.position + Vector3.LEFT * 4
 	await frames(2)
 	var bar: ProgressBar = $Arena/CanvasLayer.boss_bar
 	check(bar.visible and bar.value == 3, "HUD anuncia a vida do chefe")
+	check(Audio.current_track == boss.GUARDIAN_MUSIC and Audio.spare_music.playing,
+		"ativação do Guardião inicia o fade entre as faixas")
 	for expected in [2, 1, 0]:
 		player.strike_index = 0
 		player.strike_time = .10
 		boss.contact_player(player)
 		check(boss.health == expected and bar.value == expected, "acerto no chefe resta %d" % expected)
+		check(Game.is_hit_stopped(), "acerto no chefe pausa a física")
 		player.position.x = boss.origin.x - 6
-		await frames(54)
+		await frames(58)
 		if expected == 2:
 			check(boss.position.y > boss.origin.y + .2, "segunda fase salta")
 		elif expected == 1:
 			check(boss.position.y == boss.origin.y and boss.position.x < boss.origin.x, "terceira fase investe")
 	check(not bar.visible, "derrota encerra a barra do chefe")
+	check(Audio.current_track == phase_loop and Audio.music.playing and not Audio.spare_music.playing,
+		"derrota do chefe completa o fade de volta à música da fase")
 	await frames(30)
 	check(not is_instance_valid(boss) and boss_spores, "derrota libera partículas independentes do inimigo")
 	Audio.stop_all()

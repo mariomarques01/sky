@@ -8,7 +8,25 @@ A câmera suaviza posição e antecipação e recebe o sinal `impact` para deslo
 
 Cada coletável é uma Area3D com bloqueio de coleta dupla. O GameManager contabiliza por tipo e emite changed ou finished. O HUD escuta esses sinais. O patrulheiro usa limites e um RayCast3D apontado para o piso. A diferença entre os pés do jogador e o centro do inimigo, junto à velocidade vertical, caracteriza o impacto por cima.
 
-Quatro autoloads concentram o estado da partida, persistência ConfigFile, síntese e reprodução de sons e reinício de cena. O checkpoint dura uma tentativa da fase. Reiniciar restaura inimigos, coletas e vida. A interface e o menu usam processamento durante pausa, com liberação das ações de toque ao abrir o menu.
+Quatro autoloads concentram o estado da partida, persistência ConfigFile, reprodução de áudio e reinício de cena. O checkpoint dura uma tentativa da fase. Reiniciar restaura inimigos, coletas e vida. A interface e o menu usam processamento durante pausa, com liberação das ações de toque ao abrir o menu.
+
+### Áudio e impacto
+
+`Audio` distribui efeitos por SFX e UI, com oito vozes prontas e expansão do
+pool quando todas estão ocupadas. A Web registra os samples na inicialização
+para tirar o custo da primeira reprodução dos frames de jogo. As caixas tocam
+o som quando recebem o golpe e liberam os estilhaços ao fim da compressão.
+O perfil Baixo usa nove fragmentos de madeira em vez de dezoito.
+
+A música usa dois players no bus Música. O Guardião troca o loop da fase
+pelo tema da luta e restaura o loop da fase na derrota, com fades cruzados
+de 0,5 s. A conclusão para a música e toca o jingle de vitória no bus SFX.
+Os WAVs são sintetizados por `procedural/bake_audio.py`.
+
+`Game.hit_stop(0.05)` aplica a pausa de stomp, ground pound e acertos no Guardião.
+Um único temporizador ignora a escala do tempo e continua com o menu pausado.
+Impactos sobrepostos estendem o prazo até o maior tempo restante. O fim da pausa
+ou o reinício da fase restaura a escala anterior.
 
 ### Animação do explorador
 

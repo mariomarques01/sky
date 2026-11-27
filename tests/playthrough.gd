@@ -104,11 +104,15 @@ func check_audio() -> void:
 		and jump_voice.stream != coin_voice.stream and jump_voice.bus == &"SFX" and ui_voice.bus == &"UI",
 		"pulo, moeda, UI e música podem tocar juntos")
 	check(jump_voice.pitch_scale >= .94 and jump_voice.pitch_scale <= 1.06, "pitch dos efeitos varia dentro do intervalo")
+	for effect in [&"double_jump", &"triple_jump", &"wall_kick", &"dive", &"boss_hit", &"boss_defeat", &"checkpoint", &"crate"]:
+		Audio.play(effect)
+	check(Audio.voices.size() == 11 and jump_voice.playing and jump_voice.stream == Audio.EFFECTS[&"jump"],
+		"pool cresce sem interromper efeitos em reprodução")
 
 func measure_stomp(enemy: Area3D, hold_jump: bool) -> float:
 	var impact_samples: Array = []
 	var record := func() -> void:
-		if player.get("stomp_stop") > 0.0:
+		if Game.is_hit_stopped():
 			impact_samples.append([Engine.get_physics_frames(), player.position])
 	player.connect("impact", record)
 	if hold_jump:
@@ -123,7 +127,7 @@ func measure_stomp(enemy: Area3D, hold_jump: bool) -> float:
 			continue
 		player.disconnect("impact", record)
 		var launch := player.velocity.y
-		while player.get("stomp_stop") > 0.0:
+		while Game.is_hit_stopped():
 			await frames(1)
 		var impact_frame: int = impact_samples[0][0]
 		var impact_position: Vector3 = impact_samples[0][1]
@@ -268,6 +272,25 @@ func _ready() -> void:
 	get_tree().paused = false
 	await check_slide()
 	await check_touch_attack()
+	Engine.time_scale = .8
+	Game.hit_stop(.05)
+	await frames(2)
+	Game.hit_stop(.05)
+	Game.hit_stop(.01)
+	get_tree().paused = true
+	await get_tree().create_timer(.025, true, false, true).timeout
+	check(Game.is_hit_stopped(), "impacto sobreposto prolonga a pausa e ignora pedidos mais curtos")
+	await get_tree().create_timer(.07, true, false, true).timeout
+	check(not Game.is_hit_stopped() and is_equal_approx(Engine.time_scale, .8),
+		"pausa do menu não impede que o impacto restaure a velocidade anterior")
+	Engine.time_scale = 1.0
+	get_tree().paused = false
+	Game.finish_level()
+	var victory_playing := false
+	for voice in Audio.voices:
+		victory_playing = victory_playing or (voice.stream == Audio.EFFECTS[&"victory"] and voice.playing)
+	check(victory_playing and not Audio.music.playing and not Audio.spare_music.playing,
+		"vitória para a música e toca o jingle com o jogo pausado")
 	Audio.stop_all()
 	await get_tree().create_timer(.3,true,false,true).timeout
 	get_tree().quit(failed)

@@ -15,7 +15,7 @@ var attack_target: CharacterBody3D
 @onready var visual_scale := visual.scale
 
 func _physics_process(dt: float) -> void:
-	if defeated:
+	if defeated or Game.is_hit_stopped():
 		return
 	clock += dt
 	advance_patrol(dt)
@@ -83,8 +83,6 @@ func defeat(body: CharacterBody3D, stomp: bool) -> void:
 		body.stomp_enemy(Input.is_action_pressed("jump"))
 	Game.collect(1)
 	var t := create_tween()
-	if stomp:
-		t.tween_interval(body.stomp_stop)
 	var base := visual_scale
 	var away := signf(global_position.x - body.global_position.x)
 	if is_zero_approx(away):
