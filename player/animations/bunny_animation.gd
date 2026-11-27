@@ -32,7 +32,7 @@ func soften_step(rise: float) -> void:
 	step_offset -= rise
 	position.y = step_offset
 
-func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float, vertical_speed := 0.0, landing := 0.0) -> void:
+func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float, vertical_speed := 0.0, landing := 0.0, strike_index := -1, strike_time := 0.0) -> void:
 	var height := 1.0 + stretch_intensity * clampf(vertical_speed / 10.0, 0.0, 1.0)
 	height -= landing_squash * clampf(landing / 0.08, 0.0, 1.0)
 	if next in [&"Punch", &"Kick", &"AirKick", &"Dash", &"Dive", &"BellySlide"]:
@@ -78,12 +78,16 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 				rig.set_bone_pose_rotation(index, neutral.slerp(animated, .63))
 	else:
 		rig.reset_bone_poses()
-		pose_action(next, speed, dt, vertical_speed)
+		if next in [&"Punch", &"Kick", &"AirKick"]:
+			pose_strike(next, strike_index, pose_time if next == &"AirKick" else strike_time)
+		else:
+			pose_action(next, speed, dt, vertical_speed)
 
 	if next == &"Run":
 		pitch("Spine", 12.0 * clampf(speed / 7.0, 0.0, 1.0))
 
-	var weight := smoothstep(0.0, BLEND_TIME, pose_time)
+	var blend_duration := .05 if next in [&"Punch", &"Kick", &"AirKick"] else BLEND_TIME
+	var weight := smoothstep(0.0, blend_duration, pose_time)
 	if weight < 1.0:
 		for index in rig.get_bone_count():
 			rig.set_bone_pose(index, blend_from[index].interpolate_with(rig.get_bone_pose(index), weight))
@@ -148,6 +152,29 @@ func plant_leg(side: int, offset: Vector3, foot_pitch: float) -> void:
 	ankle.basis = Basis(Vector3.RIGHT, deg_to_rad(foot_pitch)) * rest[foot].basis
 	rig.set_bone_global_pose(foot, ankle)
 
+# Rotate around the character's lateral axis in the parent's frame. Only
+# the joint rotation changes, so bind offsets and limb lengths stay intact.
+func rotate_strike_joint(label: String, degrees: float) -> void:
+	var index := joint(label)
+	var parent := rig.get_bone_parent(index)
+	var parent_rotation := rig.get_bone_global_pose(parent).basis.get_rotation_quaternion()
+	var axis := parent_rotation.inverse() * Vector3.RIGHT
+	var rotation_delta := Quaternion(axis.normalized(), deg_to_rad(degrees))
+	rig.set_bone_pose_rotation(index, rotation_delta * rig.get_bone_pose_rotation(index))
+
+func pose_strike(next: StringName, stage: int, elapsed: float) -> void:
+	if next == &"Punch":
+		var side := "Right" if stage == 1 else "Left"
+		var peak := .09 if stage == 1 else .12
+		var reach := smoothstep(0, peak, elapsed) * (1.0 - smoothstep(peak, .30, elapsed))
+		rotate_strike_joint(side + "Arm", -65.0 * reach)
+		rotate_strike_joint(side + "ForeArm", -15.0 * reach)
+		return
+	var lift := smoothstep(0, .09, elapsed) * (1.0 - smoothstep(.18, .38, elapsed))
+	var extend := smoothstep(.06, .14, elapsed) * (1.0 - smoothstep(.20, .34, elapsed))
+	rotate_strike_joint("RightUpLeg", -54.0 * lift)
+	rotate_strike_joint("RightLeg", 38.0 * (lift - extend))
+
 func pose_action(next: StringName, speed: float, dt: float, vertical_speed: float) -> void:
 	var sink := .008 * sin(3.8 * pose_time)
 	var lean := sink * 100.0
@@ -192,8 +219,8 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 			feet[0] = Vector3(0, .055 + .19 * tuck, .035 + .14 * tuck)
 			feet[1] = Vector3(0, .025 + .12 * tuck, -.085)
 			toe_angle = 13.0 * tuck
-		&"LongJump", &"AirKick", &"Kick":
-			lean = 25.0 if next == &"LongJump" else -20.0
+		&"LongJump":
+			lean = 25.0
 			arms = Vector2(-73.0, -19.0)
 			feet[0] = Vector3(0, .23, .31)
 			feet[1] = Vector3(0, .12, -.18)
@@ -208,10 +235,6 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 			arms = Vector2(-140.0 + 24.0 * climb, -140.0 - 24.0 * climb)
 			feet[0] = Vector3(0, .15 + .10 * climb, .11)
 			feet[1] = Vector3(0, .15 - .10 * climb, .11)
-		&"Punch":
-			var extension := sin(PI * clampf(pose_time / .25, 0, 1))
-			lean = 10.0 * extension
-			arms = Vector2(-28.0 - 50.0 * extension, -20.0)
 		&"Dash":
 			lean = 25.0
 			arms = Vector2(-75.0, 27.0)
