@@ -9,6 +9,9 @@ const LEG_BONES := [["LeftUpLeg", "LeftLeg", "LeftFoot"], ["RightUpLeg", "RightL
 @onready var explorer: Node3D = $Explorer
 @onready var rig := explorer.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
 @onready var library := explorer.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
+@onready var tree: AnimationTree = $AnimationTree
+@onready var machine := tree.tree_root as AnimationNodeStateMachine
+@onready var playback := tree.get("parameters/playback") as AnimationNodeStateMachinePlayback
 var rest: Array[Transform3D] = []
 var blend_from: Array[Transform3D] = []
 var spin_from := Quaternion.IDENTITY
@@ -22,6 +25,7 @@ func _ready() -> void:
 	rig.reset_bone_poses()
 	for index in rig.get_bone_count():
 		rest.append(rig.get_bone_global_rest(index))
+	tree.anim_player = tree.get_path_to(library)
 	library.callback_mode_process = AnimationMixer.ANIMATION_CALLBACK_MODE_PROCESS_MANUAL
 
 func soften_step(rise: float) -> void:
@@ -46,7 +50,17 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 	step_offset = move_toward(step_offset, 0.0, 2.8 * dt)
 	position.y = step_offset
 
-	if next in [&"Walk", &"Run"]:
+	var state := &"Land" if next == &"Landing" else next
+	var authored := false
+	if machine.has_node(state):
+		var node := machine.get_node(state) as AnimationNodeAnimation
+		authored = node.animation != &"Walking"
+		if playback.get_current_node() != state or pose_time == dt:
+			playback.start(state)
+	tree.active = authored
+	if authored:
+		tree.advance(dt)
+	elif next in [&"Walk", &"Run"]:
 		var clip := &"Running" if next == &"Run" else &"Walking"
 		var stride := 2.6 if next == &"Run" else 1.65
 		gait = fposmod(gait + speed * dt / stride, 1.0)
