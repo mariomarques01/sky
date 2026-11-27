@@ -129,7 +129,7 @@ func _ready() -> void:
 	var hud := world.get_node("CanvasLayer")
 	var pad := hud.get("pad") as Control
 	pad.hide()
-	var touch_targets: Array[Vector2] = [pad.get("stick_center") + Vector2.RIGHT * 66 * float(pad.get("unit")), pad.get("jump_center")]
+	var touch_targets: Array[Vector2] = [pad.get("stick_center") + Vector2.RIGHT * 66 * float(pad.get("unit")), pad.get("jump_center"), pad.get("action_center")]
 	for index in touch_targets.size():
 		var down := InputEventScreenTouch.new()
 		down.index=index
@@ -137,7 +137,7 @@ func _ready() -> void:
 		down.position=pad.global_position+touch_targets[index]
 		get_viewport().push_input(down,true)
 	await frames(2)
-	check(pad.visible and Input.is_action_pressed("right") and Input.is_action_pressed("jump"), "primeiro toque revela os controles e permite multitouch")
+	check(pad.visible and Input.is_action_pressed("right") and Input.is_action_pressed("jump") and Input.is_action_pressed("dive"), "primeiro toque revela os controles e permite multitouch")
 	for index in touch_targets.size():
 		var up := InputEventScreenTouch.new()
 		up.index=index
@@ -145,22 +145,16 @@ func _ready() -> void:
 		get_viewport().push_input(up,true)
 	var dash_touch := InputEventScreenTouch.new()
 	dash_touch.index = 4
-	dash_touch.position = pad.global_position + pad.get("dash_center")
-	dash_touch.pressed = true
-	get_viewport().push_input(dash_touch, true)
-	dash_touch.pressed = false
-	get_viewport().push_input(dash_touch, true)
-	check(Input.is_action_pressed("dash"), "toque no raio dispara dash")
-	await frames(5)
+	dash_touch.position = pad.global_position + pad.size * Vector2(.5, .75)
 	dash_touch.pressed = true
 	get_viewport().push_input(dash_touch, true)
 	var swipe := InputEventScreenDrag.new()
 	swipe.index = dash_touch.index
-	swipe.position = dash_touch.position + Vector2.UP * 46 * float(pad.get("unit"))
+	swipe.position = dash_touch.position + Vector2.RIGHT * 50 * float(pad.get("unit"))
 	get_viewport().push_input(swipe, true)
 	dash_touch.pressed = false
 	get_viewport().push_input(dash_touch, true)
-	check(Input.is_action_pressed("dive") and not Input.is_action_pressed("dash"), "deslize no raio aciona mergulho sem dash")
+	check(Input.is_action_pressed("dash") and not Input.is_action_pressed("dive"), "gesto horizontal dispara dash")
 	await frames(70)
 	player.position = Vector3(-3, .12, 0)
 	player.velocity = Vector3.ZERO
@@ -221,6 +215,16 @@ func _ready() -> void:
 	check(Game.counts[1] >= 2 and held_height > normal_height + 0.55, "segurar pulo no stomp aumenta a altura do quique")
 	hud.toggle_pause()
 	check(get_tree().paused,"menu pausa")
+	var stick_x: float = pad.get("stick_center").x
+	hud.change_side()
+	hud.change_size()
+	hud.change_opacity()
+	check((stick_x < pad.size.x / 2) != (pad.get("stick_center").x < pad.size.x / 2), "modo canhoto espelha o direcional")
+	var saved := ConfigFile.new()
+	saved.load(Save.PATH)
+	check(saved.get_value("toque", "canhoto") == pad.get("left_handed")
+		and saved.get_value("toque", "tamanho") == hud.size_index
+		and saved.get_value("toque", "opacidade") == hud.opacity_index, "preferências de toque gravadas")
 	hud.toggle_pause()
 	hud.cycle_profile()
 	check(world.quality==int(Save.data.get_value("video","perfil",-1)),"perfil persistido")

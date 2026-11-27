@@ -8,17 +8,17 @@ Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do a
 
 | Ação | Teclado | Gamepad | Touch |
 |---|---|---|---|
-| Mover e acelerar | A/D ou ←/→ | Analógico esquerdo ou direcional | Direcional esquerdo |
+| Mover e acelerar | A/D ou ←/→ | Analógico esquerdo ou direcional | Direcional virtual |
 | Saltar | Espaço ou W | Botão inferior | ↑ |
 | Salto duplo aéreo | Solte e pressione salto no ar | Segundo toque no botão inferior | Segundo toque em ↑ |
 | Agachar ou deslizar durante a corrida | S ou ↓ | Direcional para baixo | Para baixo no direcional |
-| Soco, chute aéreo ou mergulho | J | Botão superior | Deslize o botão de raio para cima |
+| Soco, chute aéreo ou mergulho | J | Botão superior | Botão Ação |
 | Subir em poste | ↑ | Direcional para cima | Para cima no direcional |
-| Dash | X ou Shift | Botão esquerdo | Toque no raio |
+| Dash | X ou Shift | Botão esquerdo | Deslize horizontalmente na metade inferior, fora dos botões |
 | Pausa | Esc | Start | Ⅱ |
 | Exibir ou ocultar controles virtuais no computador | T | | |
 
-Soltar o salto cedo reduz a altura. Um salto sobre o cogumelo rende uma moeda. O menu de pausa permite reiniciar e alternar os perfis Baixo, Médio e Alto.
+Soltar o salto cedo reduz a altura. Um salto sobre o cogumelo rende uma moeda. O menu de pausa permite reiniciar e alternar os perfis Baixo, Médio e Alto, ajustar tamanho e opacidade dos controles e inverter o lado do direcional. As preferências ficam salvas para a próxima partida.
 
 Aperte salto logo após pousar em movimento para encadear o segundo salto. Corra e repita após o segundo pouso para o salto triplo. Agache e salte para saltar longe em movimento ou dar um mortal para trás parado. Inverta a direção durante a corrida e salte enquanto derrapa para o mortal lateral. Salte novamente ao tocar de frente uma parede no ar para quicar nela.
 

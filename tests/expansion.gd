@@ -132,10 +132,13 @@ func test_meadow() -> void:
 	await jump_to(shelf_entry, true, false, 14)
 	check(await stomp(meadow.get_node("ShelfCrate")), "caixa da saliência opcional pode ser quebrada")
 	check(await run_to(96.05, 185) and Game.checkpoint.x > 96.0, "checkpoint do prado após os terraços")
+	var hud := world.get_node("CanvasLayer")
+	check(hud.notice.is_visible_in_tree(), "HUD anuncia o checkpoint do prado")
 	player.position.y = -9
 	await frames(45)
 	check(absf(player.position.x - Game.checkpoint.x) < 0.12 and not meadow.has_node("EntryCrate"), "respawn do prado mantém as caixas já abertas")
 	check(await run_to(101.1, 130) and Game.complete and player.position.y > 2.6, "conclusão no mirante")
+	check(hud.result.is_visible_in_tree() and ("Moedas · %d" % Game.counts[1]) in hud.result.text, "resultado exibe as moedas da partida")
 	var camera := world.get_node("CameraRig") as Camera3D
 	check(camera.position.x > 98.0, "câmera acompanha o mirante")
 

@@ -13,7 +13,7 @@ func _ready() -> void:
 	set_quality(int(Save.data.get_value("video","perfil",1)))
 func _checkpoint(body: Node3D) -> void:
 	if body.is_in_group("player") and Game.checkpoint.x<0:
-		Game.checkpoint = Vector3(10.6,.8,0)
+		Game.activate_checkpoint(Vector3(10.6,.8,0))
 		Audio.play(&"checkpoint")
 		$Gameplay/Checkpoints/Beacon/Flame.scale *= 1.4
 func set_quality(value: int) -> void:

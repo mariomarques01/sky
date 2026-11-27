@@ -19,3 +19,13 @@ Idle, Jump, Fall, Land, Dash, Hurt ou Death pelo clipe dedicado da biblioteca
 do Explorer. Walking marca uma pose procedural provisória. Landing usa Land.
 A árvore avança no passo de física apenas para clipes dedicados. Walk e Run
 continuam sincronizados com a distância e os golpes e acrobacias conservam suas poses.
+
+### HUD e toque
+
+O direcional, Pulo e Ação capturam dedos independentes. Um gesto horizontal iniciado
+na área livre da metade inferior aciona dash e preserva o segundo toque de salto.
+O HUD guarda tamanho, opacidade e lado na seção `toque` de Save. A área segura
+contém o menu e o controle virtual. O mínimo físico usa o DPI informado pelo sistema.
+Game emite `collected(kind)` e `checkpoint_activated` para os avisos do HUD.
+A conclusão apresenta o relógio de jogo da fase (pausas excluídas), as moedas da
+partida e o recorde persistente de cristais dourados.
