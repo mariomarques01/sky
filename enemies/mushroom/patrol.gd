@@ -1,4 +1,6 @@
 extends Area3D
+const Spores = preload("res://environment/effects/sparkles.gd")
+
 @export var limits := Vector2(11.0,15.2)
 @export var speed := 1.1
 var direction := -1
@@ -25,5 +27,15 @@ func _physics_process(dt: float) -> void:
 			if stomp:
 				t.tween_interval(float(body.get("stomp_stop")))
 			t.tween_property($Visual,"scale",Vector3(1.25,.12,1.25),.16)
-			t.tween_callback(queue_free)
+			t.tween_property($Visual, "scale", Vector3(.85, 1.18, .85), .06)
+			t.tween_callback(burst)
+			return
 		else: body.call("hurt",global_position.x)
+
+func burst() -> void:
+	var spores := Spores.new()
+	spores.burst_amount = 8
+	spores.tint = Color("#ffca83")
+	get_parent().add_child(spores)
+	spores.global_position = global_position + Vector3.UP * .45
+	queue_free()
