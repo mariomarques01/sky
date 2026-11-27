@@ -78,6 +78,9 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 		rig.reset_bone_poses()
 		pose_action(next, speed, dt, vertical_speed)
 
+	if next == &"Run":
+		pitch("Spine", 12.0 * clampf(speed / 7.0, 0.0, 1.0))
+
 	var weight := smoothstep(0.0, BLEND_TIME, pose_time)
 	if weight < 1.0:
 		for index in rig.get_bone_count():
@@ -85,10 +88,6 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 
 	var spin := Vector3.ZERO
 	match next:
-		&"Run":
-			spin.x = deg_to_rad(12.0) * clampf(speed / 7.0, 0.0, 1.0)
-		&"Skid", &"Slide", &"SlopeSlide":
-			spin.x = deg_to_rad(-16.0) * clampf(speed / 9.0, 0.0, 1.0)
 		&"TripleJump", &"SideFlip", &"Rollout":
 			spin.x = TAU * smoothstep(0.0, .54, pose_time)
 		&"Backflip":
@@ -170,7 +169,7 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 				feet[side] *= smoothstep(.03, .65, speed)
 		&"Slide", &"SlopeSlide", &"Skid":
 			sink = .24
-			lean = -22.0
+			lean = -8.0 - 26.0 * clampf(speed / 9.0, 0.0, 1.0)
 			arms = Vector2(-36.0, -43.0)
 			feet[0].z = .23
 			feet[1].z = .09
