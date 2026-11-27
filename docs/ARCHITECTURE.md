@@ -40,3 +40,6 @@ O chefe sinaliza a vida ao HUD ao entrar em combate e após cada acerto.
 
 O canhão captura na entrada e lança com Pulo ou Ação. O cipó fornece uma
 âncora móvel ao grupo `climb_pole`: segure cima para agarrar e Pulo para soltar.
+
+A fase principal instancia `LookoutTrail.tscn` depois do mirante. A trilha
+reúne os seis elementos, tem um checkpoint após o vão e termina na última ilha.

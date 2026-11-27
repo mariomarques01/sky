@@ -10,15 +10,11 @@
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Checkpoint.tscn" id="Checkpoint"]
 [ext_resource type="PackedScene" path="res://environment/Pillar.glb" id="Pillar"]
 [ext_resource type="PackedScene" path="res://environment/Sign.glb" id="Sign"]
-[ext_resource type="Script" path="res://worlds/world_01/level_01/expansion/finish.gd" id="finish"]
 [ext_resource type="PackedScene" path="res://environment/Horizon.glb" id="Horizon"]
 [ext_resource type="PackedScene" path="res://environment/Arch.glb" id="Arch"]
 [ext_resource type="Shader" path="res://shaders/cloud.gdshader" id="cloud"]
 
 [ext_resource type="PackedScene" path="res://enemies/mushroom/Mushroom.tscn" id="Mushroom"]
-
-[sub_resource type="BoxShape3D" id="FinishShape"]
-size = Vector3(0.8, 7, 1.5)
 
 [sub_resource type="QuadMesh" id="CloudPlane"]
 size = Vector2(1, 1)
@@ -316,13 +312,6 @@ rotation = Vector3(0, 0, 1.5708)
 [node name="LookoutSign" parent="." instance=ExtResource("Sign")]
 position = Vector3(101.75, 2.73, 0.67)
 scale = Vector3(0.79, 0.79, 0.79)
-
-[node name="Finish" type="Area3D" parent="."]
-position = Vector3(101.1, 4.95, 0)
-script = ExtResource("finish")
-
-[node name="Collision" type="CollisionShape3D" parent="Finish"]
-shape = SubResource("FinishShape")
 
 [node name="DistantIsland0" parent="." instance=ExtResource("Horizon")]
 position = Vector3(75.8, -1.1, -18)

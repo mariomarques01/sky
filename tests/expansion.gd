@@ -137,10 +137,31 @@ func test_meadow() -> void:
 	player.position.y = -9
 	await frames(45)
 	check(absf(player.position.x - Game.checkpoint.x) < 0.12 and not meadow.has_node("EntryCrate"), "respawn do prado mantém as caixas já abertas")
-	check(await run_to(101.1, 130) and Game.complete and player.position.y > 2.6, "conclusão no mirante")
-	check(hud.result.is_visible_in_tree() and ("Moedas · %d" % Game.counts[1]) in hud.result.text, "resultado exibe as moedas da partida")
+	check(await run_to(101.1, 130) and not Game.complete and player.position.y > 2.6, "mirante dá acesso à trilha final")
+
 	var camera := world.get_node("CameraRig") as Camera3D
 	check(camera.position.x > 98.0, "câmera acompanha o mirante")
+
+	var trail := world.get_node("Expansion/LookoutTrail")
+	check(await run_to(103, 90) and player.is_on_floor(), "trilha conecta ao mirante a pé")
+	for feature in ["Spiked", "Flyer", "BarrelSpawner", "Cannon", "Vine", "Guardian"]:
+		check(trail.has_node(feature), "trilha inclui " + feature)
+	player.position = Vector3(120, 4.92, 0)
+	player.velocity = Vector3.ZERO
+	await frames(6)
+	check(player.cannon == trail.get_node("Cannon"), "canhão captura na fase principal")
+	Input.action_press("touch_attack")
+	await frames(2)
+	Input.action_release("touch_attack")
+	check(player.cannon == null and player.velocity.y > 0, "canhão lança pelo botão Ação")
+	Input.action_press("right")
+	await frames(65)
+	Input.action_release("right")
+	check(player.position.x > 123.2 and player.position.y > 3.7, "lançamento atravessa o vão")
+	player.position = Vector3(138.2, 3.91, 0)
+	await frames(8)
+	check(Game.complete, "trilha final conclui a fase")
+	check(hud.result.is_visible_in_tree() and ("Moedas · %d" % Game.counts[1]) in hud.result.text, "resultado exibe as moedas da partida")
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -221,7 +242,7 @@ func _ready() -> void:
 	route = world.get_node("Expansion/TreasureRoute")
 	check(not route.has_node("Sapphire") and not route.has_node("Amethyst") and not route.has_node("GoldenChest"), "recarregamento não duplica tesouros")
 	check(world.get_node("Expansion/FlowerMeadow").has_node("EntryCrate"), "caixas comuns voltam em nova partida")
-	world.get_node("Player").position = Vector3(101.1, 2.74, 0)
+	world.get_node("Player").position = Vector3(138.2, 3.91, 0)
 	await frames(6)
 	check(Game.complete and Game.counts[2] == 0, "conclusão disponível em nova partida")
 	get_tree().paused = false
