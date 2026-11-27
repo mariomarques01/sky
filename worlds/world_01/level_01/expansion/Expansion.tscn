@@ -9,6 +9,8 @@
 
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FlowerMeadow.tscn" id="FlowerMeadow"]
 
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/LookoutTrail.tscn" id="LookoutTrail"]
+
 [node name="Expansion" type="Node3D"]
 
 [node name="IslandCrossing" parent="." instance=ExtResource("IslandCrossing")]
@@ -24,3 +26,5 @@
 [node name="Scenery" parent="." instance=ExtResource("Scenery")]
 
 [node name="FlowerMeadow" parent="." instance=ExtResource("FlowerMeadow")]
+
+[node name="LookoutTrail" parent="." instance=ExtResource("LookoutTrail")]

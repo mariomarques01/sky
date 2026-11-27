@@ -4,7 +4,7 @@
 
 Abra `project.godot` no Godot 4.7.2, aguarde a importação e pressione **F6** na cena World_01_Level_01 ou **F5** a partir de qualquer cena. A primeira importação extrai os materiais do explorador e prepara os recursos locais. O jogo funciona offline.
 
-Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do arco, siga os cristais dourados pelas ilhas e ruínas até a Ponte Celestial, ou explore as ilhas elevadas em busca de tesouros. Saia do Templo Celestial pela direita para atravessar o Prado Florido. Aterrisse sobre as caixas com estrela para revelar as recompensas. A fase termina no mirante, após o novo checkpoint. As chamas azuis marcam os checkpoints. A queda devolve o explorador ao último checkpoint ativado nesta partida. Os tesouros únicos, o recorde de cristais dourados, a conclusão e o perfil gráfico ficam em `user://skybound.cfg`.
+Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do arco, siga os cristais dourados pelas ilhas e ruínas até a Ponte Celestial, ou explore as ilhas elevadas em busca de tesouros. Saia do Templo Celestial pela direita para atravessar o Prado Florido. Aterrisse sobre as caixas com estrela para revelar as recompensas. Depois do mirante, atravesse a rampa dos barris e use o canhão ou o cipó para seguir até o guardião. A fase termina na ponta da última ilha. As chamas azuis marcam os checkpoints. A queda devolve o explorador ao último checkpoint ativado nesta partida. Os tesouros únicos, o recorde de cristais dourados, a conclusão e o perfil gráfico ficam em `user://skybound.cfg`.
 
 | Ação | Teclado | Gamepad | Touch |
 |---|---|---|---|
