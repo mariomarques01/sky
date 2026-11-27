@@ -18,6 +18,16 @@ var modal := ColorRect.new()
 var title := Label.new()
 var resume := Button.new()
 var profile := Button.new()
+const SIZES := [0.8, 1.0, 1.25]
+const OPACITIES := [0.4, 0.65, 0.85, 1.0]
+var size_button := Button.new()
+var opacity_button := Button.new()
+var side_button := Button.new()
+var size_index := 1
+var opacity_index := 3
+var menu_buttons: Array[Button] = []
+var stack := VBoxContainer.new()
+
 func panel(bg: Color, border: Color, radius: int) -> StyleBoxFlat:
 	var box := StyleBoxFlat.new()
 	box.bg_color = bg
@@ -78,13 +88,18 @@ func _ready() -> void:
 	# Web play keeps the virtual controls available even when the browser reports no touchscreen.
 	pad.visible = OS.has_feature("web") or OS.has_feature("mobile") or DisplayServer.is_touchscreen_available()
 	pad.resized.connect(pad.layout)
-	add_child(modal)
+	safe.add_child(modal)
 	modal.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	modal.color = Color("#14151edc")
 	var center := CenterContainer.new()
-	modal.add_child(center)
-	center.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var stack := VBoxContainer.new()
+	var scroll := ScrollContainer.new()
+	modal.add_child(scroll)
+	scroll.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+	scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	scroll.follow_focus = true
+	scroll.add_child(center)
+	center.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	center.size_flags_vertical = Control.SIZE_EXPAND_FILL
 	center.add_child(stack)
 	stack.custom_minimum_size.x = 520
 	stack.add_theme_constant_override("separation",18)
@@ -95,9 +110,20 @@ func _ready() -> void:
 	button(resume,"Continuar",toggle_pause)
 	stack.add_child(profile)
 	button(profile,"",cycle_profile)
+	stack.add_child(size_button)
+	button(size_button, "", change_size)
+	stack.add_child(opacity_button)
+	button(opacity_button, "", change_opacity)
+	stack.add_child(side_button)
+	button(side_button, "", change_side)
+	size_index = clampi(int(Save.data.get_value("toque", "tamanho", 1)), 0, SIZES.size()-1)
+	opacity_index = clampi(int(Save.data.get_value("toque", "opacidade", 3)), 0, OPACITIES.size()-1)
+	pad.left_handed = bool(Save.data.get_value("toque", "canhoto", false))
+	apply_touch_settings()
 	var restart := Button.new()
 	stack.add_child(restart)
 	button(restart,"Reiniciar fase",Scenes.restart)
+	menu_buttons = [resume, profile, size_button, opacity_button, side_button, restart]
 	modal.hide()
 	Game.changed.connect(refresh)
 	Game.finished.connect(finish)
@@ -132,9 +158,39 @@ func layout() -> void:
 	var unit := minf(safe.size.x / 1280.0, safe.size.y / 590.0)
 	status.position = Vector2(16, 15) * unit
 	status.scale = Vector2.ONE * .555 * unit
+	var window_size := Vector2(DisplayServer.window_get_size())
+	var pixels_to_ui := visible_size / window_size.max(Vector2.ONE)
+	var dpi := DisplayServer.screen_get_dpi(DisplayServer.window_get_current_screen())
+	pad.minimum_target = ceilf(9.0 * maxi(dpi, 96) / 25.4 * maxf(pixels_to_ui.x, pixels_to_ui.y))
+	for item in menu_buttons:
+		item.custom_minimum_size.y = maxf(74.0, pad.minimum_target)
 	var pause_diameter := 64.0 * unit * (1.25 if safe.size.x < safe.size.y else 1.0)
+	pause_diameter = maxf(pause_diameter, pad.minimum_target)
 	pause_button.size = Vector2.ONE * pause_diameter
 	pause_button.position = Vector2(safe.size.x - pause_diameter - 16 * unit, 15 * unit)
+	pad.layout()
+
+func change_size() -> void:
+	size_index = (size_index + 1) % SIZES.size()
+	Save.write("toque", "tamanho", size_index)
+	apply_touch_settings()
+
+func change_opacity() -> void:
+	opacity_index = (opacity_index + 1) % OPACITIES.size()
+	Save.write("toque", "opacidade", opacity_index)
+	apply_touch_settings()
+
+func change_side() -> void:
+	pad.left_handed = not pad.left_handed
+	Save.write("toque", "canhoto", pad.left_handed)
+	apply_touch_settings()
+
+func apply_touch_settings() -> void:
+	pad.size_factor = SIZES[size_index]
+	pad.modulate.a = OPACITIES[opacity_index]
+	size_button.text = "Tamanho · %d%%" % roundi(pad.size_factor * 100)
+	opacity_button.text = "Opacidade · %d%%" % roundi(pad.modulate.a * 100)
+	side_button.text = "Direcional · " + ("Direita (canhoto)" if pad.left_handed else "Esquerda")
 	pad.layout()
 
 func _process(_delta: float) -> void:
