@@ -51,6 +51,8 @@ var strike_index := -1
 var strike_time := 0.0
 var combo_buffered := false
 var slope_slide := false
+var cannon: Node3D
+var pole_height := 0.0
 var pole: Node3D
 var pole_cooldown := 0.0
 var ledge: Node3D
@@ -133,8 +135,9 @@ func try_grab_pole() -> void:
 		return
 	for candidate in get_tree().get_nodes_in_group("climb_pole"):
 		var anchor := candidate as Node3D
-		var offset := global_position - anchor.global_position
+		var offset := anchor.to_local(global_position) if anchor.is_in_group("swing_vine") else global_position - anchor.global_position
 		if absf(offset.x) <= .55 and offset.y >= -.1 and offset.y <= 2.9:
+			pole_height = offset.y
 			pole = anchor
 			reset_pole_motion()
 			return
@@ -165,6 +168,10 @@ func update_pole(axis: float, dt: float) -> void:
 		climb_speed = -3.6
 	var height := clampf(global_position.y + climb_speed * dt, anchor.y, anchor.y + 2.9)
 	var feet := Vector3(anchor.x, height, 0)
+	if pole.is_in_group("swing_vine"):
+		pole_height = clampf(pole_height + climb_speed * dt, 0.0, 2.9)
+		feet = pole.to_global(Vector3.UP * pole_height)
+		height = anchor.y + pole_height
 	if capsule_fits(feet):
 		global_position = feet
 	if climb_speed < 0 and height <= anchor.y:
@@ -180,7 +187,32 @@ func wind_at_player() -> float:
 			gust += float(zone.get_meta("horizontal_speed", 2.0))
 	return gust
 
+func enter_cannon(barrel: Node3D) -> void:
+	if recovery > 0 or stun > 0 or is_instance_valid(cannon):
+		return
+	reset_moves()
+	cannon = barrel
+	velocity = Vector3.ZERO
+	dash.remaining = 0
+	sliding = false
+	buffered = 0
+	stomp_stop = 0
+	global_position = cannon.global_position
+	states.enter(&"Cannon")
+
+func update_cannon() -> void:
+	if not (Input.is_action_just_pressed("jump") or Input.is_action_just_pressed("dive")):
+		return
+	velocity = cannon.launch_velocity()
+	cannon = null
+	facing = signf(velocity.x)
+	dash.air_available = true
+	air_move = &"Jump"
+	jumps = 1
+	coyote = 0
+
 func reset_moves() -> void:
+	cannon = null
 	strike_index = -1
 	combo_buffered = false
 	pole = null
@@ -491,6 +523,9 @@ func handle_landing(incoming: Vector3) -> void:
 			break
 
 func _physics_process(dt: float) -> void:
+	if is_instance_valid(cannon):
+		update_cannon()
+		return
 	if stomp_stop > 0.0:
 		stomp_stop = maxf(0.0, stomp_stop - dt)
 		if stomp_stop < 0.0001:
