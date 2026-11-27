@@ -9,6 +9,11 @@
 resource_local_to_scene = true
 radius = 0.27
 height = 1.55
+[sub_resource type="SphereMesh" id="TrailMesh"]
+radius = 0.085
+height = 0.17
+radial_segments = 5
+rings = 2
 [node name="Player" type="CharacterBody3D" groups=["player"]]
 script = ExtResource("1")
 floor_snap_length = 0.22
@@ -26,3 +31,12 @@ script = ExtResource("3")
 [node name="Explorer" parent="Visual" instance=ExtResource("2")]
 [node name="Dash" type="Node" parent="."]
 script=ExtResource("6")
+[node name="DashTrail" type="CPUParticles3D" parent="Visual"]
+position = Vector3(0, 0.6, -0.2)
+emitting = false
+local_coords = false
+cast_shadow = 0
+amount = 8
+lifetime = 0.13
+gravity = Vector3(0,0,0)
+mesh = SubResource("TrailMesh")

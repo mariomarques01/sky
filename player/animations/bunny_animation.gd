@@ -3,6 +3,9 @@ extends Node3D
 const BLEND_TIME := .14
 const LEG_BONES := [["LeftUpLeg", "LeftLeg", "LeftFoot"], ["RightUpLeg", "RightLeg", "RightFoot"]]
 
+@export_range(0.0, 0.4, 0.01) var stretch_intensity := 0.14
+@export_range(0.0, 0.4, 0.01) var landing_squash := 0.22
+
 @onready var explorer: Node3D = $Explorer
 @onready var rig := explorer.find_children("*", "Skeleton3D", true, false)[0] as Skeleton3D
 @onready var library := explorer.find_children("*", "AnimationPlayer", true, false)[0] as AnimationPlayer
@@ -25,7 +28,12 @@ func soften_step(rise: float) -> void:
 	step_offset -= rise
 	position.y = step_offset
 
-func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float, vertical_speed := 0.0) -> void:
+func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float, vertical_speed := 0.0, landing := 0.0) -> void:
+	var height := 1.0 + stretch_intensity * clampf(vertical_speed / 10.0, 0.0, 1.0)
+	height -= landing_squash * clampf(landing / 0.08, 0.0, 1.0)
+	var width := 1.0 / sqrt(height)
+	scale = Vector3(width, height, width)
+	$DashTrail.emitting = next == &"Dash"
 	if next != pose_name:
 		blend_from.clear()
 		for index in rig.get_bone_count():
@@ -63,6 +71,10 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 
 	var spin := Vector3.ZERO
 	match next:
+		&"Run":
+			spin.x = deg_to_rad(12.0) * clampf(speed / 7.0, 0.0, 1.0)
+		&"Skid", &"Slide", &"SlopeSlide":
+			spin.x = deg_to_rad(-16.0) * clampf(speed / 9.0, 0.0, 1.0)
 		&"TripleJump", &"SideFlip", &"Rollout":
 			spin.x = TAU * smoothstep(0.0, .54, pose_time)
 		&"Backflip":

@@ -622,4 +622,4 @@ func _physics_process(dt: float) -> void:
 	elif absf(velocity.x)>4: next = &"Run"
 	elif absf(velocity.x)>.1: next = &"Walk"
 	states.enter(next)
-	$Visual.update_pose(next,facing,absf(velocity.x),dt,health.shield,velocity.y)
+	$Visual.update_pose(next,facing,absf(velocity.x),dt,health.shield,velocity.y,landing)
