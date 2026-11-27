@@ -8,13 +8,13 @@ Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do a
 
 | Ação | Teclado | Gamepad | Touch |
 |---|---|---|---|
-| Mover e acelerar | A/D ou ←/→ | Analógico esquerdo ou direcional | Direcional esquerdo |
+| Mover e acelerar | A/D ou ←/→ | Analógico esquerdo ou direcional | Direcional virtual |
 | Saltar | Espaço ou W | Botão inferior | ↑ |
 | Salto duplo aéreo | Solte e pressione salto no ar | Segundo toque no botão inferior | Segundo toque em ↑ |
 | Agachar ou deslizar durante a corrida | S ou ↓ | Direcional para baixo | Para baixo no direcional |
-| Soco, chute aéreo ou mergulho | J | Botão superior | Deslize o botão de raio para cima |
+| Soco, chute aéreo ou mergulho | J | Botão superior | Botão Ação |
 | Subir em poste | ↑ | Direcional para cima | Para cima no direcional |
-| Dash | X ou Shift | Botão esquerdo | Toque no raio |
+| Dash | X ou Shift | Botão esquerdo | Deslize horizontalmente na metade inferior, fora dos botões |
 | Pausa | Esc | Start | Ⅱ |
 | Exibir ou ocultar controles virtuais no computador | T | | |
 

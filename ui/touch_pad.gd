@@ -2,30 +2,35 @@ extends Control
 
 const STICK = preload("res://ui/hud_art/stick.png")
 const THUMB = preload("res://ui/hud_art/stick_thumb.png")
-const DASH = preload("res://ui/hud_art/dash.png")
+const HUD_FONT = preload("res://ui/fonts/hud.ttf")
 const JUMP = preload("res://ui/hud_art/jump.png")
 
 var stick_center := Vector2.ZERO
 var jump_center := Vector2.ZERO
-var dash_center := Vector2.ZERO
+var action_center := Vector2.ZERO
 var unit := 1.0
 var stick_vector := Vector2.ZERO
 var stick_finger := -1
 var jump_fingers: Dictionary = {}
-var dash_finger := -1
-var dash_origin := Vector2.ZERO
-var dive_swipe := false
+var action_finger := -1
+var gesture_finger := -1
+var gesture_origin := Vector2.ZERO
+var size_factor := 1.0
+var left_handed := false
+var minimum_target := 0.0
 var active_actions: Dictionary = {}
 var pulses: Dictionary = {}
 var pulse_version := 0
 
 func layout() -> void:
-	unit = minf(size.x / 1280.0, size.y / 590.0)
-	if size.x < size.y:
-		unit *= 1.28
-	stick_center = Vector2(134 * unit, size.y - 120 * unit)
-	jump_center = size - Vector2(94, 105) * unit
-	dash_center = size - Vector2(211, 90) * unit
+	unit = maxf(minf(size.x / 1280.0, size.y / 590.0) * size_factor, minimum_target / 96.0)
+	stick_center = Vector2(110, -108) * unit + Vector2.DOWN * size.y
+	jump_center = size - Vector2(82, 96) * unit
+	action_center = size - Vector2(204, 82) * unit
+	if left_handed:
+		stick_center.x = size.x - stick_center.x
+		jump_center.x = size.x - jump_center.x
+		action_center.x = size.x - action_center.x
 	queue_redraw()
 
 func paint(texture: Texture2D, center: Vector2, diameter: float, shade: Color) -> void:
@@ -37,7 +42,11 @@ func _draw() -> void:
 		return
 	paint(STICK, stick_center, 190, Color(1, 1, 1, .78))
 	paint(THUMB, stick_center + stick_vector * 42 * unit, 73, Color.WHITE)
-	paint(DASH, dash_center, 89, Color(1, .86, .58) if dash_finger >= 0 else Color.WHITE)
+	draw_circle(action_center, 48 * unit, Color("#443c38"))
+	draw_arc(action_center, 46 * unit, 0, TAU, 48, Color("#efba66"), 3 * unit, true)
+	draw_string(HUD_FONT, action_center + Vector2(-48, 8) * unit, "Ação",
+		HORIZONTAL_ALIGNMENT_CENTER, 96 * unit, maxi(1, roundi(23 * unit)),
+		Color("#ffcd82") if action_finger >= 0 else Color.WHITE)
 	paint(JUMP, jump_center, 130, Color(1, .86, .58) if not jump_fingers.is_empty() else Color.WHITE)
 
 func set_action(action: StringName, strength: float) -> void:
@@ -74,7 +83,8 @@ func release_all() -> void:
 	for action: StringName in active_actions.keys():
 		set_action(action, 0.0)
 	stick_finger = -1
-	dash_finger = -1
+	action_finger = -1
+	gesture_finger = -1
 	stick_vector = Vector2.ZERO
 	jump_fingers.clear()
 	pulses.clear()
@@ -99,10 +109,13 @@ func handle_touch(event: InputEvent) -> void:
 				jump_fingers[event.index] = true
 				set_action(&"jump", 1.0)
 				handled = true
-			elif dash_finger < 0 and point.distance_to(dash_center) <= 48 * unit:
-				dash_finger = event.index
-				dash_origin = point
-				dive_swipe = false
+			elif action_finger < 0 and point.distance_to(action_center) <= 48 * unit:
+				action_finger = event.index
+				set_action(&"dive", 1.0)
+				handled = true
+			elif gesture_finger < 0 and Rect2(Vector2(0, size.y * .5), Vector2(size.x, size.y * .5)).has_point(point):
+				gesture_finger = event.index
+				gesture_origin = point
 				handled = true
 		elif event.index == stick_finger:
 			stick_finger = -1
@@ -111,20 +124,23 @@ func handle_touch(event: InputEvent) -> void:
 		elif jump_fingers.erase(event.index):
 			set_action(&"jump", 0.0 if jump_fingers.is_empty() else 1.0)
 			handled = true
-		elif event.index == dash_finger:
-			dash_finger = -1
-			if not dive_swipe and not event.canceled:
-				pulse(&"dash")
+		elif event.index == action_finger:
+			action_finger = -1
+			set_action(&"dive", 0)
+			handled = true
+		elif event.index == gesture_finger:
+			gesture_finger = -1
 			handled = true
 	elif event is InputEventScreenDrag:
 		var point: Vector2 = event.position - global_position
 		if event.index == stick_finger:
 			update_stick(point)
 			handled = true
-		elif event.index == dash_finger:
-			if not dive_swipe and dash_origin.y - point.y > 37 * unit:
-				pulse(&"dive")
-				dive_swipe = true
+		elif event.index == gesture_finger:
+			var travel: Vector2 = point - gesture_origin
+			if absf(travel.x) >= 42 * unit and absf(travel.x) > absf(travel.y):
+				pulse(&"dash")
+				gesture_finger = -1
 			handled = true
 		elif jump_fingers.has(event.index):
 			handled = true
