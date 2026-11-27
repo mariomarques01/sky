@@ -10,6 +10,7 @@ height = 0.38
 material = SubResource("Tint")
 [node name="Spiked" instance=ExtResource("base")]
 script = ExtResource("script")
+spore_tint = Color(0.90, 0.70, 1, 1)
 [node name="Detail0" type="MeshInstance3D" parent="Visual"]
 mesh = SubResource("Detail")
 position = Vector3(-0.26,0.93,0)

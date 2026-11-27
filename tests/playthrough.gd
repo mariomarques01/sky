@@ -230,6 +230,8 @@ func _ready() -> void:
 	var enemy := world.get_node("Gameplay/Enemies/Sporeling") as Area3D
 	player.position = enemy.position + Vector3(.37,.01,0)
 	await frames(4)
+	check(Game.health==3,"antecipação do dano lateral")
+	await frames(9)
 	check(Game.health==2,"dano lateral")
 	await frames(4)
 	check(Game.health==2,"invulnerabilidade")

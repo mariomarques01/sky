@@ -3,6 +3,7 @@ extends Node
 @onready var arena := $Arena
 @onready var player := $Arena/Player
 var failures := 0
+var boss_spores := false
 
 func check(condition: bool, label: String) -> void:
 	print(("PASS " if condition else "FAIL ") + label)
@@ -28,10 +29,27 @@ func _ready() -> void:
 	check(not is_instance_valid(barrel), "soco ativo quebra o barril")
 	player.reset_moves()
 	var spike := $Arena/Spiked
-	player.position = spike.position + Vector3.UP * .6
+	spike.position.x = spike.limits.x
+	spike.direction = -1
+	spike.turn_remaining = 0.0
+	await frames(1)
+	check(spike.direction == -1 and is_equal_approx(spike.turn_remaining, .15), "espinhos sinalizam a virada no limite")
+	await frames(8)
+	check(spike.direction == -1 and spike.visual.scale.y < spike.visual_scale.y, "espinhos mantêm a direção durante a antecipação")
+	await frames(1)
+	check(spike.direction == 1, "espinhos viram após 150 ms")
+	player.position = spike.position + Vector3.UP * .55
 	player.velocity.y = -4
-	spike.contact_player(player)
-	check(Game.health == 2 and not spike.defeated, "stomp normal nos espinhos causa dano")
+	await frames(3)
+	check(Game.health == 3 and spike.attack_target == player and not spike.defeated, "stomp normal nos espinhos sinaliza dano")
+	player.position.x -= 5.0
+	await frames(12)
+	check(Game.health == 3 and spike.attack_target == null, "sair do alcance cancela o ataque")
+	player.position = spike.position + Vector3.UP * .55
+	await frames(3)
+	check(spike.attack_target == player, "novo contato inicia outra antecipação")
+	await frames(9)
+	check(Game.health == 2 and not spike.defeated, "espinhos causam dano após a antecipação")
 	player.air_move = &"GroundPound"
 	player.ground_pound.emit(spike.position)
 	check(spike.defeated, "impacto vertical derrota espinhos")
@@ -66,6 +84,10 @@ func _ready() -> void:
 	player.update_pole(0, .016)
 	check(player.position.distance_to(grip.to_global(Vector3.UP * height)) < .01, "jogador acompanha o balanço")
 	player.reset_moves()
+	arena.child_entered_tree.connect(func(child: Node) -> void:
+		if child.get_script() == preload("res://environment/effects/sparkles.gd") and child.tint == Color("#ffca83"):
+			boss_spores = child.burst_amount == 8
+	)
 	var boss := $Arena/Guardian
 	player.position = boss.position + Vector3.LEFT * 4
 	await frames(2)
@@ -83,4 +105,8 @@ func _ready() -> void:
 		elif expected == 1:
 			check(boss.position.y == boss.origin.y and boss.position.x < boss.origin.x, "terceira fase investe")
 	check(not bar.visible, "derrota encerra a barra do chefe")
+	await frames(30)
+	check(not is_instance_valid(boss) and boss_spores, "derrota libera partículas independentes do inimigo")
+	Audio.stop_all()
+	await get_tree().create_timer(.5).timeout
 	get_tree().quit(failures)

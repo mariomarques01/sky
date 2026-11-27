@@ -9,6 +9,7 @@ height = 0.12
 material = SubResource("Tint")
 [node name="Flyer" instance=ExtResource("base")]
 script = ExtResource("script")
+spore_tint = Color(0.53, 0.91, 1, 1)
 [node name="Detail0" type="MeshInstance3D" parent="Visual"]
 mesh = SubResource("Detail")
 position = Vector3(-0.45,0.58,0)
