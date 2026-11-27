@@ -87,6 +87,7 @@ func _ready() -> void:
 	pause_button.stretch_mode = TextureButton.STRETCH_KEEP_ASPECT_CENTERED
 	pause_button.tooltip_text = "Pausar"
 	pause_button.pressed.connect(toggle_pause)
+	get_window().focus_exited.connect(pad.release_all)
 	safe.add_child(pad)
 	pad.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	pad.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -167,10 +168,11 @@ func layout() -> void:
 				safe.position = Vector2(rectangle[0], rectangle[1]) * visible_size
 				safe.size = Vector2(rectangle[2], rectangle[3]) * visible_size
 	elif OS.has_feature("mobile"):
-		var rect := DisplayServer.get_display_safe_area()
+		var window := Rect2i(DisplayServer.window_get_position(), DisplayServer.window_get_size())
+		var rect := DisplayServer.get_display_safe_area().intersection(window)
 		var screen := Vector2(DisplayServer.window_get_size())
 		if screen.x>0 and rect.has_area():
-			safe.position = Vector2(rect.position)*visible_size/screen
+			safe.position = Vector2(rect.position - window.position)*visible_size/screen
 			safe.size = Vector2(rect.size)*visible_size/screen
 	var unit := minf(safe.size.x / 1280.0, safe.size.y / 590.0)
 	status.position = Vector2(16, 15) * unit

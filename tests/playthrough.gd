@@ -215,6 +215,16 @@ func _ready() -> void:
 	check(Game.counts[1] >= 2 and held_height > normal_height + 0.55, "segurar pulo no stomp aumenta a altura do quique")
 	hud.toggle_pause()
 	check(get_tree().paused,"menu pausa")
+	var stick_x: float = pad.get("stick_center").x
+	hud.change_side()
+	hud.change_size()
+	hud.change_opacity()
+	check((stick_x < pad.size.x / 2) != (pad.get("stick_center").x < pad.size.x / 2), "modo canhoto espelha o direcional")
+	var saved := ConfigFile.new()
+	saved.load(Save.PATH)
+	check(saved.get_value("toque", "canhoto") == pad.get("left_handed")
+		and saved.get_value("toque", "tamanho") == hud.size_index
+		and saved.get_value("toque", "opacidade") == hud.opacity_index, "preferências de toque gravadas")
 	hud.toggle_pause()
 	hud.cycle_profile()
 	check(world.quality==int(Save.data.get_value("video","perfil",-1)),"perfil persistido")
