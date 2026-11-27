@@ -86,6 +86,18 @@ func update_pose(next: StringName, facing: float, speed: float, dt: float, shiel
 	explorer.position = pivot - explorer.basis * pivot
 	visible = shield <= 0 or fmod(shield, .14) < .1
 
+func death_arc(progress: float) -> void:
+	position.y = 4.0 * progress * (1.0 - progress) - 0.65 * progress
+	explorer.rotation.x = TAU * progress
+	var pivot := Vector3.UP * 0.72
+	explorer.position = pivot - explorer.basis * pivot
+
+func reset_after_death() -> void:
+	step_offset = 0.0
+	position.y = 0.0
+	explorer.rotation = Vector3.ZERO
+	explorer.position = Vector3.ZERO
+
 func joint(label: String) -> int:
 	return rig.find_bone("mixamorig_" + label)
 

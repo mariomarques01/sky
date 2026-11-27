@@ -498,14 +498,15 @@ func _physics_process(dt: float) -> void:
 		return
 	if recovery > 0:
 		recovery = maxf(0,recovery-dt)
-		$Visual.scale = Vector3.ONE*maxf(.02,recovery/.35)
+		$Visual.update_pose(&"Death", facing, 0, dt, 0)
+		$Visual.death_arc(1.0 - recovery / .35)
 		if recovery == 0:
 			global_position = Game.checkpoint
 			health.restore()
 			states.enter(&"Respawn")
 			dash.reset()
 			$Visual.scale = Vector3.ONE
-			$Visual.step_offset = 0
+			$Visual.reset_after_death()
 			stun = 0
 			jumps = 0
 		return
