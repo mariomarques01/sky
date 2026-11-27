@@ -9,6 +9,9 @@ script = ExtResource("Manager")
 [node name="StageMusic" type="AudioStreamPlayer" parent="."]
 bus = &"Música"
 
+[node name="StageMusicAlt" type="AudioStreamPlayer" parent="."]
+bus = &"Música"
+
 [node name="Effects" type="Node" parent="."]
 
 [node name="Voice1" type="AudioStreamPlayer" parent="Effects"]
