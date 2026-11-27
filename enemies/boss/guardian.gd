@@ -2,6 +2,10 @@ extends "res://enemies/mushroom/patrol.gd"
 
 signal health_changed(current: int)
 const MAX_HEALTH := 3
+const GUARDIAN_MUSIC := preload("res://audio/music/guardian_loop.wav")
+const MUSIC_FADE := .5
+const HIT_STOP := .05
+var stage_loop: AudioStreamWAV
 var health := MAX_HEALTH
 var cooldown := 0.0
 var active := false
@@ -9,12 +13,17 @@ var charge_direction := 1.0
 @onready var origin := position
 @onready var target := get_tree().get_first_node_in_group("player") as CharacterBody3D
 
+func _ready() -> void:
+	Audio.prepare_music_loop(GUARDIAN_MUSIC)
+
 func advance_patrol(dt: float) -> void:
 	if not active:
 		active = is_instance_valid(target) and absf(target.global_position.x - global_position.x) < 7
 		clock = 0
 		if not active:
 			return
+		stage_loop = Audio.current_track
+		Audio.play_stage_music(null, GUARDIAN_MUSIC, MUSIC_FADE)
 		health_changed.emit(health)
 	cooldown = maxf(0, cooldown - dt)
 	match health:
@@ -39,11 +48,21 @@ func contact_player(body: CharacterBody3D) -> void:
 	if not stomp and not body.is_striking():
 		body.hurt(global_position.x)
 		return
+	if defeated:
+		return
+	Game.hit_stop(HIT_STOP)
 	health -= 1
 	health_changed.emit(health)
 	if health == 0:
+		Audio.play(&"boss_defeat")
+		if Audio.current_track == GUARDIAN_MUSIC:
+			if stage_loop:
+				Audio.play_stage_music(null, stage_loop, MUSIC_FADE)
+			else:
+				Audio.stop_music(MUSIC_FADE)
 		defeat(body, stomp)
 		return
+	Audio.play(&"boss_hit")
 	if stomp:
 		body.stomp_enemy(Input.is_action_pressed("jump"))
 	cooldown = .85

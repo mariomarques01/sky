@@ -2,9 +2,12 @@
 
 ## Áudio e resposta ao impacto
 
-O autoload de áudio usa oito vozes de efeitos e um player dedicado à música. A faixa original de Jardins Celestiais começa com uma introdução de 4,8 segundos e repete o trecho até 24 segundos. Os arquivos WAV podem ser regenerados com `procedural/bake_audio.py`.
-
-O teste de partida verifica o pool, os buses, a reprodução simultânea e a configuração do loop. Dois stomps medem a pausa de três ciclos de física a 60 Hz e comparam o ápice com o botão de pulo solto e segurado. O teste também verifica a emissão de poeira no pouso e na derrapagem.
+`tests/playthrough.tscn` verifica a expansão do pool sem cortes, os buses, o
+loop da fase, o jingle de vitória e o fim do hit-stop com impactos
+sobrepostos e o menu pausado. Dois stomps medem três ciclos de física a
+60 Hz e comparam o ápice com o botão de pulo solto e segurado.
+`tests/movement.tscn` verifica o hit-stop do ground pound.
+`tests/enemies.tscn` valida a pausa de impacto e a transição musical do Guardião.
 
 ## Revisão dos saltos e das caixas
 

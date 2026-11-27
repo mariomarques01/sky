@@ -167,7 +167,10 @@ func _ready() -> void:
 	await frames(2)
 	check(player.air_move == &"PoundWindup", "preparação do impacto vertical")
 	check(await wait_for_ground(), "pouso após impacto vertical")
-	check(impacts == 1, "impacto vertical emitido uma vez")
+	check(impacts == 1 and Game.is_hit_stopped(), "impacto vertical emitido uma vez e pausa a física")
+	while Game.is_hit_stopped():
+		await frames(1)
+	check(is_equal_approx(Engine.time_scale, 1.0), "impacto vertical restaura o tempo")
 
 	var ledge := add_block(Vector3(22, .66, 0), Vector3(2, 1.32, 2))
 	await reset_at(Vector3(20.35, .75, 0))

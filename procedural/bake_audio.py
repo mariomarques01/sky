@@ -140,3 +140,39 @@ samples[:fade_in] *= np.linspace(0, 1, fade_in)
 samples[loop_start-fade_out:loop_start] *= np.linspace(1, 0, fade_out)
 write("music/celestial_gardens_intro.wav", samples[:loop_start]*.88)
 write("music/celestial_gardens_loop.wav", samples[loop_start:]*.88)
+
+
+def phrase(t, pitches, spacing):
+    result = np.zeros_like(t)
+    for index, midi in enumerate(pitches):
+        start = round(index * spacing * RATE)
+        elapsed = t[:len(t) - start]
+        phase = 2 * np.pi * 440 * 2**((midi - 69) / 12) * elapsed
+        result[start:] += (np.sin(phase) + .28 * np.sin(phase * 2)) * np.exp(-8 * elapsed) * np.minimum(elapsed * 200, 1)
+    return result
+
+
+effect("double_jump", .24, lambda t: phrase(t, (76, 83), .065), .46)
+effect("triple_jump", .34, lambda t: phrase(t, (74, 81, 86), .065), .50)
+effect("wall_kick", .18, lambda t: (.23 * noise(t.size) + sweep(t, 410, 960)) * np.exp(-19*t), .48)
+effect("dive", .27, lambda t: (.53 * noise(t.size) + .68 * sweep(t, 620, 130)) * np.sin(np.pi*t/.27), .43)
+effect("boss_hit", .26, lambda t: (sweep(t, 185, 48) + .38 * noise(t.size)) * np.exp(-13*t), .55)
+effect("boss_defeat", .68, lambda t: phrase(t, (55, 59, 62, 67), .115) + .5 * sweep(t, 135, 39) * np.exp(-10*t), .58)
+effect("victory", 1.55, lambda t: phrase(t, (69, 74, 78, 81, 86), .17)
+       + .48 * phrase(t, (50, 57, 62, 66, 74), .17), .62)
+
+# Eight bars at 150 BPM, with alternating bass and a minor-key ostinato.
+BEAT = .40
+INTRO = 0
+loop_start = 0
+samples = np.zeros(round(32 * BEAT * RATE), dtype=np.float64)
+for bar, chord in enumerate(((50, 53, 57), (46, 50, 53), (48, 52, 55), (45, 49, 52)) * 2):
+    for step in range(8):
+        beat = bar * 4 + step * .5
+        note(beat, chord[(0, 2, 1, 2)[step % 4]] + 12, .64, .13, "lead")
+        if step % 2 == 0:
+            note(beat, chord[0] - (12 if step % 4 == 0 else 0), .88, .19, "bass")
+        drum = time(.12)
+        hit = sweep(drum, 122, 46) if step % 4 == 0 else .35 * noise(drum.size)
+        add(beat, .15 * hit * np.exp(-30 * drum) * np.minimum(drum * 400, 1))
+write("music/guardian_loop.wav", samples)

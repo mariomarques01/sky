@@ -23,6 +23,7 @@ script = ExtResource("Burst")
 
 [node name="Boards" type="CPUParticles3D" parent="."]
 cast_shadow = 0
+emitting = false
 amount = 5
 lifetime = 0.5
 one_shot = true
@@ -44,6 +45,7 @@ scale_amount_max = 1.2
 
 [node name="Splinters" type="CPUParticles3D" parent="."]
 cast_shadow = 0
+emitting = false
 amount = 13
 lifetime = 0.61
 one_shot = true

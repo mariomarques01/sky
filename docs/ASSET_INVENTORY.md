@@ -10,7 +10,7 @@ O repositório remoto consultado não anunciou refs Git. O workspace inicial con
 | Esqueleto | SmartRigArmature, 32 juntas com skinning |
 | Dimensões locais | Aproximadamente 0,683 × 1,700 × 0,566 unidades. Base em Y=0, eixo vertical +Y. O visual gira em torno de Y para alinhar a frente ao deslocamento lateral |
 | Animações presentes | Walking e Running |
-| Sons | Tons curtos gerados em AudioStreamWAV para salto, dash, coleta, dano e checkpoint |
+| Sons | Efeitos, jingle e trilhas originais sintetizados em WAV com `procedural/bake_audio.py` |
 
 `procedural/bake.py` recria os módulos com a seed 1739, usando somente a biblioteca padrão do Python. Execute `python3 procedural/bake.py` na raiz e reimporte. Cada GLB resultante reúne as superfícies do módulo em uma malha e pode ser instanciado em outra fase.
 

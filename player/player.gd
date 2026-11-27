@@ -3,7 +3,7 @@ signal impact
 signal ground_pound(point: Vector3)
 
 const GroundDust = preload("res://environment/effects/GroundDust.tscn")
-const STOMP_STOP_SECONDS := 0.05
+const IMPACT_STOP_SECONDS := 0.05
 @export var run_speed := 6.6
 @export var crouch_speed := 2.2
 @export var crouch_height := 0.92
@@ -25,7 +25,6 @@ var jumps := 0
 var stun := 0.0
 var recovery := 0.0
 var landing := 0.0
-var stomp_stop := 0.0
 var slide_dust_timer := 0.0
 var crouched := false
 var sliding := false
@@ -196,7 +195,6 @@ func enter_cannon(barrel: Node3D) -> void:
 	dash.remaining = 0
 	sliding = false
 	buffered = 0
-	stomp_stop = 0
 	global_position = cannon.global_position
 	states.enter(&"Cannon")
 
@@ -238,7 +236,7 @@ func is_striking() -> bool:
 	return strike_is_active() or sliding or belly_slide or slope_slide or air_move in [&"Dive", &"AirKick", &"GroundPound"]
 
 func hurt(source_x: float) -> void:
-	if recovery == 0 and stomp_stop <= 0.0 and health.hit():
+	if recovery == 0 and not Game.is_hit_stopped() and health.hit():
 		impact.emit()
 		Audio.vibrate(45)
 		if Game.health <= 0:
@@ -251,7 +249,6 @@ func hurt(source_x: float) -> void:
 			var away := signf(global_position.x - source_x)
 			velocity = Vector3(4 * (away if away != 0 else -facing), 4, 0)
 func die() -> void:
-	stomp_stop = 0.0
 	reset_moves()
 	states.enter(&"Death")
 	recovery = .35
@@ -270,7 +267,7 @@ func bounce(launch_speed := 0.0) -> void:
 	dash.air_available = true
 func stomp_enemy(held: bool) -> void:
 	bounce(jump_speed * 1.12 if held else 0.0)
-	stomp_stop = STOMP_STOP_SECONDS
+	Game.hit_stop(IMPACT_STOP_SECONDS)
 	impact.emit()
 	Audio.play(&"stomp")
 	Audio.vibrate(28)
@@ -327,7 +324,15 @@ func try_jump(axis: float, wants_crouch: bool) -> void:
 	coyote = 0
 	chain_time = 0
 	dash.remaining = 0
-	Audio.play(&"jump")
+	match air_move:
+		&"DoubleJump":
+			Audio.play(&"double_jump")
+		&"TripleJump":
+			Audio.play(&"triple_jump")
+		&"WallKick":
+			Audio.play(&"wall_kick")
+		_:
+			Audio.play(&"jump")
 
 func update_strike(dt: float) -> void:
 	var was_active := strike_is_active()
@@ -373,6 +378,7 @@ func start_dive(grounded: bool, attack_only := false) -> void:
 		velocity.y = 4.9
 		return
 	air_move = &"Dive"
+	Audio.play(&"dive")
 	velocity.x = facing * minf(speed + 3.52, 10.5)
 	velocity.y = 4.9 if grounded else maxf(velocity.y, 0.0)
 
@@ -486,6 +492,7 @@ func emit_ground_dust(direction: Vector3, particles: int) -> void:
 
 func handle_landing(incoming: Vector3) -> void:
 	if air_move == &"GroundPound":
+		Game.hit_stop(IMPACT_STOP_SECONDS)
 		Audio.play(&"pound")
 		Audio.vibrate(40)
 		emit_ground_dust(Vector3.UP, 13)
@@ -523,13 +530,10 @@ func handle_landing(incoming: Vector3) -> void:
 			break
 
 func _physics_process(dt: float) -> void:
+	if Game.is_hit_stopped():
+		return
 	if is_instance_valid(cannon):
 		update_cannon()
-		return
-	if stomp_stop > 0.0:
-		stomp_stop = maxf(0.0, stomp_stop - dt)
-		if stomp_stop < 0.0001:
-			stomp_stop = 0.0
 		return
 	if recovery > 0:
 		recovery = maxf(0,recovery-dt)

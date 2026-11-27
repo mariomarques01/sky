@@ -16,6 +16,7 @@ func take_movement_hit() -> void:
 		return
 	broken = true
 	$Collision.set_deferred("disabled", true)
+	Audio.play(&"crate")
 	var crush := create_tween()
 	crush.tween_property($Visual, "scale", Vector3(1.10, 0.62, 1.08), 0.075)
 	crush.tween_callback(_shatter)
@@ -28,5 +29,4 @@ func _shatter() -> void:
 	var burst := WoodBurst.instantiate() as Node3D
 	burst.position = position + Vector3(0, 0.52, 0.24)
 	get_parent().add_child(burst)
-	Audio.play(&"crate")
 	queue_free()
