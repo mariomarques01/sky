@@ -35,6 +35,8 @@ func soften_step(rise: float) -> void:
 func update_pose(next: StringName, facing: float, speed: float, dt: float, shield: float, vertical_speed := 0.0, landing := 0.0) -> void:
 	var height := 1.0 + stretch_intensity * clampf(vertical_speed / 10.0, 0.0, 1.0)
 	height -= landing_squash * clampf(landing / 0.08, 0.0, 1.0)
+	if next in [&"Punch", &"Kick", &"AirKick", &"Dash", &"Dive", &"BellySlide"]:
+		height = 1.0
 	var width := 1.0 / sqrt(height)
 	scale = Vector3(width, height, width)
 	$DashTrail.emitting = next == &"Dash"
@@ -175,8 +177,8 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 			feet[1].z = .09
 		&"Dive", &"BellySlide":
 			sink = .26 if next == &"BellySlide" else .10
-			lean = 63.0
-			arms = Vector2(-96.0, -96.0)
+			lean = 28.0
+			arms = Vector2(-65.0, -65.0)
 			feet[0] = Vector3(0, .18, -.22)
 			feet[1] = Vector3(0, .14, -.16)
 		&"Landing", &"Hurt", &"Bonk":
@@ -206,7 +208,11 @@ func pose_action(next: StringName, speed: float, dt: float, vertical_speed: floa
 			arms = Vector2(-140.0 + 24.0 * climb, -140.0 - 24.0 * climb)
 			feet[0] = Vector3(0, .15 + .10 * climb, .11)
 			feet[1] = Vector3(0, .15 - .10 * climb, .11)
-		&"Punch", &"Dash":
+		&"Punch":
+			var extension := sin(PI * clampf(pose_time / .25, 0, 1))
+			lean = 10.0 * extension
+			arms = Vector2(-28.0 - 50.0 * extension, -20.0)
+		&"Dash":
 			lean = 25.0
 			arms = Vector2(-75.0, 27.0)
 	var hips := joint("Hips")

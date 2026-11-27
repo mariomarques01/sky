@@ -44,14 +44,23 @@ func defeat(body: CharacterBody3D, stomp: bool) -> void:
 	var t := create_tween()
 	if stomp:
 		t.tween_interval(body.stomp_stop)
-	t.tween_property($Visual, "scale", Vector3(1.25, .12, 1.25), .16)
-	t.tween_property($Visual, "scale", Vector3(.85, 1.18, .85), .06)
+	var visual := $Visual as Node3D
+	var base := visual.scale
+	var away := signf(global_position.x - body.global_position.x)
+	if is_zero_approx(away):
+		away = body.facing
+	t.tween_property(visual, "scale", base * Vector3(1.24, .48, 1.24), .09)
+	t.tween_property(visual, "scale", base, .12)
+	t.parallel().tween_property(visual, "position", visual.position + Vector3(.28 * away, .68, 0), .15).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
+	t.parallel().tween_property(visual, "rotation:z", -away * 1.45, .15)
+	t.tween_property(visual, "position:y", .18, .20).set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	t.parallel().tween_property(visual, "scale", base * .55, .20)
 	t.tween_callback(burst)
 
 func burst() -> void:
 	var spores := Spores.new()
 	spores.burst_amount = 8
 	spores.tint = Color("#ffca83")
+	spores.position = get_parent().to_local($Visual.global_position + Vector3.UP * .35)
 	get_parent().add_child(spores)
-	spores.global_position = global_position + Vector3.UP * .45
 	queue_free()

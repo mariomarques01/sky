@@ -12,7 +12,7 @@ Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do a
 | Saltar | Espaço ou W | Botão inferior | ↑ |
 | Salto duplo aéreo | Solte e pressione salto no ar | Segundo toque no botão inferior | Segundo toque em ↑ |
 | Agachar ou deslizar durante a corrida | S ou ↓ | Direcional para baixo | Para baixo no direcional |
-| Soco, chute aéreo ou mergulho | J | Botão superior | Botão Ação |
+| Soco, chute aéreo ou mergulho | J | Botão superior | Toque em Ação para golpear. Para mergulhar em velocidade, deslize para cima na área livre da metade inferior |
 | Subir em poste | ↑ | Direcional para cima | Para cima no direcional |
 | Dash | X ou Shift | Botão esquerdo | Deslize horizontalmente na metade inferior, fora dos botões |
 | Pausa | Esc | Start | Ⅱ |

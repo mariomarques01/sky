@@ -63,6 +63,31 @@ func check_slide() -> void:
 	check(not player.get("sliding") and impacts.size() == 1, "parede encerra deslizada e registra impacto")
 	wall.queue_free()
 
+func check_touch_attack() -> void:
+	player.reset_moves()
+	player.position = Vector3(-3, .12, 0)
+	player.velocity = Vector3.ZERO
+	await frames(20)
+	var crate := preload("res://worlds/world_01/level_01/expansion/SurpriseCrate.tscn").instantiate()
+	world.add_child(crate)
+	crate.global_position = player.global_position + Vector3.RIGHT * 1.15
+	player.facing = 1
+	player.velocity.x = player.run_speed
+	var pad = world.get_node("CanvasLayer").pad
+	pad.show()
+	var touch := InputEventScreenTouch.new()
+	touch.index = 7
+	touch.position = pad.global_position + pad.action_center
+	touch.pressed = true
+	get_viewport().push_input(touch, true)
+	await frames(2)
+	check(player.strike_index == 0 and player.dash.remaining == 0 and player.is_on_floor()
+		and player.get_node("Visual").scale.is_equal_approx(Vector3.ONE), "Ação em corrida inicia soco com proporções normais")
+	touch.pressed = false
+	get_viewport().push_input(touch, true)
+	await frames(20)
+	check(not is_instance_valid(crate), "soco por toque quebra a caixa com estrela")
+
 func check_audio() -> void:
 	var music := Audio.music.stream as AudioStreamWAV
 	check(Audio.voices.size() == 8 and Audio.music.bus == &"Música" and Audio.music.playing, "oito vozes de efeitos e música dedicada")
@@ -107,6 +132,8 @@ func measure_stomp(enemy: Area3D, hold_jump: bool) -> float:
 		var peak := player.position.y
 		for sample in 32:
 			await frames(1)
+			if sample == 11:
+				check(is_instance_valid(enemy) and enemy.get_node("Visual").position.y > .25, "derrota eleva o modelo antes do estouro")
 			peak = maxf(peak, player.position.y)
 		Input.action_release("jump")
 		check(launch > 0 and not is_instance_valid(enemy), "o inimigo derrotado libera o quique")
@@ -137,7 +164,7 @@ func _ready() -> void:
 		down.position=pad.global_position+touch_targets[index]
 		get_viewport().push_input(down,true)
 	await frames(2)
-	check(pad.visible and Input.is_action_pressed("right") and Input.is_action_pressed("jump") and Input.is_action_pressed("dive"), "primeiro toque revela os controles e permite multitouch")
+	check(pad.visible and Input.is_action_pressed("right") and Input.is_action_pressed("jump") and Input.is_action_pressed("touch_attack"), "primeiro toque revela os controles e permite multitouch")
 	for index in touch_targets.size():
 		var up := InputEventScreenTouch.new()
 		up.index=index
@@ -154,7 +181,7 @@ func _ready() -> void:
 	get_viewport().push_input(swipe, true)
 	dash_touch.pressed = false
 	get_viewport().push_input(dash_touch, true)
-	check(Input.is_action_pressed("dash") and not Input.is_action_pressed("dive"), "gesto horizontal dispara dash")
+	check(Input.is_action_pressed("dash") and not Input.is_action_pressed("touch_attack"), "gesto horizontal dispara dash")
 	await frames(70)
 	player.position = Vector3(-3, .12, 0)
 	player.velocity = Vector3.ZERO
@@ -238,6 +265,7 @@ func _ready() -> void:
 	check(not Game.complete and Game.counts[2]==1 and not get_tree().paused,"cristal azul sem concluir a fase")
 	get_tree().paused = false
 	await check_slide()
+	await check_touch_attack()
 	Audio.stop_all()
 	await get_tree().create_timer(.3,true,false,true).timeout
 	get_tree().quit(failed)
