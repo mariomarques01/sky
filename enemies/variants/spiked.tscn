@@ -1,0 +1,21 @@
+[gd_scene format=3]
+[ext_resource type="PackedScene" path="res://enemies/mushroom/Mushroom.tscn" id="base"]
+[ext_resource type="Script" path="res://enemies/variants/spiked.gd" id="script"]
+[sub_resource type="StandardMaterial3D" id="Tint"]
+albedo_color = Color(0.95,0.72,0.22,1)
+[sub_resource type="CylinderMesh" id="Detail"]
+top_radius = 0.0
+bottom_radius = 0.13
+height = 0.38
+material = SubResource("Tint")
+[node name="Spiked" instance=ExtResource("base")]
+script = ExtResource("script")
+[node name="Detail0" type="MeshInstance3D" parent="Visual"]
+mesh = SubResource("Detail")
+position = Vector3(-0.26,0.93,0)
+[node name="Detail1" type="MeshInstance3D" parent="Visual"]
+mesh = SubResource("Detail")
+position = Vector3(0,0.93,0)
+[node name="Detail2" type="MeshInstance3D" parent="Visual"]
+mesh = SubResource("Detail")
+position = Vector3(0.26,0.93,0)

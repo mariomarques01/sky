@@ -1,0 +1,17 @@
+[gd_scene format=3]
+[ext_resource type="PackedScene" path="res://enemies/mushroom/Mushroom.tscn" id="base"]
+[ext_resource type="Script" path="res://enemies/variants/flyer.gd" id="script"]
+[sub_resource type="StandardMaterial3D" id="Tint"]
+albedo_color = Color(0.38,0.82,0.95,1)
+[sub_resource type="SphereMesh" id="Detail"]
+radius = 0.36
+height = 0.12
+material = SubResource("Tint")
+[node name="Flyer" instance=ExtResource("base")]
+script = ExtResource("script")
+[node name="Detail0" type="MeshInstance3D" parent="Visual"]
+mesh = SubResource("Detail")
+position = Vector3(-0.45,0.58,0)
+[node name="Detail1" type="MeshInstance3D" parent="Visual"]
+mesh = SubResource("Detail")
+position = Vector3(0.45,0.58,0)
