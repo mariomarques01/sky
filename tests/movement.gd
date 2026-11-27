@@ -234,4 +234,31 @@ func _ready() -> void:
 
 	Audio.stop_all()
 	await get_tree().create_timer(.3).timeout
+	check_strike_skeleton()
 	get_tree().quit(failures)
+
+func check_strike_skeleton() -> void:
+	var visual := player.get_node("Visual")
+	var rig: Skeleton3D = visual.rig
+	var hips: int = visual.joint("Hips")
+	var support: int = visual.joint("LeftFoot")
+	var stable := true
+	var fist_travel := 0.0
+	var kick_travel := 0.0
+	for stage in 4:
+		var pose: StringName = [&"Punch", &"Punch", &"Kick", &"AirKick"][stage]
+		var tip: int = visual.joint(["LeftHand", "RightHand", "RightFoot", "RightFoot"][stage])
+		for frame in 48:
+			visual.update_pose(pose, 1, 0, 1.0 / 60, 0, 0, 0, stage, frame / 60.0)
+			if frame < 9:
+				continue
+			var reach := rig.get_bone_global_pose(tip).origin.z - rig.get_bone_global_rest(tip).origin.z
+			if stage < 2:
+				fist_travel = maxf(fist_travel, reach)
+			else:
+				kick_travel = maxf(kick_travel, reach)
+			stable = stable and rig.get_bone_pose_position(hips).distance_to(rig.get_bone_rest(hips).origin) < .001
+			stable = stable and rig.get_bone_global_pose(support).origin.distance_to(rig.get_bone_global_rest(support).origin) < .001
+			if frame == 47:
+				stable = stable and absf(reach) < .01
+	check(stable and fist_travel > .12 and kick_travel > .15, "golpes estendem e recolhem o membro com quadril e pé de apoio estáveis")
