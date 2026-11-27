@@ -1,0 +1,16 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://collectibles/vine/vine.gd" id="script"]
+[sub_resource type="StandardMaterial3D" id="Green"]
+albedo_color = Color(0.2,0.55,0.14,1)
+[sub_resource type="CylinderMesh" id="Stem"]
+top_radius = 0.08
+bottom_radius = 0.11
+height = 3.0
+material = SubResource("Green")
+[node name="Vine" type="Node3D"]
+script = ExtResource("script")
+[node name="Grip" type="Marker3D" parent="." groups=["climb_pole","swing_vine"]]
+position = Vector3(0,-3,0)
+[node name="Stem" type="MeshInstance3D" parent="."]
+mesh = SubResource("Stem")
+position = Vector3(0,-1.5,0)

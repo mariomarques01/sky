@@ -1,0 +1,6 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://tests/enemies.gd" id="test"]
+[ext_resource type="PackedScene" path="res://worlds/test_enemies/Arena.tscn" id="arena"]
+[node name="EnemyChecks" type="Node"]
+script = ExtResource("test")
+[node name="Arena" parent="." instance=ExtResource("arena")]

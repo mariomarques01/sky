@@ -1,0 +1,29 @@
+[gd_scene format=3]
+[ext_resource type="Script" path="res://collectibles/cannon/cannon.gd" id="script"]
+[sub_resource type="StandardMaterial3D" id="Steel"]
+albedo_color = Color(0.22,0.35,0.41,1)
+[sub_resource type="StandardMaterial3D" id="Rim"]
+albedo_color = Color(0.9,0.58,0.18,1)
+[sub_resource type="CylinderMesh" id="TubeMesh"]
+top_radius = 0.6
+bottom_radius = 0.6
+height = 1.55
+material = SubResource("Steel")
+[sub_resource type="CylinderMesh" id="RimMesh"]
+top_radius = 0.68
+bottom_radius = 0.68
+height = 0.16
+material = SubResource("Rim")
+[sub_resource type="SphereShape3D" id="Capture"]
+radius = 0.67
+[node name="Cannon" type="Area3D"]
+script = ExtResource("script")
+[node name="Collision" type="CollisionShape3D" parent="."]
+shape = SubResource("Capture")
+[node name="Tube" type="Node3D" parent="."]
+[node name="Barrel" type="MeshInstance3D" parent="Tube"]
+mesh = SubResource("TubeMesh")
+position = Vector3(0,0,0)
+[node name="Muzzle" type="MeshInstance3D" parent="Tube"]
+mesh = SubResource("RimMesh")
+position = Vector3(0,0.7,0)
