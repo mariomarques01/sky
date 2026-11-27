@@ -8,12 +8,17 @@ var broken := false
 func break_from_above(player: CharacterBody3D) -> bool:
 	if broken or absf(player.global_position.x - global_position.x) > 0.48:
 		return false
+	take_movement_hit()
+	return true
+
+func take_movement_hit() -> void:
+	if broken:
+		return
 	broken = true
 	$Collision.set_deferred("disabled", true)
 	var crush := create_tween()
 	crush.tween_property($Visual, "scale", Vector3(1.10, 0.62, 1.08), 0.075)
 	crush.tween_callback(_shatter)
-	return true
 
 func _shatter() -> void:
 	var reward := prize.instantiate() as Area3D

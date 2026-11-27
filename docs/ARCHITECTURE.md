@@ -22,7 +22,7 @@ continuam sincronizados com a distância e os golpes e acrobacias conservam suas
 
 ### HUD e toque
 
-O direcional, Pulo e Ação capturam dedos independentes. Um gesto horizontal iniciado
+O direcional, Pulo e Ação capturam dedos independentes. Ação emite touch_attack para o combo no chão ou chute aéreo. O gesto para cima na área livre usa dive para o mergulho em velocidade. Um gesto horizontal iniciado
 na área livre da metade inferior aciona dash e preserva o segundo toque de salto.
 O HUD guarda tamanho, opacidade e lado na seção `toque` de Save. A área segura
 contém o menu e o controle virtual. O mínimo físico usa o DPI informado pelo sistema.
