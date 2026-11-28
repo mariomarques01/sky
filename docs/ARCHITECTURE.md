@@ -99,6 +99,29 @@ conclui a fase e dispara o jingle.
 O canhão captura na entrada e lança com Pulo ou Ação. O cipó fornece uma
 âncora móvel ao grupo `climb_pole`: segure cima para agarrar e Pulo para soltar.
 
-A fase principal instancia `LookoutTrail.tscn` depois do mirante. A trilha
-inclui o Casco de Pedra e tem um checkpoint após o vão. A última ilha contém
-a arena do Guardião e sua recompensa.
+### Percurso após o mirante
+
+`Expansion.tscn` encadeia quatro cenas depois de `FlowerMeadow`. Os
+cristais dourados guiam a rota principal. Cada um dos três trechos novos
+tem um tesouro com `persistent_id`, registrado em `JardinsTesouros` e
+independente do cristal que conclui a fase.
+
+| Trecho | Coordenadas X aproximadas | Progressão |
+| --- | --- | --- |
+| `WindWalk` | 102–125 | Plataforma móvel isolada, rajadas entre ilhas, dois voadores e ferry sob vento. A ilha de descanso dá acesso ao tesouro alto. |
+| `CascadeRuins` | 125–156 | Poste, degraus e paredes para ensaiar o salto de parede, depois plataforma que cai sobre uma rota de recuperação. O patamar central tem checkpoint, coração e acesso ao nicho alto. |
+| `SpikeCorridor` | 155–187 | Espinhos e Casco de Pedra apresentados em separado antes da patrulha combinada. A rota alta guarda um tesouro e desemboca no descanso com checkpoint e caixa surpresa. |
+| `LookoutTrail` | 187–224 | Rampa dos barris, canhão e cipó, último checkpoint e arena do Guardião (x=219). |
+
+As posições e os limites de patrulha do trecho final são locais à cena,
+com raiz sem deslocamento dentro da expansão. A distância de ativação
+do gerador de barris é relativa ao jogador. Na rota principal, os checkpoints
+ficam aproximadamente em `10,6`, `47,2`, `96,25`, `141,7`, `176,6` e `212,6`.
+O limite direito da câmera é x=224. O ponto inicial e o plano de queda
+em y=-7 continuam válidos. O perfil Baixo usa o shader simplificado
+também na nova cachoeira.
+
+A meta de ritmo é de 3 a 5 minutos no primeiro percurso e cerca de
+90 segundos para quem já conhece a fase. Os testes automatizados verificam
+a travessia e a gravação de progresso. A duração depende de sessões de jogo
+com pessoas.
