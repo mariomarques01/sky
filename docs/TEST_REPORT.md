@@ -9,6 +9,15 @@ sobrepostos e o menu pausado. Dois stomps medem três ciclos de física a
 `tests/movement.tscn` verifica o hit-stop do ground pound.
 `tests/enemies.tscn` valida a pausa de impacto e a transição musical do Guardião.
 
+## Luta do Guardião
+
+`tests/enemies.tscn` verifica os flashes e a pausa antes de saltos e investidas,
+a câmera e o HUD, a derrota e a sequência cristal–jingle. O teste simula a
+morte por contato com o Guardião, confirma o respawn e reativa o mesmo chefe.
+Também verifica que o Casco de Pedra resiste a stomp e soco e morre com o
+impacto vertical. `tests/expansion.tscn` confirma que atravessar a última ilha
+sem o cristal mantém a fase em andamento.
+
 ## Revisão dos saltos e das caixas
 
 A Travessia das Ilhas tem vãos de até 2,11 unidades entre bordas, incluindo os extremos da plataforma móvel. A rota elevada ainda permite usar o Dash. No início da fase, a plataforma que cai foi afastada do poste de escalada, e a plataforma orbital tem um curso menor perto dela. O teste sai do poste com um salto e confirma que a contagem da queda começa após a aterrissagem.
