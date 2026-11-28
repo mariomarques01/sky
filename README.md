@@ -24,6 +24,10 @@ Aperte salto logo após pousar em movimento para encadear o segundo salto. Corra
 
 Pressione agachar no ar para preparar um impacto vertical. O botão de ataque no ar dá um chute em baixa velocidade ou um mergulho quando você está rápido. O mergulho termina em deslizada ao tocar o chão. Saltar nessa deslizada dá uma cambalhota. No chão, use o mesmo botão para encadear dois socos e um chute, ou mergulhe durante a corrida. Segure na direção de uma borda ao cair para agarrá-la e salte para subir. À esquerda do início há uma área com caixa quebrável, poste, trampolim, plataforma que cai, plataforma orbital e vento.
 
+Na trilha após o mirante, use o impacto vertical para derrotar o Casco de Pedra.
+Na última ilha, espere os flashes do Guardião para esquivar de saltos e
+investidas. Recolha o cristal que ele deixa para concluir a fase.
+
 ## Projeto
 
 A cena abre com a geometria do cenário já posicionada e editável. O GLB do personagem, os módulos de ambiente e o retrato estão incluídos. Python serve apenas para reconstruir as malhas procedurais quando necessário.

@@ -1,0 +1,25 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://enemies/mushroom/Mushroom.tscn" id="base"]
+[ext_resource type="Script" path="res://enemies/variants/stone_shell.gd" id="script"]
+
+[sub_resource type="StandardMaterial3D" id="Slate"]
+albedo_color = Color(0.29, 0.42, 0.51, 1)
+roughness = 0.89
+
+[sub_resource type="CylinderMesh" id="Shell"]
+material = SubResource("Slate")
+top_radius = 0.35
+bottom_radius = 0.57
+height = 0.24
+radial_segments = 6
+rings = 1
+
+[node name="StoneShell" groups=["slam_target"] instance=ExtResource("base")]
+script = ExtResource("script")
+speed = 0.8
+spore_tint = Color(0.61, 0.77, 0.85, 1)
+
+[node name="Shell" type="MeshInstance3D" parent="Visual"]
+position = Vector3(0, 0.90, 0)
+mesh = SubResource("Shell")

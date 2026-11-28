@@ -77,13 +77,28 @@ antecipa os extremos horizontais do voo senoidal com a mesma compressão.
 O contato desses três inimigos causa dano após 150 ms de sobreposição contínua.
 Golpes válidos ainda podem derrotá-los durante a antecipação. Ao fim da
 animação de derrota, cada inimigo libera oito partículas de CPU de vida curta.
-O impacto
-vertical também atinge espinhos próximos pelo sinal `ground_pound`. O barril
-usa um RigidBody3D restrito ao plano e uma Area3D para distinguir soco de dano.
-O chefe sinaliza a vida ao HUD ao entrar em combate e após cada acerto.
+O impacto vertical também atinge espinhos próximos pelo sinal `ground_pound`.
+O Casco de Pedra pertence a `slam_target` e recebe `take_ground_pound(player)`
+só quando o jogador aterrissa com impacto vertical no raio de 1,45. Outros
+alvos do grupo preservam a chamada `take_movement_hit`. O barril usa um
+RigidBody3D restrito ao plano e uma Area3D para distinguir soco de dano.
+
+O Guardião patrulha com três pontos de vida. Com dois, alterna antecipação,
+salto e recuperação. Com um, troca o salto por uma investida. Cada salto ou
+investida começa com 0,4 s de flash e pausa. O HUD recebe `health_changed`
+e exibe a barra enquanto a luta está ativa. O rig de câmera enquadra a arena
+durante a luta e aproxima o visual do Guardião na derrota.
+
+A morte do jogador restaura vida, posição, ataque e materiais do Guardião
+no mesmo nó. Ela também libera câmera, HUD e música para o retorno ao
+checkpoint. A distância de ativação na trilha mantém o checkpoint fora do
+alcance da luta. Na vitória, a animação e as partículas antecedem a criação
+de `GuardianCrystal`. A câmera volta a seguir o jogador. Coletar o cristal
+conclui a fase e dispara o jingle.
 
 O canhão captura na entrada e lança com Pulo ou Ação. O cipó fornece uma
 âncora móvel ao grupo `climb_pole`: segure cima para agarrar e Pulo para soltar.
 
 A fase principal instancia `LookoutTrail.tscn` depois do mirante. A trilha
-reúne os seis elementos, tem um checkpoint após o vão e termina na última ilha.
+inclui o Casco de Pedra e tem um checkpoint após o vão. A última ilha contém
+a arena do Guardião e sua recompensa.

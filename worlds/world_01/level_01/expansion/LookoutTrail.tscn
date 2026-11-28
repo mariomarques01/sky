@@ -2,17 +2,14 @@
 
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FloatingPlatform.tscn" id="Island"]
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Checkpoint.tscn" id="Checkpoint"]
-[ext_resource type="Script" path="res://worlds/world_01/level_01/expansion/finish.gd" id="Finish"]
 [ext_resource type="PackedScene" path="res://enemies/variants/spiked.tscn" id="Spikes"]
 [ext_resource type="PackedScene" path="res://enemies/variants/flyer.tscn" id="Flyer"]
 [ext_resource type="Script" path="res://enemies/barrels/spawner.gd" id="Spawner"]
 [ext_resource type="PackedScene" path="res://collectibles/cannon/Cannon.tscn" id="Cannon"]
 [ext_resource type="PackedScene" path="res://collectibles/vine/Vine.tscn" id="Vine"]
+[ext_resource type="PackedScene" path="res://enemies/variants/StoneShell.tscn" id="Shell"]
 [ext_resource type="PackedScene" path="res://enemies/boss/Guardian.tscn" id="Guardian"]
 [ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="Crystal"]
-
-[sub_resource type="BoxShape3D" id="FinishShape"]
-size = Vector3(1.2, 3, 3)
 
 [node name="LookoutTrail" type="Node3D"]
 
@@ -53,6 +50,10 @@ limits = Vector2(103.5, 106.5)
 [node name="Flyer" parent="." instance=ExtResource("Flyer")]
 position = Vector3(109, 4.2, 0)
 
+[node name="StoneShell" parent="." instance=ExtResource("Shell")]
+position = Vector3(109.8, 2.73, 0)
+limits = Vector2(109.2, 110.3)
+
 [node name="BarrelSpawner" type="Marker3D" parent="."]
 position = Vector3(118, 4.86, 0)
 script = ExtResource("Spawner")
@@ -69,6 +70,7 @@ position = Vector3(127.4, 4.35, 0)
 
 [node name="Guardian" parent="." instance=ExtResource("Guardian")]
 position = Vector3(134, 3.9, 0)
+activation_distance = 4.8
 
 [node name="TrailCrystal0" parent="." instance=ExtResource("Crystal")]
 position = Vector3(102.6, 3.5, 0)
@@ -94,6 +96,12 @@ text = "Espinhos · impacto vertical"
 font_size = 44
 pixel_size = 0.006
 
+[node name="ShellSign" type="Label3D" parent="."]
+position = Vector3(110.0, 5.4, -0.65)
+text = "Casco de pedra · direcional para baixo no ar"
+font_size = 40
+pixel_size = 0.006
+
 [node name="Sign1" type="Label3D" parent="."]
 position = Vector3(119, 6.9, -0.65)
 text = "Canhão · Pulo ou Ação"
@@ -111,13 +119,6 @@ position = Vector3(134, 6.7, -0.65)
 text = "Guardião do Mirante"
 font_size = 44
 pixel_size = 0.006
-
-[node name="Finish" type="Area3D" parent="."]
-position = Vector3(138.2, 4.9, 0)
-script = ExtResource("Finish")
-
-[node name="Collision" type="CollisionShape3D" parent="Finish"]
-shape = SubResource("FinishShape")
 
 [node name="VineAnchor" parent="." instance=ExtResource("Island")]
 position = Vector3(122.1, 8.1, -0.55)

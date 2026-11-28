@@ -144,7 +144,7 @@ func test_meadow() -> void:
 
 	var trail := world.get_node("Expansion/LookoutTrail")
 	check(await run_to(103, 90) and player.is_on_floor(), "trilha conecta ao mirante a pé")
-	for feature in ["Spiked", "Flyer", "BarrelSpawner", "Cannon", "Vine", "Guardian"]:
+	for feature in ["Spiked", "Flyer", "StoneShell", "BarrelSpawner", "Cannon", "Vine", "Guardian"]:
 		check(trail.has_node(feature), "trilha inclui " + feature)
 	player.position = Vector3(120, 4.92, 0)
 	player.velocity = Vector3.ZERO
@@ -160,7 +160,25 @@ func test_meadow() -> void:
 	check(player.position.x > 123.2 and player.position.y > 3.7, "lançamento atravessa o vão")
 	player.position = Vector3(138.2, 3.91, 0)
 	await frames(8)
-	check(Game.complete, "trilha final conclui a fase")
+	check(not Game.complete and not trail.has_node("GuardianCrystal"), "atravessar a arena sem derrotar o chefe não conclui a fase")
+	var boss := trail.get_node("Guardian")
+	player.set_physics_process(false)
+	player.position = Vector3(129.7, 3.91, 0)
+	await frames(3)
+	for expected in [2, 1, 0]:
+		player.strike_index = 0
+		player.strike_time = .10
+		boss.contact_player(player)
+		player.reset_moves()
+		check(boss.health == expected, "Guardião da trilha perde um ponto de vida")
+		await frames(58)
+	await frames(8)
+	var crystal := trail.get_node_or_null("GuardianCrystal") as Area3D
+	if crystal:
+		player.position = crystal.global_position
+		await frames(6)
+	player.set_physics_process(true)
+	check(Game.complete, "cristal do Guardião conclui a fase")
 	check(hud.result.is_visible_in_tree() and ("Moedas · %d" % Game.counts[1]) in hud.result.text, "resultado exibe as moedas da partida")
 
 func _ready() -> void:
@@ -244,7 +262,9 @@ func _ready() -> void:
 	check(world.get_node("Expansion/FlowerMeadow").has_node("EntryCrate"), "caixas comuns voltam em nova partida")
 	world.get_node("Player").position = Vector3(138.2, 3.91, 0)
 	await frames(6)
-	check(Game.complete and Game.counts[2] == 0, "conclusão disponível em nova partida")
+	var fresh_boss := world.get_node("Expansion/LookoutTrail/Guardian")
+	check(fresh_boss.active and fresh_boss.health == 3 and not Game.complete and Game.counts[2] == 0,
+		"nova partida disponibiliza outra luta sem conceder a vitória")
 	get_tree().paused = false
 	Audio.stop_all()
 	await get_tree().create_timer(.5).timeout

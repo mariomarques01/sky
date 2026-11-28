@@ -512,7 +512,10 @@ func handle_landing(incoming: Vector3) -> void:
 		ground_pound.emit(global_position)
 		for target in get_tree().get_nodes_in_group("slam_target"):
 			if target is Node3D and target.global_position.distance_to(global_position) <= 1.45:
-				target.call("take_movement_hit")
+				if target.has_method("take_ground_pound"):
+					target.call("take_ground_pound", self)
+				else:
+					target.call("take_movement_hit")
 		stun = maxf(stun, .12)
 	if air_move == &"GroundPound" or -incoming.y >= 12.0:
 		impact.emit()
