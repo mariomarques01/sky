@@ -75,13 +75,14 @@ func contact_player(body: CharacterBody3D) -> void:
 	else:
 		prepare_attack(body)
 
-func defeat(body: CharacterBody3D, stomp: bool) -> void:
+func defeat(body: CharacterBody3D, stomp: bool, award_coin := true) -> void:
 	if defeated:
 		return
 	defeated = true
 	if stomp:
 		body.stomp_enemy(Input.is_action_pressed("jump"))
-	Game.collect(1)
+	if award_coin:
+		Game.collect(1)
 	var t := create_tween()
 	var base := visual_scale
 	var away := signf(global_position.x - body.global_position.x)
@@ -96,10 +97,13 @@ func defeat(body: CharacterBody3D, stomp: bool) -> void:
 	t.tween_callback(burst)
 
 func burst() -> void:
+	emit_defeat_particles()
+	queue_free()
+
+func emit_defeat_particles() -> void:
 	var spores := Spores.new()
 	spores.burst_amount = 8
 	spores.tint = spore_tint
 	spores.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	spores.position = get_parent().to_local(visual.global_position + Vector3.UP * .35)
 	get_parent().add_child(spores)
-	queue_free()
