@@ -309,6 +309,22 @@ func test_final_trail(hud: Node, lookout_time: float) -> void:
 	check(Game.complete, "cristal do Guardião conclui a fase")
 	check(hud.result.is_visible_in_tree() and ("Moedas · %d" % Game.counts[1]) in hud.result.text, "resultado exibe as moedas da partida")
 
+func test_cascade_recovery() -> void:
+	var ruins := expansion.get_node("CascadeRuins")
+	var platform: Node3D = ruins.get_node("FallingStep")
+	# Land on the platform and stay on it through its full fall and reset.
+	player.position = platform.position + Vector3.UP * .7
+	player.velocity = Vector3.ZERO
+	await frames(245)
+	check(player.is_on_floor() and absf(player.position.y - 6.6) < .18
+		and ruins.get_node("FallingStep").timer < 0.0, "plataforma cai sobre a prateleira de recuperação e retorna")
+	check(await run_to(139.04, 90), "prateleira dá acesso ao degrau depois que a plataforma retorna")
+	await frames(3)
+	await jump_to(ruins.get_node("RecoveryStep"))
+	await jump_toward(140.92, 8.9)
+	check(await run_to(142.0, 90) and ruins.get_node("CascadeCheckpoint").activated,
+		"rota de recuperação alcança o checkpoint das cascatas")
+
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	world.process_mode = Node.PROCESS_MODE_PAUSABLE
@@ -388,13 +404,16 @@ func _ready() -> void:
 	Save.data = from_disk
 	world = World.instantiate()
 	add_child(world)
+	player = world.get_node("Player")
+	expansion = world.get_node("Expansion")
 	await frames(3)
 	route = world.get_node("Expansion/TreasureRoute")
 	check(not route.has_node("Sapphire") and not route.has_node("Amethyst") and not route.has_node("GoldenChest"), "recarregamento não duplica tesouros")
 	check(world.get_node("Expansion/FlowerMeadow").has_node("EntryCrate"), "caixas comuns voltam em nova partida")
 	for treasure_path in ["WindWalk/WindTreasure", "CascadeRuins/CascadeTreasure", "SpikeCorridor/CorridorTreasure"]:
 		check(not world.get_node("Expansion").has_node(treasure_path), "tesouro da expansão não reaparece: " + treasure_path)
-	world.get_node("Player").position = Vector3(223.2, 3.91, 0)
+	await test_cascade_recovery()
+	player.position = Vector3(223.2, 3.91, 0)
 	await frames(6)
 	var fresh_boss := world.get_node("Expansion/LookoutTrail/Guardian")
 	check(fresh_boss.active and fresh_boss.health == 3 and not Game.complete and Game.counts[2] == 0,
