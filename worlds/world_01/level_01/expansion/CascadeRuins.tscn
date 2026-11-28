@@ -33,7 +33,7 @@ material = SubResource("Slate")
 size = Vector3(1.1, 2.6, 2.4)
 
 [sub_resource type="BoxShape3D" id="FallingSensor"]
-size = Vector3(2, 0.32, 1.5)
+size = Vector3(1.8, 0.32, 1.5)
 
 [node name="CascadeRuins" type="Node3D"]
 
@@ -79,8 +79,8 @@ position = Vector3(135.35, 8.1, 0)
 dimensions = Vector3(2.45, 2.25, 3.5)
 
 [node name="FallingStep" parent="." instance=ExtResource("Moving")]
-position = Vector3(138.05, 8.85, 0)
-dimensions = Vector3(2, 0.9, 3.5)
+position = Vector3(137.75, 8.85, 0)
+dimensions = Vector3(1.8, 0.9, 3.5)
 script = ExtResource("Fall")
 
 [node name="Sensor" type="Area3D" parent="FallingStep"]
@@ -95,8 +95,8 @@ position = Vector3(138.1, 6.6, 0)
 dimensions = Vector3(3.25, 1.05, 3.5)
 
 [node name="RecoveryStep" parent="." instance=ExtResource("Island")]
-position = Vector3(139.52, 7.62, 0)
-dimensions = Vector3(1.1, 0.65, 3.5)
+position = Vector3(139.83, 7.62, 0)
+dimensions = Vector3(0.76, 0.65, 3.5)
 
 [node name="CascadeRest" parent="." instance=ExtResource("Island")]
 position = Vector3(143, 8.9, 0)

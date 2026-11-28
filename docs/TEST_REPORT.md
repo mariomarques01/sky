@@ -17,7 +17,9 @@ que cai, pega o coração e coleta os três novos tesouros. Também derruba
 espinhos e um Casco de Pedra com impacto vertical, usa o caminho alto do
 corredor e atravessa a rampa dos barris e o vão do canhão.
 
-O teste ativa os três checkpoints após o mirante e simula uma queda na
+Uma tentativa adicional espera a plataforma da cascata cair e voltar, e
+confirma o acesso ao checkpoint pelos degraus de recuperação. O teste
+ativa os três checkpoints após o mirante e simula uma queda na
 arena para verificar o retorno ao último checkpoint. Ele verifica o
 cristal final, a gravação da conclusão e do recorde e a ausência dos
 tesouros já coletados na nova partida. Uma execução automatizada fez
