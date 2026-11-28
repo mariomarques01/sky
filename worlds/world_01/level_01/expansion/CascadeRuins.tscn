@@ -1,0 +1,175 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FloatingPlatform.tscn" id="Island"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/MovingPlatform.tscn" id="Moving"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Waterfall.tscn" id="Water"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/Checkpoint.tscn" id="Checkpoint"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RecoveryHeart.tscn" id="Heart"]
+[ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="Gold"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RareCollectible.tscn" id="Rare"]
+[ext_resource type="PackedScene" path="res://environment/BrokenArch.glb" id="Arch"]
+[ext_resource type="Script" path="res://environment/movement/falling_platform.gd" id="Fall"]
+[ext_resource type="Resource" path="res://collectibles/rarities/epic.tres" id="TreasureProfile"]
+
+[sub_resource type="StandardMaterial3D" id="Wood"]
+albedo_color = Color(0.45, 0.27, 0.16, 1)
+
+[sub_resource type="CylinderMesh" id="PoleMesh"]
+material = SubResource("Wood")
+top_radius = 0.08
+bottom_radius = 0.13
+height = 3.75
+radial_segments = 9
+
+[sub_resource type="StandardMaterial3D" id="Slate"]
+albedo_color = Color(0.32, 0.47, 0.5, 1)
+roughness = 0.94
+
+[sub_resource type="BoxMesh" id="WallMesh"]
+size = Vector3(1.1, 2.6, 2.4)
+material = SubResource("Slate")
+
+[sub_resource type="BoxShape3D" id="WallShape"]
+size = Vector3(1.1, 2.6, 2.4)
+
+[sub_resource type="BoxShape3D" id="FallingSensor"]
+size = Vector3(2, 0.32, 1.5)
+
+[node name="CascadeRuins" type="Node3D"]
+
+[node name="CascadeBase" parent="." instance=ExtResource("Island")]
+position = Vector3(126.5, 3.35, 0)
+dimensions = Vector3(3, 2.25, 3.5)
+
+[node name="ClimbPole" type="Node3D" parent="." groups=["climb_pole"]]
+position = Vector3(127.2, 3.35, 0)
+
+[node name="Mesh" type="MeshInstance3D" parent="ClimbPole"]
+position = Vector3(0, 1.875, -0.28)
+mesh = SubResource("PoleMesh")
+
+[node name="PoleLanding" parent="." instance=ExtResource("Island")]
+position = Vector3(130, 5.65, 0)
+dimensions = Vector3(2.55, 2.25, 3.5)
+
+[node name="WallStep" parent="." instance=ExtResource("Island")]
+position = Vector3(131.52, 6.62, 0)
+dimensions = Vector3(1.15, 0.95, 3.5)
+
+[node name="WestWall" type="StaticBody3D" parent="."]
+position = Vector3(133.1, 6.25, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="WestWall"]
+shape = SubResource("WallShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="WestWall"]
+mesh = SubResource("WallMesh")
+
+[node name="EastWall" type="StaticBody3D" parent="."]
+position = Vector3(148.35, 10.68, 0)
+
+[node name="Collision" type="CollisionShape3D" parent="EastWall"]
+shape = SubResource("WallShape")
+
+[node name="Mesh" type="MeshInstance3D" parent="EastWall"]
+mesh = SubResource("WallMesh")
+
+[node name="FallsApproach" parent="." instance=ExtResource("Island")]
+position = Vector3(135.35, 8.1, 0)
+dimensions = Vector3(2.45, 2.25, 3.5)
+
+[node name="FallingStep" parent="." instance=ExtResource("Moving")]
+position = Vector3(138.05, 8.85, 0)
+dimensions = Vector3(2, 0.9, 3.5)
+script = ExtResource("Fall")
+
+[node name="Sensor" type="Area3D" parent="FallingStep"]
+position = Vector3(0, 0.14, 0)
+collision_layer = 0
+
+[node name="Collision" type="CollisionShape3D" parent="FallingStep/Sensor"]
+shape = SubResource("FallingSensor")
+
+[node name="RecoveryShelf" parent="." instance=ExtResource("Island")]
+position = Vector3(138.1, 6.6, 0)
+dimensions = Vector3(3.25, 1.05, 3.5)
+
+[node name="RecoveryStep" parent="." instance=ExtResource("Island")]
+position = Vector3(139.52, 7.62, 0)
+dimensions = Vector3(1.1, 0.65, 3.5)
+
+[node name="CascadeRest" parent="." instance=ExtResource("Island")]
+position = Vector3(143, 8.9, 0)
+dimensions = Vector3(5.75, 2.25, 3.5)
+meadow = true
+
+[node name="CascadeAlcove" parent="." instance=ExtResource("Island")]
+position = Vector3(146.6, 11, 0)
+dimensions = Vector3(2, 1, 3.5)
+
+[node name="FallsTraverse" parent="." instance=ExtResource("Island")]
+position = Vector3(148.5, 7.45, 0)
+dimensions = Vector3(5.7, 2.25, 3.5)
+
+[node name="CascadeExit" parent="." instance=ExtResource("Island")]
+position = Vector3(153.5, 5.95, 0)
+dimensions = Vector3(4.55, 2.25, 3.5)
+meadow = true
+
+[node name="WaterfallMain" parent="." instance=ExtResource("Water")]
+position = Vector3(136.7, 4.45, -2.1)
+scale = Vector3(3.25, 11.5, 1)
+
+[node name="RuinsArch" parent="." instance=ExtResource("Arch")]
+position = Vector3(143, 8.9, -1.55)
+scale = Vector3(1.25, 1.25, 1.25)
+
+[node name="CascadeCheckpoint" parent="." instance=ExtResource("Checkpoint")]
+position = Vector3(141.5, 9.35, 0)
+
+[node name="RecoveryHeart" parent="." instance=ExtResource("Heart")]
+position = Vector3(144.55, 9.52, 0)
+
+[node name="CascadeTreasure" parent="." instance=ExtResource("Rare")]
+position = Vector3(146.65, 11.66, 0)
+reward = ExtResource("TreasureProfile")
+persistent_id = "cascade_alcove"
+
+[node name="PoleSign" type="Label3D" parent="."]
+position = Vector3(126.65, 5.34, -0.95)
+text = "Cascatas · segure cima no poste, depois pule"
+font_size = 40
+pixel_size = 0.0055
+
+[node name="WallSign" type="Label3D" parent="."]
+position = Vector3(131.2, 8.65, -0.95)
+text = "Toque na parede no ar e pule de novo"
+font_size = 40
+pixel_size = 0.0055
+
+[node name="FallSign" type="Label3D" parent="."]
+position = Vector3(135.95, 10.29, -0.95)
+text = "Pule antes que a plataforma caia"
+font_size = 40
+pixel_size = 0.0055
+
+[node name="GuideCrystal1" parent="." instance=ExtResource("Gold")]
+position = Vector3(128, 4.07, 0)
+
+[node name="GuideCrystal2" parent="." instance=ExtResource("Gold")]
+position = Vector3(130.05, 6.33, 0)
+
+[node name="GuideCrystal3" parent="." instance=ExtResource("Gold")]
+position = Vector3(135.35, 8.8, 0)
+
+[node name="GuideCrystal4" parent="." instance=ExtResource("Gold")]
+position = Vector3(140.65, 9.55, 0)
+
+[node name="GuideCrystal5" parent="." instance=ExtResource("Gold")]
+position = Vector3(145.02, 9.58, 0)
+
+[node name="GuideCrystal6" parent="." instance=ExtResource("Gold")]
+position = Vector3(149.7, 8.08, 0)
+
+[node name="GuideCrystal7" parent="." instance=ExtResource("Gold")]
+position = Vector3(153.6, 6.62, 0)

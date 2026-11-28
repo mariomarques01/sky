@@ -9,6 +9,9 @@
 
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FlowerMeadow.tscn" id="FlowerMeadow"]
 
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/WindWalk.tscn" id="WindWalk"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/CascadeRuins.tscn" id="CascadeRuins"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/SpikeCorridor.tscn" id="SpikeCorridor"]
 [ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/LookoutTrail.tscn" id="LookoutTrail"]
 
 [node name="Expansion" type="Node3D"]
@@ -26,5 +29,11 @@
 [node name="Scenery" parent="." instance=ExtResource("Scenery")]
 
 [node name="FlowerMeadow" parent="." instance=ExtResource("FlowerMeadow")]
+
+[node name="WindWalk" parent="." instance=ExtResource("WindWalk")]
+
+[node name="CascadeRuins" parent="." instance=ExtResource("CascadeRuins")]
+
+[node name="SpikeCorridor" parent="." instance=ExtResource("SpikeCorridor")]
 
 [node name="LookoutTrail" parent="." instance=ExtResource("LookoutTrail")]
