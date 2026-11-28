@@ -18,7 +18,7 @@ func check(condition: bool, label: String) -> bool:
 	return condition
 
 func stop_input() -> void:
-	for action in [&"left", &"right", &"jump", &"dash"]:
+	for action in [&"left", &"right", &"jump", &"dash", &"climb", &"crouch"]:
 		Input.action_release(action)
 
 func steer(target_x: float) -> void:
@@ -142,29 +142,158 @@ func test_meadow() -> void:
 	var camera := world.get_node("CameraRig") as Camera3D
 	check(camera.position.x > 98.0, "câmera acompanha o mirante")
 
-	var trail := world.get_node("Expansion/LookoutTrail")
-	check(await run_to(103, 90) and player.is_on_floor(), "trilha conecta ao mirante a pé")
-	for feature in ["Spiked", "Flyer", "StoneShell", "BarrelSpawner", "Cannon", "Vine", "Guardian"]:
-		check(trail.has_node(feature), "trilha inclui " + feature)
-	player.position = Vector3(120, 4.92, 0)
-	player.velocity = Vector3.ZERO
-	await frames(6)
-	check(player.cannon == trail.get_node("Cannon"), "canhão captura na fase principal")
+	var lookout_time := float(world.clock)
+	await test_new_sections()
+	await test_final_trail(hud, lookout_time)
+
+func jump_toward(x: float, y: float, double_jump := false) -> bool:
+	var marker := Marker3D.new()
+	marker.name = "Pouso_%s" % x
+	world.add_child(marker)
+	await frames(1)
+	marker.global_position = Vector3(x, y, 0)
+	var landed := await jump_to(marker, double_jump)
+	marker.queue_free()
+	return landed
+
+func ground_pound_enemy(enemy: Area3D) -> bool:
+	await frames(3)
+	Input.action_press("jump")
+	for frame in 85:
+		steer(enemy.global_position.x)
+		if frame >= 12 and player.air_move in [&"Jump", &"DoubleJump"] and not player.is_on_floor() 			and absf(player.position.x - enemy.global_position.x) < .95:
+			Input.action_press("crouch")
+		await frames(1)
+		if enemy.defeated:
+			stop_input()
+			await frames(14)
+			return true
+	stop_input()
+	return false
+
+func check_features(section: Node, names: Array[String]) -> void:
+	for feature in names:
+		check(section.has_node(feature), "%s inclui %s" % [section.name, feature])
+
+func test_new_sections() -> void:
+	var walk := expansion.get_node("WindWalk")
+	var ruins := expansion.get_node("CascadeRuins")
+	var corridor := expansion.get_node("SpikeCorridor")
+	check_features(walk, ["PracticeLift", "GustFerry", "IntroGust", "FerryGust", "ShelfFlyer", "FerryFlyer", "WindTreasure"])
+	check_features(ruins, ["ClimbPole", "WestWall", "EastWall", "FallingStep", "WaterfallMain", "CascadeCheckpoint", "RecoveryHeart", "CascadeTreasure"])
+	check_features(corridor, ["PracticeSpiked", "PracticeShell", "CorridorSpiked", "CorridorShell", "SurpriseCrate", "HighCache", "CorridorCheckpoint", "CorridorTreasure"])
+	check(await run_to(103.4, 95) and player.is_on_floor(), "mirante liga ao Caminho dos Ventos")
+	await frames(2)
+	await jump_to(walk.get_node("PracticeLift"))
+	await jump_to(walk.get_node("WindStep"))
+	check(await run_to(111.02, 60), "aproximação segura da primeira rajada")
+	await jump_toward(113.1, 3.45)
+	check(await run_to(115.08, 100), "alcança a plataforma da rajada")
+	await frames(2)
+	await jump_to(walk.get_node("GustFerry"), true)
+	await jump_to(walk.get_node("WindRest"), true)
+	await jump_to(walk.get_node("CloudNook"), true)
+	check(Save.data.get_value(Pickup.CLAIMS, "windwalk_cloud", false), "tesouro dos ventos acessível")
+	await jump_to(walk.get_node("WindRest"))
+
+	check(await run_to(127.15, 100) and player.is_on_floor(), "chegada ao poste das cascatas")
+	Input.action_press("climb")
+	await frames(83)
+	check(player.pole == ruins.get_node("ClimbPole") and player.position.y > 5.6, "poste permite subir acima da primeira borda")
+	Input.action_release("climb")
+	Input.action_press("right")
+	await jump_to(ruins.get_node("PoleLanding"))
+	await jump_to(ruins.get_node("WallStep"))
+	await jump_toward(133.1, 7.55)
+	await jump_to(ruins.get_node("FallsApproach"))
+	await jump_to(ruins.get_node("FallingStep"))
+	check(ruins.get_node("FallingStep").timer >= 0, "plataforma das cascatas cede depois do pouso")
+	await jump_toward(140.92, 8.9)
+	check(await run_to(142.0, 90) and ruins.get_node("CascadeCheckpoint").activated
+		and absf(Game.checkpoint.x - 141.7) < .05, "checkpoint intermediário da cascata ativado")
+	Game.health = 2
+	check(await run_to(144.55, 90) and Game.health == 3, "coração da cascata recupera vida")
+	await frames(12)
+	await jump_to(ruins.get_node("CascadeAlcove"), true, false, 15)
+	check(Save.data.get_value(Pickup.CLAIMS, "cascade_alcove", false), "tesouro da cascata acessível")
+	await jump_toward(149.7, 7.45)
+	var reached_corridor := await run_to(157.25, 170)
+	await frames(8)
+	check(reached_corridor and player.is_on_floor(), "descida das cascatas conecta ao corredor")
+	check(await ground_pound_enemy(corridor.get_node("PracticeSpiked")), "impacto vertical derrota os espinhos isolados")
+	await jump_toward(161.65, 4.85)
+	await frames(20)
+	check(await ground_pound_enemy(corridor.get_node("PracticeShell")), "impacto vertical derrota o Casco de Pedra isolado")
+	check(await run_to(162.55, 100), "rota principal dá acesso à rota alta")
+	await frames(12)
+	await jump_to(corridor.get_node("HighStep"), true, false, 12)
+	await jump_to(corridor.get_node("HighRun"))
+	await jump_to(corridor.get_node("HighCache"))
+	check(Save.data.get_value(Pickup.CLAIMS, "corridor_high", false), "rota alta rende o tesouro único")
+	await jump_toward(176.45, 3.45)
+	check(await run_to(176.65, 90) and corridor.get_node("CorridorCheckpoint").activated
+		and absf(Game.checkpoint.x - 176.6) < .05, "checkpoint depois dos espinhos ativado")
+	# Leave enough runway for an unshortened jump over the crate.
+	check(await run_to(177.55, 90) and await stomp(corridor.get_node("SurpriseCrate")),
+		"caixa do corredor libera a passagem e entrega o prêmio")
+	check(await run_to(187.95, 150) and player.is_on_floor(), "corredor se conecta à trilha final a pé")
+
+func reach_cannon(trail: Node3D) -> bool:
+	var cannon := trail.get_node("Cannon")
+	var last_jump := -60
+	for frame in 350:
+		if player.cannon == cannon:
+			stop_input()
+			return true
+		if player.recovery > 0.0:
+			break
+		steer(cannon.position.x)
+		if frame == last_jump + 26:
+			Input.action_release("jump")
+		if player.is_on_floor() and frame > last_jump + 27:
+			for child in trail.get_children():
+				if child is RigidBody3D:
+					var distance: float = child.global_position.x - player.global_position.x
+					if distance > .4 and distance < 3.8:
+						last_jump = frame
+						Input.action_press("jump")
+						break
+		await frames(1)
+	stop_input()
+	return false
+
+func test_final_trail(hud: Node, lookout_time: float) -> void:
+	var trail := expansion.get_node("LookoutTrail")
+	check_features(trail, ["Spiked", "Flyer", "StoneShell", "BarrelSpawner", "Cannon", "Vine", "VineAnchor", "TrailCheckpoint", "Guardian"])
+	check(await run_to(188.7, 50), "entrada da trilha deslocada")
+	await jump_toward(192.15, 2.73)
+	check(await reach_cannon(trail), "atravessa a rampa dos barris e alcança o canhão")
+	if player.cannon:
+		for frame in 230:
+			if player.cannon.launch_velocity().x > 8.5 and player.cannon.launch_velocity().x < 10.4:
+				break
+			await frames(1)
+	Input.action_press("right")
 	Input.action_press("touch_attack")
 	await frames(2)
 	Input.action_release("touch_attack")
 	check(player.cannon == null and player.velocity.y > 0, "canhão lança pelo botão Ação")
-	Input.action_press("right")
-	await frames(65)
-	Input.action_release("right")
-	check(player.position.x > 123.2 and player.position.y > 3.7, "lançamento atravessa o vão")
-	player.position = Vector3(138.2, 3.91, 0)
-	await frames(8)
-	check(not Game.complete and not trail.has_node("GuardianCrystal"), "atravessar a arena sem derrotar o chefe não conclui a fase")
+	check(await run_to(212.45, 160), "lançamento atravessa o vão")
+	await frames(28)
+	var final_checkpoint: Area3D = trail.get_node("TrailCheckpoint")
+	check(final_checkpoint.activated and Game.checkpoint.is_equal_approx(final_checkpoint.global_position + final_checkpoint.respawn_offset),
+		"checkpoint anterior ao chefe ativado pela travessia")
+	check(await run_to(215.0, 100), "chegada à arena final")
+	print("INFO Do mirante à arena com os três tesouros: %.1f s de jogo" % (float(world.clock) - lookout_time))
 	var boss := trail.get_node("Guardian")
+	check(boss.active and not Game.complete and not trail.has_node("GuardianCrystal"),
+		"Guardião deslocado ativa a luta antes da conclusão")
+	player.position.y = -9.0
+	await frames(42)
+	check(player.global_position.distance_to(Game.checkpoint) < .12 and not boss.active,
+		"queda na arena devolve o jogador ao último checkpoint")
+	check(await run_to(215.0, 100) and boss.active, "arena reativa após respawn")
 	player.set_physics_process(false)
-	player.position = Vector3(129.7, 3.91, 0)
-	await frames(3)
 	for expected in [2, 1, 0]:
 		player.strike_index = 0
 		player.strike_time = .10
@@ -174,10 +303,9 @@ func test_meadow() -> void:
 		await frames(58)
 	await frames(8)
 	var crystal := trail.get_node_or_null("GuardianCrystal") as Area3D
-	if crystal:
-		player.position = crystal.global_position
-		await frames(6)
 	player.set_physics_process(true)
+	if crystal:
+		check(await run_to(crystal.global_position.x, 140), "recompensa alcançável a partir da arena")
 	check(Game.complete, "cristal do Guardião conclui a fase")
 	check(hud.result.is_visible_in_tree() and ("Moedas · %d" % Game.counts[1]) in hud.result.text, "resultado exibe as moedas da partida")
 
@@ -253,6 +381,10 @@ func _ready() -> void:
 	await frames(3)
 	var from_disk := ConfigFile.new()
 	check(from_disk.load(Save.PATH) == OK, "arquivo de recompensas gravado")
+	check(from_disk.get_value("Jardins", "concluido", false)
+		and from_disk.get_value("Jardins", "recorde", -1) >= Game.counts[0], "conclusão e recorde persistem em disco")
+	for treasure_id in ["windwalk_cloud", "cascade_alcove", "corridor_high"]:
+		check(from_disk.get_value(Pickup.CLAIMS, treasure_id, false), "tesouro único gravado: " + treasure_id)
 	Save.data = from_disk
 	world = World.instantiate()
 	add_child(world)
@@ -260,7 +392,9 @@ func _ready() -> void:
 	route = world.get_node("Expansion/TreasureRoute")
 	check(not route.has_node("Sapphire") and not route.has_node("Amethyst") and not route.has_node("GoldenChest"), "recarregamento não duplica tesouros")
 	check(world.get_node("Expansion/FlowerMeadow").has_node("EntryCrate"), "caixas comuns voltam em nova partida")
-	world.get_node("Player").position = Vector3(138.2, 3.91, 0)
+	for treasure_path in ["WindWalk/WindTreasure", "CascadeRuins/CascadeTreasure", "SpikeCorridor/CorridorTreasure"]:
+		check(not world.get_node("Expansion").has_node(treasure_path), "tesouro da expansão não reaparece: " + treasure_path)
+	world.get_node("Player").position = Vector3(223.2, 3.91, 0)
 	await frames(6)
 	var fresh_boss := world.get_node("Expansion/LookoutTrail/Guardian")
 	check(fresh_boss.active and fresh_boss.health == 3 and not Game.complete and Game.counts[2] == 0,

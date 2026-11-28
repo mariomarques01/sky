@@ -1,0 +1,118 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/FloatingPlatform.tscn" id="Island"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/MovingPlatform.tscn" id="Moving"]
+[ext_resource type="PackedScene" path="res://enemies/variants/flyer.tscn" id="Flyer"]
+[ext_resource type="PackedScene" path="res://collectibles/Sunstone.tscn" id="Gold"]
+[ext_resource type="PackedScene" path="res://worlds/world_01/level_01/expansion/RareCollectible.tscn" id="Rare"]
+[ext_resource type="PackedScene" path="res://environment/Pennant.glb" id="Flag"]
+[ext_resource type="Resource" path="res://collectibles/rarities/rare.tres" id="TreasureProfile"]
+
+[sub_resource type="BoxShape3D" id="IntroWind"]
+size = Vector3(3.3, 2.8, 2.6)
+
+[sub_resource type="BoxShape3D" id="FerryWind"]
+size = Vector3(6.4, 3.5, 2.8)
+
+[node name="WindWalk" type="Node3D"]
+
+[node name="WindEntrance" parent="." instance=ExtResource("Island")]
+position = Vector3(102.9, 2.73, 0)
+dimensions = Vector3(2.15, 2.25, 3.5)
+meadow = true
+
+[node name="PracticeLift" parent="." instance=ExtResource("Moving")]
+position = Vector3(106.3, 2.9, 0)
+dimensions = Vector3(2.65, 1.25, 3.5)
+travel = Vector3(0.55, 0.25, 0)
+period = 4.4
+
+[node name="WindStep" parent="." instance=ExtResource("Island")]
+position = Vector3(110, 3.15, 0)
+dimensions = Vector3(3, 2.25, 3.5)
+meadow = true
+
+[node name="WindShelf" parent="." instance=ExtResource("Island")]
+position = Vector3(114, 3.45, 0)
+dimensions = Vector3(3, 2.25, 3.5)
+meadow = true
+
+[node name="GustFerry" parent="." instance=ExtResource("Moving")]
+position = Vector3(118.2, 3.1, 0)
+dimensions = Vector3(3.1, 1.3, 3.5)
+travel = Vector3(1.2, 0.35, 0)
+period = 6.4
+
+[node name="WindRest" parent="." instance=ExtResource("Island")]
+position = Vector3(123.2, 3.35, 0)
+dimensions = Vector3(4, 2.25, 3.5)
+meadow = true
+
+[node name="CloudNook" parent="." instance=ExtResource("Island")]
+position = Vector3(121.7, 5.46, 0)
+dimensions = Vector3(1.85, 0.88, 3.5)
+
+[node name="IntroGust" type="Area3D" parent="." groups=["movement_wind"]]
+position = Vector3(111.9, 4.1, 0)
+collision_layer = 0
+metadata/horizontal_speed = 1.0
+
+[node name="Collision" type="CollisionShape3D" parent="IntroGust"]
+shape = SubResource("IntroWind")
+
+[node name="FerryGust" type="Area3D" parent="." groups=["movement_wind"]]
+position = Vector3(118.6, 4.3, 0)
+collision_layer = 0
+metadata/horizontal_speed = 1.45
+
+[node name="Collision" type="CollisionShape3D" parent="FerryGust"]
+shape = SubResource("FerryWind")
+
+[node name="ShelfFlyer" parent="." instance=ExtResource("Flyer")]
+position = Vector3(114.45, 4.7, 0)
+amplitude = Vector2(0.74, 0.34)
+
+[node name="FerryFlyer" parent="." instance=ExtResource("Flyer")]
+position = Vector3(118.15, 5.08, 0)
+amplitude = Vector2(0.9, 0.31)
+
+[node name="WindTreasure" parent="." instance=ExtResource("Rare")]
+position = Vector3(121.7, 6.12, 0)
+reward = ExtResource("TreasureProfile")
+persistent_id = "windwalk_cloud"
+
+[node name="LiftFlag" parent="." instance=ExtResource("Flag")]
+position = Vector3(103.3, 2.73, -1.15)
+
+[node name="WindFlag" parent="." instance=ExtResource("Flag")]
+position = Vector3(111.2, 3.15, -1.25)
+
+[node name="FerryFlag" parent="." instance=ExtResource("Flag")]
+position = Vector3(115.05, 3.45, -1.25)
+
+[node name="WindSign" type="Label3D" parent="."]
+position = Vector3(103, 4.95, -0.95)
+text = "Caminho dos Ventos · espere a plataforma"
+font_size = 40
+pixel_size = 0.0055
+
+[node name="GustSign" type="Label3D" parent="."]
+position = Vector3(111.1, 5.18, -0.95)
+text = "As bandeiras marcam o vento a favor"
+font_size = 40
+pixel_size = 0.0055
+
+[node name="GuideCrystal1" parent="." instance=ExtResource("Gold")]
+position = Vector3(103.5, 3.45, 0)
+
+[node name="GuideCrystal2" parent="." instance=ExtResource("Gold")]
+position = Vector3(109.15, 3.87, 0)
+
+[node name="GuideCrystal3" parent="." instance=ExtResource("Gold")]
+position = Vector3(112.85, 4.16, 0)
+
+[node name="GuideCrystal4" parent="." instance=ExtResource("Gold")]
+position = Vector3(120.98, 4.1, 0)
+
+[node name="GuideCrystal5" parent="." instance=ExtResource("Gold")]
+position = Vector3(123.95, 4.04, 0)

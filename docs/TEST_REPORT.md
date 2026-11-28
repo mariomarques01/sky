@@ -9,6 +9,22 @@ sobrepostos e o menu pausado. Dois stomps medem três ciclos de física a
 `tests/movement.tscn` verifica o hit-stop do ground pound.
 `tests/enemies.tscn` valida a pausa de impacto e a transição musical do Guardião.
 
+## Caminho dos Ventos, Ruínas das Cascatas e Corredor de Espinhos
+
+`tests/expansion.tscn` percorre do mirante à nova arena com as ações do
+jogador. O teste usa as plataformas móveis e o poste, pisa na plataforma
+que cai, pega o coração e coleta os três novos tesouros. Também derruba
+espinhos e um Casco de Pedra com impacto vertical, usa o caminho alto do
+corredor e atravessa a rampa dos barris e o vão do canhão.
+
+O teste ativa os três checkpoints após o mirante e simula uma queda na
+arena para verificar o retorno ao último checkpoint. Ele verifica o
+cristal final, a gravação da conclusão e do recorde e a ausência dos
+tesouros já coletados na nova partida. Uma execução automatizada fez
+o percurso do mirante à arena, com os três tesouros, em cerca de 41 s
+de jogo. Esse trecho isolado mantém em aberto a validação do tempo
+da fase inteira com jogadores.
+
 ## Luta do Guardião
 
 `tests/enemies.tscn` verifica os flashes e a pausa antes de saltos e investidas,

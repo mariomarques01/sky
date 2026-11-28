@@ -1225,7 +1225,7 @@ rotation = Vector3(0,0,0)
 position = Vector3(-3,0.12,0)
 [node name="CameraRig" type="Camera3D" parent="."]
 script = ExtResource("e20")
-bounds = Vector2(-2, 139.0)
+bounds = Vector2(-2, 224.0)
 fov = 39
 current = true
 [node name="CanvasLayer" type="CanvasLayer" parent="."]

@@ -4,7 +4,7 @@
 
 Abra `project.godot` no Godot 4.7.2, aguarde a importação e pressione **F6** na cena World_01_Level_01 ou **F5** a partir de qualquer cena. A primeira importação extrai os materiais do explorador e prepara os recursos locais. O jogo funciona offline.
 
-Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do arco, siga os cristais dourados pelas ilhas e ruínas até a Ponte Celestial, ou explore as ilhas elevadas em busca de tesouros. Saia do Templo Celestial pela direita para atravessar o Prado Florido. Aterrisse sobre as caixas com estrela para revelar as recompensas. Depois do mirante, atravesse a rampa dos barris e use o canhão ou o cipó para seguir até o guardião. A fase termina na ponta da última ilha. As chamas azuis marcam os checkpoints. A queda devolve o explorador ao último checkpoint ativado nesta partida. Os tesouros únicos, o recorde de cristais dourados, a conclusão e o perfil gráfico ficam em `user://skybound.cfg`.
+Atravesse a primeira ponte, passe pelo cogumelo e suba os terraços. Depois do arco, siga os cristais dourados pelas ilhas e ruínas até a Ponte Celestial, ou explore as ilhas elevadas em busca de tesouros. Saia do Templo Celestial pela direita para atravessar o Prado Florido. Aterrisse sobre as caixas com estrela para revelar as recompensas. As chamas azuis marcam os checkpoints. A queda devolve o explorador ao último checkpoint ativado nesta partida. Os tesouros únicos, o recorde de cristais dourados, a conclusão e o perfil gráfico ficam em `user://skybound.cfg`.
 
 | Ação | Teclado | Gamepad | Touch |
 |---|---|---|---|
@@ -24,9 +24,16 @@ Aperte salto logo após pousar em movimento para encadear o segundo salto. Corra
 
 Pressione agachar no ar para preparar um impacto vertical. O botão de ataque no ar dá um chute em baixa velocidade ou um mergulho quando você está rápido. O mergulho termina em deslizada ao tocar o chão. Saltar nessa deslizada dá uma cambalhota. No chão, use o mesmo botão para encadear dois socos e um chute, ou mergulhe durante a corrida. Segure na direção de uma borda ao cair para agarrá-la e salte para subir. À esquerda do início há uma área com caixa quebrável, poste, trampolim, plataforma que cai, plataforma orbital e vento.
 
-Na trilha após o mirante, use o impacto vertical para derrotar o Casco de Pedra.
-Na última ilha, espere os flashes do Guardião para esquivar de saltos e
-investidas. Recolha o cristal que ele deixa para concluir a fase.
+Depois do mirante, siga os cristais dourados pelo **Caminho dos Ventos**,
+pelas **Ruínas das Cascatas** e pelo **Corredor de Espinhos**. Espere as
+plataformas móveis, suba pelo poste e prepare o impacto vertical com o
+direcional para baixo no ar para derrotar espinhos e Cascos de Pedra. Os
+três trechos têm um tesouro único. O do corredor fica na rota alta opcional.
+
+Na trilha final, pule os barris e use o canhão ou o cipó. Passe pelo
+checkpoint na ilha de chegada antes de enfrentar o Guardião. Espere os
+flashes para esquivar de saltos e investidas. Recolha o cristal que o chefe
+deixa para concluir a fase.
 
 ## Projeto
 
